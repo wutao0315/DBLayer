@@ -1,0 +1,30 @@
+﻿{
+  "dblayer": {
+    "DbProvider": {
+      "ProviderName": "System.Data.SqlClient.SqlClientFactory, System.Data.SqlClient",
+      "ParameterPrefix": "@",
+      "SelectKey": "SELECT @@IDENTITY;",
+      "FieldFormat": "[{0}]"
+    },
+    "ConnectionString": {
+      "Properties": {
+        "userid": "***",
+        "password": "***",
+        "passwordKey": "",
+        "database": "***",
+        "datasource": "***"
+      },
+      "ConnectionToken": "Password=${password};Persist Security Info=True;User ID=${userid};Initial Catalog=${database};Data Source=${datasource};pooling=true;min pool size=5;max pool size=10"
+    },
+    "UUID": {
+      "WorkerId": 1,
+      "RegionId": 1,
+      "CreateDate": "2018-11-01"
+    },
+    "Snowflake": {
+      "DataCenterId": 1,
+      "WorkerId": 1,
+      "StartDt": "2018-11-01"
+    }
+  }
+}

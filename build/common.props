@@ -1,0 +1,17 @@
+<Project>
+
+	<Import Project="version.props" />
+
+	<PropertyGroup Label="Package">
+		<Product>DBLayer</Product>
+		<Authors>savorboard;dotnetcore</Authors>
+    <RepositoryUrl>https://github.com/wutao0315/DBLayer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/19404084</PackageIconUrl>
+		<PackageProjectUrl>https://github.com/wutao0315/DBLayer</PackageProjectUrl>
+		<PackageLicenseUrl>https://github.com/wutao0315/DBLayer/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageTags>DBLayer;SqlServer;MySql;Oracle;Page;</PackageTags>
+    <Description>DBLayer simple orm.</Description>
+	</PropertyGroup>
+
+</Project>
