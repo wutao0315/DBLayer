@@ -11,7 +11,7 @@ namespace DBLayer.Persistence
     {
         public ConnectionString(IDictionary<string,string> properties,string connectionToken)
         {
-            this.Properties = properties;
+            this.Properties = properties ?? new Dictionary<string, string>();
             this.ConnectionToken = connectionToken;
             _connectionString = ParsePropertyTokens(ConnectionToken, Properties);
 

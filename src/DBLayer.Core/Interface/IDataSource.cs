@@ -9,20 +9,7 @@ namespace DBLayer.Core.Interface
 {
     public interface IDataSource
     {
-        //IConnectionString ConnectionString { get; }
-
-        //IDbProvider DbProvider { get; }
-
-
         #region 连接命令
-
-        ///// <summary>
-        ///// 创建事务
-        ///// </summary>
-        ///// <returns></returns>
-        //DbTransaction GetTransaction(bool disposeConnection = true);
-
-
         public IDbFactory DbFactory { get; }
 
         public IPagerGenerator PagerGenerator { get; }

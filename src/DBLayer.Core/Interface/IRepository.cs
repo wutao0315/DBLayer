@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,8 +17,9 @@ namespace DBLayer.Core.Interface
         {
             get => ()=>LogManager.CreateLogger(typeof(IRepository));
         }
-        
         IUnitOfWork Uow { get; }
+        IQueryable<T> Queryable<T>();
+
         #region insert
         /// <summary>
         /// 通过实体类型 T 向表中增加一条记录

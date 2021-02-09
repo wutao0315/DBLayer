@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace DBLayer.Persistence
@@ -41,6 +42,103 @@ namespace DBLayer.Persistence
                 : resultTmp;
 
             return resultTmp2;
+        }
+
+        public static Type GetSequenceType(this Type type)
+        {
+            var sequenceType = TryGetSequenceType(type);
+            if (sequenceType == null)
+            {
+                // TODO: Add exception message
+                throw new ArgumentException();
+            }
+
+            return sequenceType;
+        }
+
+#nullable enable
+
+        public static Type? TryGetSequenceType(this Type type)
+            => type.TryGetElementType(typeof(IEnumerable<>))
+                ?? type.TryGetElementType(typeof(IAsyncEnumerable<>));
+
+        public static Type? TryGetElementType(this Type type, Type interfaceOrBaseType)
+        {
+            if (type.IsGenericTypeDefinition)
+            {
+                return null;
+            }
+
+            var types = GetGenericTypeImplementations(type, interfaceOrBaseType);
+
+            Type? singleImplementation = null;
+            foreach (var implementation in types)
+            {
+                if (singleImplementation == null)
+                {
+                    singleImplementation = implementation;
+                }
+                else
+                {
+                    singleImplementation = null;
+                    break;
+                }
+            }
+
+            return singleImplementation?.GenericTypeArguments.FirstOrDefault();
+        }
+
+#nullable disable
+
+        public static bool IsCompatibleWith(this Type propertyType, Type fieldType)
+        {
+            if (propertyType.IsAssignableFrom(fieldType)
+                || fieldType.IsAssignableFrom(propertyType))
+            {
+                return true;
+            }
+
+            var propertyElementType = propertyType.TryGetSequenceType();
+            var fieldElementType = fieldType.TryGetSequenceType();
+
+            return propertyElementType != null
+                && fieldElementType != null
+                && IsCompatibleWith(propertyElementType, fieldElementType);
+        }
+        public static IEnumerable<Type> GetGenericTypeImplementations(this Type type, Type interfaceOrBaseType)
+        {
+            var typeInfo = type.GetTypeInfo();
+            if (!typeInfo.IsGenericTypeDefinition)
+            {
+                var baseTypes = interfaceOrBaseType.GetTypeInfo().IsInterface
+                    ? typeInfo.ImplementedInterfaces
+                    : type.GetBaseTypes();
+                foreach (var baseType in baseTypes)
+                {
+                    if (baseType.IsGenericType
+                        && baseType.GetGenericTypeDefinition() == interfaceOrBaseType)
+                    {
+                        yield return baseType;
+                    }
+                }
+
+                if (type.IsGenericType
+                    && type.GetGenericTypeDefinition() == interfaceOrBaseType)
+                {
+                    yield return type;
+                }
+            }
+        }
+        public static IEnumerable<Type> GetBaseTypes(this Type type)
+        {
+            type = type.BaseType;
+
+            while (type != null)
+            {
+                yield return type;
+
+                type = type.BaseType;
+            }
         }
     }
 }

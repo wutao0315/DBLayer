@@ -38,7 +38,7 @@ namespace DBLayer.Persistence.PagerGenerator
             
 
             var entityType = typeof(T);
-            entityType.GetDataTableAttribute(out string tableName);
+            var tableName = entityType.GetDataTableName();
             tableName = string.Format(dataSource.DbFactory.DbProvider.FieldFormat, tableName);
             var fields = dataSource.CreateAllEntityDicSql<T>(inclusionList);
 
@@ -68,8 +68,7 @@ namespace DBLayer.Persistence.PagerGenerator
             var cmdText = new StringBuilder();
             var entityType = typeof(T);
 
-            
-            entityType.GetDataTableAttribute(out string tableName);
+            var tableName = entityType.GetDataTableName();
             tableName = string.Format(dataSource.DbFactory.DbProvider.FieldFormat, tableName);
 
             var fields = dataSource.CreateAllEntityDicSql<T>(inclusionList);
@@ -98,8 +97,7 @@ namespace DBLayer.Persistence.PagerGenerator
         public void ProcessInsertId<T>(string fieldName, ref StringBuilder sbField, ref StringBuilder sbValue)
         {
             var entityType = typeof(T);
-            var tableName = string.Empty;
-            var dataTable = entityType.GetDataTableAttribute(out tableName);
+            var (dataTable, _) = entityType.GetDataTableAttribute();
 
             sbField.Append(fieldName.ToUpper());
             sbField.Append(",");
@@ -120,8 +118,7 @@ namespace DBLayer.Persistence.PagerGenerator
             var cmdText = new StringBuilder();
 
             var entityType = typeof(T);
-            var tableName = string.Empty;
-            var dataTable = entityType.GetDataTableAttribute(out tableName);
+            var (dataTable,_) = entityType.GetDataTableAttribute();
 
             cmdText.AppendLine("BEGIN ");
             cmdText.AppendFormat("{0}; ", insertCmd);
@@ -151,8 +148,7 @@ namespace DBLayer.Persistence.PagerGenerator
             var cmdText = new StringBuilder();
 
             var entityType = typeof(T);
-            var tableName = string.Empty;
-            var dataTable = entityType.GetDataTableAttribute(out tableName);
+            var (dataTable,_) = entityType.GetDataTableAttribute();
 
             cmdText.AppendLine("BEGIN ");
             cmdText.AppendFormat("{0}; \t\n", insertCmd);

@@ -30,7 +30,7 @@ namespace DBLayer.Core.Extensions
     }
     public class ConnectionStringOption
     {
-        public IDictionary<string,string> Properties { get; set; }
+        public IDictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
         public string ConnectionToken { get; set; }
     }
 

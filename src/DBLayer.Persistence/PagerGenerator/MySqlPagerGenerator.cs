@@ -36,7 +36,7 @@ namespace DBLayer.Persistence.PagerGenerator
             }
 
             var entityType = typeof(T);
-            entityType.GetDataTableAttribute(out string tableName);
+            var tableName = entityType.GetDataTableName();
             tableName = string.Format(dataSource.DbFactory.DbProvider.FieldFormat, tableName);
             var fields = dataSource.CreateAllEntityDicSql<T>(inclusionList);
 
@@ -68,7 +68,7 @@ namespace DBLayer.Persistence.PagerGenerator
 
             var entityType = typeof(T);
 
-            entityType.GetDataTableAttribute(out string tableName);
+            var tableName = entityType.GetDataTableName();
             tableName = string.Format(dataSource.DbFactory.DbProvider.FieldFormat, tableName);
 
             var fields = dataSource.CreateAllEntityDicSql<T>(inclusionList);

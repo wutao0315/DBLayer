@@ -172,7 +172,7 @@ namespace DBLayer.Persistence
                     // It'd be nice to have a cleaner way of doing this.
                     try
                     {
-                        property.GetDataFieldAttribute(out string fieldName);
+                        var fieldName = property.GetFieldName();
 
                         object value = null;
                         if (reader.ReaderExists(fieldName)) 
@@ -292,10 +292,6 @@ namespace DBLayer.Persistence
             var ts = new List<T>();
 
             // 获得此模型的类型
-            var type = typeof(T);
-
-            var tempName = "";
-
             foreach (DataRow dr in dt.Rows)
             {
                 T t = new T();
@@ -305,8 +301,8 @@ namespace DBLayer.Persistence
 
                 foreach (var pi in propertys)
                 {
-                    var datafieldAttribute = pi.GetDataFieldAttribute(out tempName);
 
+                    var tempName = pi.GetFieldName();
                     // 检查DataTable是否包含此列
                     if (dt.Columns.Contains(tempName))
                     {
@@ -314,7 +310,7 @@ namespace DBLayer.Persistence
                         if (!pi.CanWrite) continue;
 
                         var value = dr[tempName];
-                        if (value != DBNull.Value) 
+                        if (value != DBNull.Value)
                         {
                             var dataType = value.GetType();
                             if (pi.PropertyType == dataType)
@@ -326,7 +322,7 @@ namespace DBLayer.Persistence
                                 pi.SetValue(t, value.ChangeType(pi.PropertyType), null);
                             }
                         }
-                            
+
                     }
                 }
 
@@ -451,7 +447,7 @@ namespace DBLayer.Persistence
                     continue;
                 }
 
-                property.GetDataFieldAttribute(out string fieldName);
+                var fieldName = property.GetFieldName();
 
                 sqlFields.Append(prexAppend);
                 sqlFields.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, fieldName);

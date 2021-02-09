@@ -25,7 +25,7 @@ namespace DbLayer.CoreTest
     public class UnitTest1
     {
         [TestMethod]
-        public async Task TestIocConfigAddUpdateSelectDelete()
+        public void TestIocConfigAddUpdateSelectDelete()
         {
             var builder = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory() + "/Config")
@@ -48,47 +48,43 @@ namespace DbLayer.CoreTest
             });
 
 
-            using (var bsp = services.BuildServiceProvider())
+            using var bsp = services.BuildServiceProvider();
+            var service = bsp.GetService<IUcDynamicRepository>();
+
+            var myData = service.GetMyData();
+
+            using var uow = bsp.GetService<IUnitOfWork>();
+            try
             {
-                var service = bsp.GetService<IUcDynamicRepository>();
-
-                var myData = service.GetMyData();
-
-                using (var uow = bsp.GetService<IUnitOfWork>())
+                uow.BeginTransaction();
+                var id = service.InsertEntity(() => new UcDynamic
                 {
-                    try
-                    {
-                        uow.BeginTransaction();
-                        var id = service.InsertEntity(() => new UcDynamic
-                        {
-                            Id = -1,
-                            Type = 1,
-                            Data = "",
-                            CreateDt = DateTime.Now,
-                            UserId = -1
-                        });
-                        service.UpdateEntity(() => new UcDynamic
-                        {
-                            Data = "test",
-                        }, w => w.Id == id);
+                    Id = -1,
+                    Type = 1,
+                    Data = "",
+                    CreateDt = DateTime.Now,
+                    UserId = -1
+                });
+                service.UpdateEntity(() => new UcDynamic
+                {
+                    Data = "test",
+                }, w => w.Id == id);
 
-                        var cmdText = "select a.*,a.data as DataContent from uc_dynamic a where a.id = @id";
-                        var entityData = service.GetEntity<UcDynamicExtInfo>(cmdText, new { id });
+                var cmdText = "select a.*,a.data as DataContent from uc_dynamic a where a.id = @id";
+                var entityData = service.GetEntity<UcDynamicExtInfo>(cmdText, new { id });
 
-                        var entity = service.GetEntity(w => w.Id == id && w.Data == "test");
-                        var list = service.GetEntityList(w => w.Data == "test");
-                        service.DeleteEntity(w => w.Id == id);
+                var entity = service.GetEntity(w => w.Id == id && w.Data == "test");
+                var list = service.GetEntityList(w => w.Data == "test");
+                service.DeleteEntity(w => w.Id == id);
 
-                        var count = list.Count();
-                         Assert.AreEqual(1, count);
+                var count = list.Count();
+                Assert.AreEqual(1, count);
 
-                        uow.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        uow.Rollback();
-                    }
-                }
+                uow.Commit();
+            }
+            catch
+            {
+                uow.Rollback();
             }
 
             //using (var bsp = services.BuildServiceProvider())
@@ -204,49 +200,47 @@ namespace DbLayer.CoreTest
 
             //services.AddTransient<IUcDynamicRepository, UcDynamicRepository>();
 
-            using (var bsp = services.BuildServiceProvider())
-            {
-                var service = bsp.GetService<IUcDynamicRepository>();
+            using var bsp = services.BuildServiceProvider();
+            var service = bsp.GetService<IUcDynamicRepository>();
 
-                var id = 261772383541661696L;
-                var record = await service.GetEntityAsync<WkgJobRecord>(w => w.WjrId == id && w.WjrStatus > 1);
+            var id = 261772383541661696L;
+            var record = await service.GetEntityAsync<WkgJobRecord>(w => w.WjrId == id && w.WjrStatus > 1);
 
-                //var myData = service.GetMyData();
+            //var myData = service.GetMyData();
 
-                //using (var uow = bsp.GetService<IUnitOfWork>())
-                //{
-                //    try
-                //    {
-                //        uow.BeginTransaction();
-                //        var id = service.InsertEntity(() => new UcDynamic
-                //        {
-                //            Id = -1,
-                //            Type = 1,
-                //            Data = "",
-                //            CreateDt = DateTime.Now,
-                //            UserId = -1
-                //        });
-                //        service.UpdateEntity(() => new UcDynamic
-                //        {
-                //            Data = "test",
-                //        }, w => w.Id == id);
+            //using (var uow = bsp.GetService<IUnitOfWork>())
+            //{
+            //    try
+            //    {
+            //        uow.BeginTransaction();
+            //        var id = service.InsertEntity(() => new UcDynamic
+            //        {
+            //            Id = -1,
+            //            Type = 1,
+            //            Data = "",
+            //            CreateDt = DateTime.Now,
+            //            UserId = -1
+            //        });
+            //        service.UpdateEntity(() => new UcDynamic
+            //        {
+            //            Data = "test",
+            //        }, w => w.Id == id);
 
 
-                //        var entity = service.GetEntity(w => w.Id == id && w.Data == "test");
-                //        var list = service.GetEntityList(w => w.Data == "test", null);
-                //        //service.DeleteEntity(w => w.Id == id);
+            //        var entity = service.GetEntity(w => w.Id == id && w.Data == "test");
+            //        var list = service.GetEntityList(w => w.Data == "test", null);
+            //        //service.DeleteEntity(w => w.Id == id);
 
-                //        var count = list.Count();
-                //        Assert.AreEqual(1, count);
+            //        var count = list.Count();
+            //        Assert.AreEqual(1, count);
 
-                //        uow.Commit();
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        uow.Rollback();
-                //    }
-                //}
-            }
+            //        uow.Commit();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        uow.Rollback();
+            //    }
+            //}
         }
     }
     public interface IUcDynamicRepository : IRepository<UcDynamic, long>

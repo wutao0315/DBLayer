@@ -9,32 +9,26 @@ using System.Text;
 
 namespace DBLayer.Persistence
 {
-    public enum DirAway {
-    Left,Right
-    }
     internal static class FuncExtensions
     {
-
         #region Where Expression
-
         internal static StringBuilder Where<T>(this IDataSource dataSource, Expression<Func<T, bool>> func, ref List<DbParameter> paramerList) where T : new()
         {
             var result = new StringBuilder();
             if (func!=null) 
             {
                 var index = 0;
-                if (func.Body is BinaryExpression)
+                if (func.Body is BinaryExpression be)
                 {
-                    var be = ((BinaryExpression)func.Body);
                     result = BinarExpressionProvider(dataSource,be.Left, be.Right, be.NodeType, ref index, ref paramerList);
                     //去除多余括号
                     result.Remove(0, 1);
-                    result.Length = result.Length - 1;
+                    result.Length -= 1;
                     result.Insert(0, " WHERE ");
                 }
                 else if (func.Body is MethodCallExpression)
                 {
-                    result = ExpressionRouter(dataSource,func.Body, DirAway.Left, ref index, ref paramerList);
+                    result = ExpressionRouter(dataSource, func.Body, DirAway.Left, ref index, ref paramerList);
                     result.Insert(0, " WHERE ");
                 }
             }
@@ -46,7 +40,6 @@ namespace DBLayer.Persistence
             var sb = new StringBuilder("(");
             //先处理左边
             sb.Append(ExpressionRouter(dataSource,left, DirAway.Left, ref index, ref paramerList));
-
             sb.Append(ExpressionTypeCast(type));
 
             //再处理右边
@@ -54,12 +47,12 @@ namespace DBLayer.Persistence
             if (tmpStr.ToString() == "null")
             {
                 if (sb.ToString().EndsWith(" =")){
-                    sb.Length =sb.Length-2;
+                    sb.Length -= 2;
                     sb.Append(" IS NULL");
                 }
                 else if (sb.ToString().EndsWith("<>"))
                 {
-                    sb.Length = sb.Length - 2;
+                    sb.Length -= 2;
                     sb.Append( " IS NOT NULL");
                 }
             }
@@ -75,18 +68,15 @@ namespace DBLayer.Persistence
         {
             var sb =new StringBuilder();
 
-            if (exp is BinaryExpression)
+            if (exp is BinaryExpression be)
             {
-                var be = ((BinaryExpression)exp);
                 sb = BinarExpressionProvider(dataSource,be.Left, be.Right, be.NodeType, ref index, ref paramerList);
             }
-            else if (exp is MemberExpression)
+            else if (exp is MemberExpression me)
             {
-                var me = ((MemberExpression)exp);
-
                 if (away == DirAway.Left)
                 {
-                    sb.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, GetFieldName(me.Member));
+                    sb.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, me.Member.GetFieldName());
                 }
                 else { 
                 //把member的值读出来
@@ -94,105 +84,109 @@ namespace DBLayer.Persistence
                 }
                 
             }
-            else if (exp is NewArrayExpression)
+            else if (exp is NewArrayExpression ae)
             {
-                var ae = ((NewArrayExpression)exp);
-                    if (isFunc)
+                if (isFunc)
+                {
+                    var tmpstr = new StringBuilder();
+                    foreach (var ex in ae.Expressions)
                     {
-                        var tmpstr = new StringBuilder();
-                        foreach (var ex in ae.Expressions)
-                        {
-                            tmpstr.Append(ExpressionRouter(dataSource,ex, DirAway.Left, ref index, ref paramerList));
-                            tmpstr.Append(",");
-                        }
-
-                        if (tmpstr.Length > 0)
-                        {
-                            tmpstr.Length = tmpstr.Length - 1;
-                            var result = dataSource.DbFactory.DbProvider.ParameterPrefix + "fs_param_" + index;
-
-                            sb.Append(result);
-                            paramerList.Add(dataSource.CreateParameter(result, tmpstr.ToString()));
-                            index++;
-                        }
+                        tmpstr.Append(ExpressionRouter(dataSource,ex, DirAway.Left, ref index, ref paramerList));
+                        tmpstr.Append(",");
                     }
-                    else {
-                        var tmpstr = new StringBuilder();
-                        var arrayIndex = 0;
-                        foreach (var ex in ae.Expressions)
-                        {
-                            var result = string.Concat(dataSource.DbFactory.DbProvider.ParameterPrefix ,"arr_param_",index,"_"+arrayIndex);
-                            var value = ExpressionRouter(dataSource,ex, DirAway.Left, ref index, ref paramerList);
 
-                            paramerList.Add(dataSource.CreateParameter(result, value.ToString()));
+                    if (tmpstr.Length > 0)
+                    {
+                        tmpstr.Length -= 1;
+                        var result = dataSource.DbFactory.DbProvider.ParameterPrefix + "fs_param_" + index;
 
-                            tmpstr.Append(result);
-                            tmpstr.Append(",");
-
-                            arrayIndex++;
-                        }
-
-                        if (tmpstr.Length > 0)
-                        {
-                            tmpstr.Length = tmpstr.Length - 1;
-                            sb.Append(tmpstr);
-                            index++;
-                        }
+                        sb.Append(result);
+                        paramerList.Add(dataSource.CreateParameter(result, tmpstr.ToString()));
+                        index++;
                     }
-                    
-                   
+                }
+                else {
+                    var tmpstr = new StringBuilder();
+                    var arrayIndex = 0;
+                    foreach (var ex in ae.Expressions)
+                    {
+                        var result = string.Concat(dataSource.DbFactory.DbProvider.ParameterPrefix ,"arr_param_",index,"_"+arrayIndex);
+                        var value = ExpressionRouter(dataSource,ex, DirAway.Left, ref index, ref paramerList);
+
+                        paramerList.Add(dataSource.CreateParameter(result, value.ToString()));
+
+                        tmpstr.Append(result);
+                        tmpstr.Append(",");
+
+                        arrayIndex++;
+                    }
+
+                    if (tmpstr.Length > 0)
+                    {
+                        tmpstr.Length -= 1;
+                        sb.Append(tmpstr);
+                        index++;
+                    }
+                }
             }
-            else if (exp is MethodCallExpression)
+            else if (exp is MethodCallExpression mce)
             {
-                var mce = (MethodCallExpression)exp;
-                if (mce.Method.Name == "Like")
+                if (mce.Method.Name == nameof(Core.FuncExtensions.Like))
                 {
-                    sb.AppendFormat("({0} LIKE {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource,mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
+                    sb.AppendFormat("({0} LIKE {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "NotLike")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.NotLike))
                 {
-                    sb.AppendFormat("({0} NOT LIKE {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource,mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
+                    sb.AppendFormat("({0} NOT LIKE {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "Less")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.Less))
                 {
                     sb.AppendFormat("({0} < {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "LessEqual")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.LessEqual))
                 {
                     sb.AppendFormat("({0} <= {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "Greater")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.Greater))
                 {
                     sb.AppendFormat("({0} > {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "GreaterEqual")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.GreaterEqual))
                 {
                     sb.AppendFormat("({0} >= {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "In")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.In))
                 {
-                    sb.AppendFormat("{0} IN ({1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource,mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
+                    sb.AppendFormat("{0} IN ({1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "NotIn")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.NotIn))
                 {
-                    sb.AppendFormat("{0} NOT IN ({1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource,mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
+                    sb.AppendFormat("{0} NOT IN ({1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
                 }
-                else if (mce.Method.Name == "InFunc")
+                //else if (mce.Method.Name == "Contains")
+                //{
+                //    if (mce.Object != null)
+                //    {
+                //        return Like(MethodCall);
+                //    }
+                //    return In(mce, value);
+                //}
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.InFunc))
                 {
-                    var leftString=ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList); 
-                    var rightString=ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList, true);
+                    var leftString = ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList);
+                    var rightString = ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList, true);
 
-                    var infunc = dataSource.PagerGenerator.GetInFunc(() => 
-                    { 
+                    var infunc = dataSource.PagerGenerator.GetInFunc(() =>
+                    {
                         return leftString;
-                    }, () => 
+                    }, () =>
                     {
                         return rightString;
                     });
 
                     sb.Append(infunc);
                 }
-                else if (mce.Method.Name == "NotInFunc")
+                else if (mce.Method.Name == nameof(Core.FuncExtensions.NotInFunc))
                 {
                     var leftString = ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList);
                     var rightString = ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList, true);
@@ -207,19 +201,27 @@ namespace DBLayer.Persistence
 
                     sb.Append(infunc);
                 }
-                else if (away==DirAway.Right)
+                else if (away == DirAway.Right)
                 {
-                    sb.Append(ExpressionRouter(dataSource,GetReduceOrConstant(mce), away, ref index, ref paramerList, isFunc));
+                    sb.Append(ExpressionRouter(dataSource, GetReduceOrConstant(mce), away, ref index, ref paramerList, isFunc));
                 }
 
             }
-            else if (exp is ConstantExpression)
+            else if (exp is ConstantExpression ce)
             {
-                var ce = ((ConstantExpression)exp);
                 if (away == DirAway.Right)
                 {
-                    if (!(ce.Value is Array))
+                    if (ce.Value is Array arrayData)
                     {
+                        var list = new List<Expression>();
+                        foreach (var item in arrayData)
+                        {
+                            list.Add(Expression.Constant(item));
+                        }
+
+                        sb.Append(ExpressionRouter(dataSource, Expression.NewArrayInit(arrayData.GetValue(0).GetType(), list), away, ref index, ref paramerList, isFunc));
+                    }
+                    else {
                         var result = dataSource.DbFactory.DbProvider.ParameterPrefix + "wh_param_" + index;
                         sb.Append(result);
                         if (ce.Value == null || ce.Value is DBNull)
@@ -237,16 +239,6 @@ namespace DBLayer.Persistence
                         }
                         index++;
                     }
-                    else {
-                        var arrayData=(Array)ce.Value;
-                        var list=new List<Expression>();
-                        foreach (var item in arrayData)
-	                    {
-		                   list.Add(Expression.Constant(item)); 
-	                    }
-
-                        sb.Append(ExpressionRouter(dataSource,Expression.NewArrayInit(arrayData.GetValue(0).GetType(), list), away, ref index, ref paramerList, isFunc));
-                    }
                 }
                 else {
                     if (ce.Value == null)
@@ -259,9 +251,8 @@ namespace DBLayer.Persistence
                     }
                 }
             }
-            else if (exp is UnaryExpression)
+            else if (exp is UnaryExpression ue)
             {
-                var ue = ((UnaryExpression)exp);
                 return ExpressionRouter(dataSource,ue.Operand, away, ref index, ref paramerList, isFunc);
             }
             else {
@@ -296,22 +287,22 @@ namespace DBLayer.Persistence
                 case ExpressionType.Add:
                 case ExpressionType.AddChecked:
                     return "+";
-                //case ExpressionType.AddAssign:
-                //case ExpressionType.AddAssignChecked:
-                //    return "+=";
+                case ExpressionType.AddAssign:
+                case ExpressionType.AddAssignChecked:
+                    return "+=";
                 case ExpressionType.Subtract:
                 case ExpressionType.SubtractChecked:
                     return "-";
-                //case ExpressionType.SubtractAssign:
-                //case ExpressionType.SubtractAssignChecked:
-                //    return "-=";
+                case ExpressionType.SubtractAssign:
+                case ExpressionType.SubtractAssignChecked:
+                    return "-=";
                 case ExpressionType.Divide:
                     return "/";
                 case ExpressionType.Multiply:
                 case ExpressionType.MultiplyChecked:
                     return "*";
                 default:
-                    return null;
+                    throw new Exception($"不支持{type}此种运算符查找！");
             }
         }
         #endregion
@@ -323,41 +314,38 @@ namespace DBLayer.Persistence
             if (func != null)
             {
                 result.Append(" ORDER BY ");
-                result.Append(dataSource.ExpressionOrderRoute(func));
+                result.Append(dataSource.ExpressionOrderRoute<T>(func));
             }
             return result;
         }
 
-        static StringBuilder ExpressionOrderRoute(this IDataSource dataSource, Expression exp)
+        static StringBuilder ExpressionOrderRoute<T>(this IDataSource dataSource, Expression exp) where T : new()
         {
             var result = new StringBuilder();
 
-            if (exp is LambdaExpression)
+            if (exp is LambdaExpression lmd)
             {
-                var lmd = (LambdaExpression)exp;
-                result.Append(dataSource.ExpressionOrderRoute(lmd.Body));
+                result.Append(dataSource.ExpressionOrderRoute<T>(lmd.Body));
             }
-            else if (exp is MethodCallExpression)
+            else if (exp is MethodCallExpression mce)
             {
-                var mce = (MethodCallExpression)exp;
                 if (mce.Object is MethodCallExpression) {
-                    result.Append(dataSource.ExpressionOrderRoute(mce.Object));
+                    result.Append(dataSource.ExpressionOrderRoute<T>(mce.Object));
                     result.Append(",");
                 }
-                if (mce.Method.Name == "OrderBy")
-                    return result.AppendFormat("{0} ASC", dataSource.ExpressionOrderRoute(mce.Arguments[0]));
-                else if (mce.Method.Name == "OrderByDesc")
-                    return result.AppendFormat("{0} DESC", dataSource.ExpressionOrderRoute(mce.Arguments[0]));
+                if (mce.Method.Name == nameof(System.Linq.Enumerable.OrderBy))
+                    return result.AppendFormat("{0} ASC", dataSource.ExpressionOrderRoute<T>(mce.Arguments[0]));
+                else if (mce.Method.Name == nameof(OrderExpression<T>.OrderByDesc) 
+                    || mce.Method.Name == nameof(System.Linq.Enumerable.OrderByDescending))
+                    return result.AppendFormat("{0} DESC", dataSource.ExpressionOrderRoute<T>(mce.Arguments[0]));
             }
-            else if (exp is MemberExpression)
+            else if (exp is MemberExpression me)
             {
-                var me = ((MemberExpression)exp);
-                result.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, GetFieldName(me.Member));
+                result.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, me.Member.GetFieldName());
             }
-            else if (exp is UnaryExpression)
+            else if (exp is UnaryExpression ue)
             {
-                var ue = ((UnaryExpression)exp);
-                result.Append(dataSource.ExpressionOrderRoute(ue.Operand));
+                result.Append(dataSource.ExpressionOrderRoute<T>(ue.Operand));
             }
             return result;
         }
@@ -393,35 +381,26 @@ namespace DBLayer.Persistence
 
             var result = new StringBuilder();
 
-            if (exp is MemberInitExpression)
+            if (exp is MemberInitExpression minit)
             {
-
-                var minit = (MemberInitExpression)exp;
                 //var sb = new StringBuilder();
                 foreach (var item in minit.Bindings)
                 {
 
-                    if (item is MemberAssignment)
+                    if (item is MemberAssignment myItem)
                     {
-                        var myItem = (MemberAssignment)item;
-
                         var isKey = false;
                         var isAuto = false;
                         var keyType = KeyType.SEQ;
 
                         var fieldName = myItem.Member.Name;
-
-                        object[] oArr = myItem.Member.GetCustomAttributes(true);
-                        for (int i = 0; i < oArr.Length; i++)
+                        var df = myItem.Member.GetCustomAttribute<DataFieldAttribute>(true);
+                        if (df != null)
                         {
-                            if (oArr[i] is DataFieldAttribute)
-                            {
-                                var df = (DataFieldAttribute)oArr[i];
-                                fieldName = df.FieldName;
-                                isKey = df.IsKey;
-                                isAuto = df.IsAuto;
-                                keyType = df.KeyType;
-                            }
+                            fieldName = df.FieldName;
+                            isKey = df.IsKey;
+                            isAuto = df.IsAuto;
+                            keyType = df.KeyType;
                         }
 
                         if (isKey && isAuto && keyType == KeyType.SEQ)
@@ -430,7 +409,7 @@ namespace DBLayer.Persistence
                         }
                         else
                         {
-                            result.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, GetFieldName(myItem.Member));
+                            result.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, myItem.Member.GetFieldName());
                             result.Append(" = ");
                             result.Append(ExpressionUpdateRouter<T>(dataSource,myItem.Expression, DirAway.Right, ref index, ref paramerList));
                             result.Append(",");
@@ -439,18 +418,16 @@ namespace DBLayer.Persistence
                 }
                 if (result.Length > 0)
                 {
-                    result.Length = result.Length - 1;
+                    result.Length -= - 1;
                 }
             }
-            else if (exp is MemberExpression)
+            else if (exp is MemberExpression mbe)
             {
-                var mbe = (MemberExpression)exp;
-                var nodeType = mbe.NodeType;
                 if (mbe.Member.MemberType == MemberTypes.Property)
                 {
                     if (away == DirAway.Left)
                     {
-                        result.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, GetFieldName(mbe.Member));
+                        result.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, mbe.Member.GetFieldName());
                     }
                     else {
                         result = ExpressionUpdateRouter<T>(dataSource,GetReduceOrConstant(mbe), away, ref index, ref paramerList);
@@ -494,16 +471,13 @@ namespace DBLayer.Persistence
                     
                 }
             }
-            else if (exp is UnaryExpression)
+            else if (exp is UnaryExpression uny)
             {
-                var uny = (UnaryExpression)exp;
                 result = ExpressionUpdateRouter<T>(dataSource,uny.Operand, away, ref index, ref paramerList);
             }
-            else if (exp is ConstantExpression)
+            else if (exp is ConstantExpression ce)
             {
-                
                 var paramName = dataSource.DbFactory.DbProvider.ParameterPrefix+ "ud_param_" + index;
-                var ce = (ConstantExpression)exp;
 
                 if (ce.Value == null|| ce.Value is DBNull)
                 {
@@ -572,17 +546,13 @@ namespace DBLayer.Persistence
                         var keyType=KeyType.SEQ;
 
                         var fieldName = myItem.Member.Name;
-
-                        var oArr = myItem.Member.GetCustomAttributes(true);
-                        for (int i = 0; i < oArr.Length; i++)
+                        var df = myItem.Member.GetCustomAttribute<DataFieldAttribute>(true);
+                        if (df!=null) 
                         {
-                            if (oArr[i] is DataFieldAttribute df)
-                            {
-                                fieldName = df.FieldName;
-                                isKey = df.IsKey;
-                                isAuto = df.IsAuto;
-                                keyType = df.KeyType;
-                            }
+                            fieldName = df.FieldName;
+                            isKey = df.IsKey;
+                            isAuto = df.IsAuto;
+                            keyType = df.KeyType;
                         }
 
                         if (isKey && isAuto)
@@ -656,7 +626,7 @@ namespace DBLayer.Persistence
                 {
                     if (away == DirAway.Left)
                     {
-                        resultKey = new StringBuilder(string.Format(dataSource.DbFactory.DbProvider.FieldFormat, GetFieldName(mbe.Member)));
+                        resultKey = new StringBuilder(string.Format(dataSource.DbFactory.DbProvider.FieldFormat, mbe.Member.GetFieldName()));
                     }
                     else
                     {
@@ -759,26 +729,6 @@ namespace DBLayer.Persistence
         }
         #endregion
 
-        static string GetFieldName(MemberInfo member)
-        {
-            var fieldName = member.Name;
-
-            var oArr = member.GetCustomAttributes(true);
-            if (oArr != null && oArr.Length>0) {
-                foreach (var item in oArr)
-                {
-                    if (item is DataFieldAttribute)
-                    {
-                        var df = (DataFieldAttribute)item;
-                        fieldName = df.FieldName;
-                        break;
-                    }
-                }
-            }
-            return fieldName;
-        
-        }
-
         /// <summary>
         /// 利用反射返回参数集合
         /// </summary>
@@ -804,5 +754,9 @@ namespace DBLayer.Persistence
             }
             return result.ToArray();
         }
+    }
+    enum DirAway
+    {
+        Left, Right
     }
 }

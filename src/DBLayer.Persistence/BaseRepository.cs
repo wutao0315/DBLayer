@@ -3,6 +3,7 @@ using DBLayer.Core.Condition;
 using DBLayer.Core.Interface;
 using DBLayer.Core.Logging;
 using DBLayer.Core.Utilities;
+using DBLayer.Persistence.Linq;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -41,9 +42,10 @@ namespace DBLayer.Persistence
             _pagerGenerator = dbContext.PagerGenerator;
             _httpContextAccessor = dbContext.HttpContextAccesser;
         }
-
-        
-
+        public IQueryable<T> Queryable<T>() 
+        {
+            return new SqlQueryable<T>();
+        }
         #region public method
         protected readonly IGenerator _generator;
         protected readonly IPagerGenerator _pagerGenerator;
@@ -2141,6 +2143,7 @@ namespace DBLayer.Persistence
             var result = GetSingle<R>(data);
             return result;
         }
+
         #region 分页
         /// <summary>
         /// 生成分页sql
@@ -2688,7 +2691,7 @@ namespace DBLayer.Persistence
             var cmdText = new StringBuilder();
 
             var entityType = typeof(T);
-            entityType.GetDataTableAttribute(out string tableName);
+            var tableName = entityType.GetDataTableName();
             tableName = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, tableName);
 
             cmdText.AppendFormat("SELECT COUNT(0) FROM {0} {1}", tableName, whereStr);
@@ -2732,8 +2735,8 @@ namespace DBLayer.Persistence
             var propertyInfos = entityType.GetProperties();
             var sqlFields = new StringBuilder();
             var sqlValues = new StringBuilder();
-            
-            entityType.GetDataTableAttribute(out string tableName);
+
+            var tableName = entityType.GetDataTableName();
             tableName = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, tableName);
             cmdText = new StringBuilder("");
             
@@ -2750,7 +2753,7 @@ namespace DBLayer.Persistence
 
                 var propVal = property.GetValue(entity, null);
 
-                var da = property.GetDataFieldAttribute(out string fieldName);
+                var (da, fieldName) = property.GetDataFieldAttribute();
                 if (da != null)
                 {
                     if (da.IsKey && da.IsAuto && da.KeyType == KeyType.SEQ)
@@ -2839,7 +2842,7 @@ namespace DBLayer.Persistence
         {
             var entityType = typeof(T);
 
-            entityType.GetDataTableAttribute(out string tableName);
+            string tableName = entityType.GetDataTableName();
             tableName = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, tableName);
 
             var cmdText = $"INSERT INTO {tableName} ";
@@ -2862,7 +2865,7 @@ namespace DBLayer.Persistence
             var propertyInfos = entityType.GetProperties();
             var sqlFields = new StringBuilder();
             var sqlValues = new StringBuilder();
-            entityType.GetDataTableAttribute(out string tableName);
+            string tableName = entityType.GetDataTableName();
             tableName = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, tableName);
 
             foreach (var property in propertyInfos)
@@ -2874,8 +2877,8 @@ namespace DBLayer.Persistence
                 {
                     continue;
                 }
-
-                var datafieldAttribute = property.GetDataFieldAttribute(out string fieldName);
+                
+                var (datafieldAttribute, fieldName) = property.GetDataFieldAttribute();
 
                 object oval;
                 if (datafieldAttribute != null)
@@ -2934,7 +2937,7 @@ namespace DBLayer.Persistence
         {
             var entityType = typeof(T);
 
-            entityType.GetDataTableAttribute(out string tableName);
+            string tableName = entityType.GetDataTableName();
             tableName = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, tableName);
 
             var cmdText = $"UPDATE {tableName} SET ";
@@ -2943,35 +2946,6 @@ namespace DBLayer.Persistence
         }
 
 
-        //private string CreateAllEntityDicSql<T>(params string[] inclusionList)
-        //{
-
-        //    var entityType = typeof(T);
-        //    var propertyInfos = entityType.GetProperties();
-        //    var sqlFields = new StringBuilder();
-        //    foreach (var property in propertyInfos)
-        //    {
-        //        //不可读
-        //        if (!property.CanRead || !property.CanWrite || (inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Name)))
-        //        {
-        //            continue;
-        //        }
-
-        //        property.GetDataFieldAttribute(out string fieldName);
-
-        //        sqlFields.AppendFormat(_dataSource.DbFactory.DbProvider.FieldFormat, fieldName);
-        //        sqlFields.Append(" AS ");
-        //        sqlFields.AppendFormat(_dataSource.DbFactory.DbProvider.FieldFormat, property.Name);
-
-        //        sqlFields.Append(",");
-        //    }
-
-        //    if (sqlFields.Length > 0)
-        //    {
-        //        sqlFields.Length = sqlFields.Length - 1;
-        //    }
-        //    return sqlFields.ToString();
-        //}
 
         /// <summary>
         /// 删除所有该表的数据的sql
@@ -2981,7 +2955,7 @@ namespace DBLayer.Persistence
         private string CreateDeleteAllSql<T>()
         {
             var entityType = typeof(T);
-            entityType.GetDataTableAttribute(out string tableName);
+            string tableName = entityType.GetDataTableName();
             tableName = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, tableName);
 
             var cmdText = $"DELETE FROM {tableName} ";
@@ -2990,6 +2964,7 @@ namespace DBLayer.Persistence
         }
 
         #endregion
+
         /// <summary>
         /// 获取查询需要的字段
         /// </summary>

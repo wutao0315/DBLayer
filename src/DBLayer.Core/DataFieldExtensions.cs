@@ -15,7 +15,7 @@ namespace DBLayer.Core
 {
     public static class DataFieldExtensions
     {
-        public static bool IsExcluded(this IEnumerable<string> inclusionList, string propertyName)
+        internal static bool IsExcluded(this IEnumerable<string> inclusionList, string propertyName)
         {
             //var isSuccess = inclusionList?.Contains(propertyName, StringComparer.OrdinalIgnoreCase)??false;
             //return !isSuccess;
@@ -30,33 +30,68 @@ namespace DBLayer.Core
         /// </summary>
         /// <param name="entityType">Class类</param>
         /// <returns>DataFieldAttribute</returns>
-        public static DataFieldAttribute GetDataFieldAttribute(this PropertyInfo prop, out string fieldName)
+        internal static (DataFieldAttribute, string) GetDataFieldAttribute(this PropertyInfo prop)
         {
-            fieldName = prop.Name;
+            var fieldName = prop.Name;
             var result = prop.GetCustomAttribute<DataFieldAttribute>(true);
             if (result != null) 
             {
                 fieldName = result.FieldName;
             }
-            return result;
+            return (result, fieldName);
             
         }
-       
+        internal static string GetFieldName(this PropertyInfo member)
+        {
+            var fieldName = member.Name;
 
+            var df = member.GetCustomAttribute<DataFieldAttribute>(true);
+            if (df != null)
+            {
+                fieldName = df.FieldName;
+            }
+            return fieldName;
+        }
+        internal static string GetFieldName(this MemberInfo member)
+        {
+            var fieldName = member.Name;
+
+            var df = member.GetCustomAttribute<DataFieldAttribute>(true);
+            if (df != null)
+            {
+                fieldName = df.FieldName;
+            }
+            return fieldName;
+        }
         /// <summary>
         ///  获取DataFieldAttribute特性
         /// </summary>
-        /// <param name="entityType">Class类</param>
+        /// <param name="propType">Class类</param>
         /// <returns>DataFieldAttribute</returns>
-        public static DataTableAttribute GetDataTableAttribute(this Type propType, out string tableName)
+        internal static string GetDataTableName(this Type propType)
         {
-            tableName = propType.Name;
+            var tableName = propType.Name;
             var result = propType.GetCustomAttribute<DataTableAttribute>(true);
             if (result != null)
             {
                 tableName = result.TableName;
             }
-            return result;
+            return tableName;
+        }
+        /// <summary>
+        ///  获取DataFieldAttribute特性
+        /// </summary>
+        /// <param name="entityType">Class类</param>
+        /// <returns>DataFieldAttribute</returns>
+        internal static (DataTableAttribute, string) GetDataTableAttribute(this Type propType)
+        {
+            var tableName = propType.Name;
+            var result = propType.GetCustomAttribute<DataTableAttribute>(true);
+            if (result != null)
+            {
+                tableName = result.TableName;
+            }
+            return (result, tableName);
         }
     }
 }
