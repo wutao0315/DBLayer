@@ -388,45 +388,6 @@ namespace DBLayer.Persistence
             
         }
 
-        /// <summary>
-        /// 利用反射根据对象和属性名取对应属性的值
-        /// </summary>
-        /// <param name="feildname"></param>
-        /// <param name="obEntity"></param>
-        /// <returns></returns>
-        public static string GetValueByPropertyName(this object obEntity, string feildname )
-        {
-            var PropertyVaule = string.Empty;
-            var tpEntity = obEntity.GetType();
-            var pis = tpEntity.GetProperties();
-            var a = pis.FirstOrDefault(m => m.Name == feildname);
-            if (a != null)
-            {
-                object obj = a.GetValue(obEntity, null);
-                if (obj != null)
-                {
-                    PropertyVaule = obj.ToString();
-                }
-            }
-            return PropertyVaule;
-        }
-        /// <summary>
-        /// 利用反射根据对象和属性名为对应的属性赋值
-        /// </summary>
-        /// <param name="feildname"></param>
-        /// <param name="obEntity"></param>
-        /// <returns></returns>
-        public static void SetValueByPropertyName(this object obEntity, string feildname, object Value)
-        {
-            var tpEntity = obEntity.GetType();
-            var pis = tpEntity.GetProperties();
-            var a = pis.FirstOrDefault(m => m.Name == feildname);
-            if (a != null)
-            {
-                a.SetValue(obEntity,Value.ChangeType(a.PropertyType), null);
-            }
-        }
-
         public static StringBuilder CreateAllEntityDicSql<T>(this IDataSource dataSource,string[] inclusionList, string prex = "")
         {
             var sqlFields = new StringBuilder();

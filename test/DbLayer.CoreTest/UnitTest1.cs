@@ -25,6 +25,104 @@ namespace DbLayer.CoreTest
     public class UnitTest1
     {
         [TestMethod]
+        public async Task TestBaseEntity()
+        {
+            var builder = new ConfigurationBuilder()
+                 .SetBasePath(Directory.GetCurrentDirectory() + "/Config")
+                 .AddJsonFile("dblayer.json", false, true);
+
+            var config = builder.Build();
+
+            IServiceCollection services = new ServiceCollection();
+            services.Configure<DBLayerOption>(config.GetSection("dblayer"));
+            services.AddLogging();
+
+
+            services.AddDBLayerDefault("DbLayer.CoreTest");
+
+            services.AddLogging((loggerBuilder) =>
+            {
+                loggerBuilder.ClearProviders();
+                loggerBuilder.SetMinimumLevel(LogLevel.Debug);
+                loggerBuilder.AddConsole();
+            });
+
+            using var bsp = services.BuildServiceProvider();
+            var service = bsp.GetService<IUcHelpRepository>();
+
+            var qty = await service.UpdateEntityAsync(() => new UcHelp
+            {
+                Title = "title2",
+                CodeValue = "value2",
+                Content = "content2",
+            }, w => w.Id == 1);
+
+
+            //Task.Run(async () => {
+
+            //    while (true)
+            //    {
+            //        try
+            //        {
+            //            service.Uow.BeginTransaction();
+            //            var qty = await service.UpdateEntityAsync(() => new UcHelp
+            //            {
+            //                Title = "title1",
+            //                CodeValue = "value1",
+            //                Content = "content1",
+            //            }, w => w.Id == id);
+            //            //var entity = await service.GetEntityAsync(w => w.Id == id);
+            //            //var list = await service.GetEntityListAsync(w => w.Id == id);
+            //            // await service.DeleteEntityAsync(w => w.Id == id);
+            //            //var count = list.Count();
+            //            //Assert.AreEqual(1, count);
+
+            //            service.Uow.Commit();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            service.Uow.Rollback();
+            //        }
+            //        Thread.Sleep(2000);
+            //    }
+            //});
+
+            //Task.Run(async () => {
+            //    while (true)
+            //    {
+
+            //        try
+            //        {
+            //            service.Uow.BeginTransaction();
+
+            //            var qty = await service.UpdateEntityAsync(() => new UcHelp
+            //            {
+            //                Title = "title2",
+            //                CodeValue = "value2",
+            //                Content = "content2",
+            //            }, w => w.Id == id);
+            //            //var entity = await service.GetEntityAsync(w => w.Id == id);
+            //            //var list = await service.GetEntityListAsync(w => w.Id == id);
+            //            //await service.DeleteEntityAsync(w => w.Id == id);
+            //            //var count = list.Count();
+            //            //Assert.AreEqual(1, count);
+
+            //            // uow.Commit();
+            //            service.Uow.Rollback();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            service.Uow.Rollback();
+            //        }
+            //        Thread.Sleep(2000);
+            //    }
+
+            //});
+
+            Console.WriteLine("test");
+            Console.ReadLine();
+        }
+        [TestMethod]
         public void TestIocConfigAddUpdateSelectDelete()
         {
             var builder = new ConfigurationBuilder()
@@ -340,13 +438,8 @@ namespace DbLayer.CoreTest
     /// </summary>
     [Serializable]
     [DataTable("uc_help")]
-    public class UcHelp
+    public class UcHelp : BaseEntity<long>
     {
-        /// <summary>
-        /// ∞Ô÷˙±‡∫≈
-        /// </summary>
-        [DataField("id", IsAuto = true, IsKey = true, KeyType = KeyType.MANUAL)]
-        public long Id { get; set; } = 0;
         /// <summary>
         /// ±ÍÃ‚
         /// </summary>

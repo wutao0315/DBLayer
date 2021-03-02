@@ -514,10 +514,11 @@ namespace DBLayer.Persistence
         /// <param name="func"></param>
         /// <param name="paramerList"></param>
         /// <returns></returns>
-        internal static (StringBuilder, StringBuilder) Insert<T>(this IDataSource dataSource, Expression<Func<T>> func, ref object newID, ref List<DbParameter> paramerList, IGenerator generater) where T : new()
+        internal static (StringBuilder, StringBuilder) Insert<T>(this IDataSource dataSource, Expression<Func<T>> func, ref object newID, ref List<DbParameter> paramerList, IGenerator generater, string userText) where T : new()
         {
             var index = 0;
-            var result = ExpressionInsertRouter<T>(dataSource,func.Body, DirAway.Left, ref index, ref newID, ref paramerList, generater);
+            var isBaseEntity = typeof(T).HasImplementedRawGeneric(typeof(BaseEntity<>));
+            var result = ExpressionInsertRouter<T>(dataSource,func.Body, DirAway.Left, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
             return result;
         }
         /// <summary>
@@ -528,7 +529,7 @@ namespace DBLayer.Persistence
         /// <param name="index"></param>
         /// <param name="paramerList"></param>
         /// <returns></returns>
-        static (StringBuilder, StringBuilder) ExpressionInsertRouter<T>(this IDataSource dataSource, Expression exp, DirAway away, ref int index, ref object newID, ref List<DbParameter> paramerList, IGenerator generater) where T : new()
+        static (StringBuilder, StringBuilder) ExpressionInsertRouter<T>(this IDataSource dataSource, Expression exp, DirAway away, ref int index, ref object newID, ref List<DbParameter> paramerList, IGenerator generater, bool isBaseEntity,string userText) where T : new()
         {
             var resultKey = new StringBuilder();
             var resultValue = new StringBuilder();
@@ -598,14 +599,14 @@ namespace DBLayer.Persistence
 
                                 sbField.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, fieldName);
                                 sbField.Append(",");
-                                var (_,valueRight) = ExpressionInsertRouter<T>(dataSource, Expression.Constant(newID), DirAway.Right, ref index, ref newID, ref paramerList, generater);
+                                var (_,valueRight) = ExpressionInsertRouter<T>(dataSource, Expression.Constant(newID), DirAway.Right, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
                                 sbValue.Append(valueRight);
                                 sbValue.Append(",");
                             }
                         }else{
                             sbField.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, fieldName);
                             sbField.Append(",");
-                            var (_, valueRight) = ExpressionInsertRouter<T>(dataSource, myItem.Expression, DirAway.Right, ref index, ref newID, ref paramerList, generater);
+                            var (_, valueRight) = ExpressionInsertRouter<T>(dataSource, myItem.Expression, DirAway.Right, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
                             sbValue.Append(valueRight);
                             sbValue.Append(",");
                         }
@@ -630,7 +631,7 @@ namespace DBLayer.Persistence
                     }
                     else
                     {
-                        (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource,GetReduceOrConstant(mbe), away, ref index, ref newID, ref paramerList, generater);
+                        (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource,GetReduceOrConstant(mbe), away, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
                     }
                 }
                 else
@@ -643,6 +644,19 @@ namespace DBLayer.Persistence
                             try
                             {
                                 maValue = (T)GetMemberExpressionValue(mbe);
+                                if (isBaseEntity)
+                                {
+                                    var updater = maValue.GetValueByPropertyName(nameof(BaseEntity<long>.Updater));
+                                    if (updater == null || string.IsNullOrWhiteSpace(updater.ToString())) 
+                                    {
+                                        maValue.SetValueByPropertyName(nameof(BaseEntity<long>.Updater), userText);
+                                    }
+                                    var creater = maValue.GetValueByPropertyName(nameof(BaseEntity<long>.Creater));
+                                    if (creater == null || string.IsNullOrWhiteSpace(creater.ToString()))
+                                    {
+                                        maValue.SetValueByPropertyName(nameof(BaseEntity<long>.Creater), userText);
+                                    }
+                                }
                             }
                             catch (Exception)
                             {
@@ -663,11 +677,11 @@ namespace DBLayer.Persistence
                                 }
                                 //mbeCst.Value
                                 var myMem = Expression.MemberInit(Expression.New(mbeType), memberList.ToArray());
-                                (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource,myMem, away, ref index, ref newID, ref paramerList, generater);
+                                (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource,myMem, away, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
                             }
                         } else 
                         {
-                            (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource,GetReduceOrConstant(mbe), away, ref index, ref newID, ref paramerList, generater);
+                            (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource,GetReduceOrConstant(mbe), away, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
                         }
                     }
                 }
@@ -676,10 +690,10 @@ namespace DBLayer.Persistence
             {
                 if (away == DirAway.Right)
                 {
-                    (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource, GetReduceOrConstant(exp), away, ref index, ref newID, ref paramerList, generater);
+                    (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource, GetReduceOrConstant(exp), away, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
                 }
                 else {
-                    (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource, uny.Operand, away, ref index, ref newID, ref paramerList, generater);
+                    (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource, uny.Operand, away, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
                 }
             }
             else if (exp is ConstantExpression ce)
@@ -705,7 +719,7 @@ namespace DBLayer.Persistence
                 index++;
             }
             else {
-                (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource, GetReduceOrConstant(exp), away, ref index, ref newID, ref paramerList, generater);
+                (resultKey, resultValue) = ExpressionInsertRouter<T>(dataSource, GetReduceOrConstant(exp), away, ref index, ref newID, ref paramerList, generater, isBaseEntity, userText);
             }
             return (resultKey, resultValue);
         }

@@ -1242,7 +1242,7 @@ namespace DBLayer.Persistence
 
             var whereStr = _dataSource.Where(where, ref paramerList);
             //添加默认查询条件
-            if (typeof(T).IsAssignableFrom(typeof(VirtulDelEntity<>)))
+            if (typeof(T).HasImplementedRawGeneric(typeof(VirtulDelEntity<>)))
             {
                 AppendDeleteSql(whereStr, paramerList);
             }
@@ -1373,12 +1373,13 @@ namespace DBLayer.Persistence
         {
             object newID = null;
             var paramerList = new List<DbParameter>();
-            var (sbField, sbValue) = _dataSource.Insert(expression, ref newID, ref paramerList, _generator);
+            var userText = GetUserText();
+            var (sbField, sbValue) = _dataSource.Insert(expression, ref newID, ref paramerList, _generator, userText);
             
             //添加默认更新字段
-            if (typeof(T).IsAssignableFrom(typeof(BaseEntity<>)) && sbField.Length > 0)
+            if (typeof(T).HasImplementedRawGeneric(typeof(BaseEntity<>)) && sbField.Length > 0)
             {
-                var username = GetUserText();
+                var username = GetText();
                 var fieldStrLower = sbField.ToString();
 
                 var idKey = $"{string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, "id")}";
@@ -1553,14 +1554,14 @@ namespace DBLayer.Persistence
 
             var whereStr = _dataSource.Where(where, ref paramerList);
             //添加默认查询条件
-            if (typeof(T).IsAssignableFrom(typeof(VirtulDelEntity<>)))
+            if (typeof(T).HasImplementedRawGeneric(typeof(VirtulDelEntity<>)))
             {
                 AppendDeleteSql(whereStr, paramerList);
             }
 
             var updateStr = _dataSource.Update(expression, ref paramerList);
             //添加默认更新字段
-            if (typeof(T).IsAssignableFrom(typeof(BaseEntity<>)) && updateStr.Length > 0)
+            if (typeof(T).HasImplementedRawGeneric(typeof(BaseEntity<>)) && updateStr.Length > 0)
             {
                 var updateStrUpper = updateStr.ToString();
                 
@@ -1574,7 +1575,7 @@ namespace DBLayer.Persistence
                 var updater = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, "updater");
                 if (!updateStrUpper.Contains(updater, StringComparison.OrdinalIgnoreCase))
                 {
-                    var username = GetUserText();
+                    var username = GetText();
                     var parameterName = $"{_dataSource.DbFactory.DbProvider.ParameterPrefix}updater_0_dl_0";
                     updateStr.Append($",{updater} = {parameterName}");
                     paramerList.Add(_dataSource.CreateParameter(parameterName, username));
@@ -1617,8 +1618,8 @@ namespace DBLayer.Persistence
             Expression<Func<T, bool>> where) 
             where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var (cmdText, paramerList) = getUpdateText(expression, where);
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var result = await _dataSource.ExecuteNonQueryAsync(cmdText, conn, CommandType.Text, paramerList);
             if (Uow.ActiveNumber == 0)
             {
@@ -1680,11 +1681,11 @@ namespace DBLayer.Persistence
             var whereStr = _dataSource.Where(where, ref paramerList);
 
             string allDelete;
-            if (typeof(T).IsAssignableFrom(typeof(VirtulDelEntity<>)) && isLogic)
+            if (typeof(T).IsSubclassOf(typeof(VirtulDelEntity<>)) && isLogic)
             {
                 allDelete = this.CreateUpdateAllSql<T>();
 
-                var username = GetUserText();
+                var username = GetText();
                 var deleteKey = string.Format(_dataSource.DbFactory.DbProvider.FieldFormat, "is_delete");
                 var deleteName = $"{_dataSource.DbFactory.DbProvider.ParameterPrefix}is_delete_0_dl_0";
                 paramerList.Add(_dataSource.CreateParameter(deleteName, true));
@@ -2641,7 +2642,7 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public string GetUserName()
         {
-            var username = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(w => w.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase))?.Value?? "anonymous";
+            var username = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase))?.Value?? "anonymous";
             return username;
         }
         /// <summary>
@@ -2650,7 +2651,7 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public string GetText()
         {
-            var text = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(w => w.Type.Equals("Text", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
+            var text = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("Text", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
             return text;
         }
         /// <summary>
@@ -2659,9 +2660,11 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public string GetUserText(string split="/")
         {
-            var username = GetUserName();
+            var username = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase))?.Value ?? "anonymous"; 
+            var nickname = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("NickName", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
+            var realname = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("RealName", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
             var text = GetText();
-            return $"{text}{split}{username}";
+            return $"{username}{split}{nickname}{split}{realname}";
         }
         /// <summary>
         /// yonh外键获取
@@ -2672,7 +2675,7 @@ namespace DBLayer.Persistence
         {
             try
             {
-                var userId = _httpContextAccessor.HttpContext.User?.Claims.FirstOrDefault(w => w.Type.Equals("UserId", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
+                var userId = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(w => w.Type.Equals("UserId", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
                 R result = (R)userId.ChangeType(typeof(R));
                 return result;
             }
@@ -2711,7 +2714,7 @@ namespace DBLayer.Persistence
         {
             if (entity is BaseEntity<R> data)
             {
-                var username = GetUserText();
+                var username = GetText();
                 if (string.IsNullOrWhiteSpace(data.Updater))
                 {
                     data.Updater = username;
