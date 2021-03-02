@@ -1455,10 +1455,10 @@ namespace DBLayer.Persistence
         private async Task<object> InsertEntityAsync<T>(Expression<Func<T>> expression) 
             where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var retval = -1;
             var (newID, cmdText, paramerList) = GetInsertText(expression);
+
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             if (newID == null)
             {
                 newID = await _pagerGenerator.InsertExecutorAsync<T>(_dataSource, cmdText, paramerList, conn);

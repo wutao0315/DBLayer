@@ -50,6 +50,14 @@ namespace DbLayer.CoreTest
             using var bsp = services.BuildServiceProvider();
             var service = bsp.GetService<IUcHelpRepository>();
 
+            var data = new UcHelp
+            {
+                Title = "title2",
+                CodeValue = "value2",
+                Content = "content2",
+            };
+            await service.InsertEntityAsync(() => data);
+
             var qty = await service.UpdateEntityAsync(() => new UcHelp
             {
                 Title = "title2",
