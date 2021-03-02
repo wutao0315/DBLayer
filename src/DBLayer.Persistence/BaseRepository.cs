@@ -116,12 +116,10 @@ namespace DBLayer.Persistence
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
             T entity = default;
-            using (var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, paramers))
+            using var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, paramers);
+            if (reader.Read())
             {
-                if (reader.Read())
-                {
-                    entity = reader.ReadObject<T>(inclusionList);
-                }
+                entity = reader.ReadObject<T>(inclusionList);
             }
 
             if (Uow.ActiveNumber == 0)
@@ -202,12 +200,10 @@ namespace DBLayer.Persistence
 
 
             T entity = default;
-            using (var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, paramers))
+            using var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, paramers);
+            if (reader.Read())
             {
-                if (reader.Read())
-                {
-                    entity = reader.ReadObject<T>(inclusionList);
-                }
+                entity = reader.ReadObject<T>(inclusionList);
             }
 
             if (Uow.ActiveNumber == 0)
@@ -317,7 +313,7 @@ namespace DBLayer.Persistence
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
             IDictionary<string, object> entity = new Dictionary<string, object>();
-            using (var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters))
+            using var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters);
             if (reader.Read())
             {
                 entity = reader.ReadSelf(inclusionList);
@@ -389,13 +385,10 @@ namespace DBLayer.Persistence
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
             IDictionary<string, object> entity = new Dictionary<string, object>();
-
-            using (var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters))
+            using var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters);
+            if (reader.Read())
             {
-                if (reader.Read())
-                {
-                    entity = reader.ReadSelf(inclusionList);
-                }
+                entity = reader.ReadSelf(inclusionList);
             }
 
             if (Uow.ActiveNumber == 0)
@@ -476,11 +469,8 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, object>> result = new List<IDictionary<string, object>>();
-            using (var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters))
-            {
-                result = reader.ReadList(r => r.ReadSelf(inclusionList));
-            }
+            using var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r => r.ReadSelf(inclusionList));
 
             if (Uow.ActiveNumber == 0)
             {
@@ -562,11 +552,8 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, object>> result = new List<IDictionary<string, object>>();
-            using (var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters))
-            {
-                result = reader.ReadList(r => r.ReadSelf(inclusionList));
-            }
+            using var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r => r.ReadSelf(inclusionList));
 
             if (Uow.ActiveNumber == 0)
             {
@@ -654,11 +641,8 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<T> result = new List<T>();
-            using (var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters))
-            {
-                result = reader.ReadList(r => r.ReadObject<T>(inclusionList));
-            }
+            using var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r => r.ReadObject<T>(inclusionList));
 
             if (Uow.ActiveNumber == 0)
             {
@@ -743,11 +727,8 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<T> result = new List<T>();
-            using (var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters))
-            { 
-                result = reader.ReadList(r => r.ReadObject<T>(inclusionList));
-            }
+            using var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r => r.ReadObject<T>(inclusionList));
 
             if (Uow.ActiveNumber == 0)
             {
@@ -822,20 +803,17 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<T> result = new List<T>();
-            using (var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters))
+            using var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r =>
             {
-                result = reader.ReadList(r =>
+                var data = r[0];
+                if (!(data is DBNull))
                 {
-                    var data = r[0];
-                    if (!(data is DBNull))
-                    {
-                        var entity = GetSingle<T>(data);
-                        return entity;
-                    }
-                    return default;
-                });
-            }
+                    var entity = GetSingle<T>(data);
+                    return entity;
+                }
+                return default;
+            });
 
             if (Uow.ActiveNumber == 0)
             {
@@ -882,20 +860,17 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<T> result = new List<T>();
-            using (var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters))
+            using var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r =>
             {
-                result = reader.ReadList(r =>
+                var data = r[0];
+                if (!(data is DBNull))
                 {
-                    var data = r[0];
-                    if (!(data is DBNull))
-                    {
-                        var entity = GetSingle<T>(data);
-                        return entity;
-                    }
-                    return default;
-                });
-            }
+                    var entity = GetSingle<T>(data);
+                    return entity;
+                }
+                return default;
+            });
 
             if (Uow.ActiveNumber == 0)
             {
@@ -974,12 +949,10 @@ namespace DBLayer.Persistence
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
             IDictionary<string, string> result = new Dictionary<string, string>();
-            using (var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters))
+            using var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters);
+            if (reader.Read())
             {
-                if (reader.Read())
-                {
-                    result = reader.ReadSelfString(inclusionList);
-                }
+                result = reader.ReadSelfString(inclusionList);
             }
 
             if (Uow.ActiveNumber == 0)
@@ -1055,12 +1028,10 @@ namespace DBLayer.Persistence
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
             IDictionary<string, string> result = new Dictionary<string, string>();
-            using (var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters))
+            using var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters);
+            if (reader.Read())
             {
-                if (reader.Read())
-                {
-                    result = reader.ReadSelfString(inclusionList);
-                }
+                result = reader.ReadSelfString(inclusionList);
             }
 
             if (Uow.ActiveNumber == 0)
@@ -1140,11 +1111,8 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, string>> result = new List<IDictionary<string, string>>();
-            using (var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters))
-            {
-                result = reader.ReadList(r => r.ReadSelfString(inclusionList));
-            }
+            using var reader = _dataSource.CreateDataReader(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r => r.ReadSelfString(inclusionList));
 
             if (Uow.ActiveNumber == 0)
             {
@@ -1219,11 +1187,8 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, string>> result = new List<IDictionary<string, string>>();
-            using (var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters))
-            {
-                result = reader.ReadList(r => r.ReadSelfString(inclusionList));
-            }
+            using var reader = await _dataSource.CreateDataReaderAsync(cmdText, conn, commandType, parameters);
+            var result = reader.ReadList(r => r.ReadSelfString(inclusionList));
 
             if (Uow.ActiveNumber == 0)
             {
@@ -1263,16 +1228,13 @@ namespace DBLayer.Persistence
         public R InsertEntity<T, R>(T entity, params string[] inclusionList)
             where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var cmdText = new StringBuilder();
             object newID = null;
-
             var paramerList = CreateInsertSql<T, R>(ref cmdText, entity, ref newID, inclusionList);
-
             R result = default;
-
             var para = paramerList.ToArray();
+
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             if (newID == null)
             {
                 newID = _pagerGenerator.InsertExecutor<T>(_dataSource, cmdText, paramerList, conn);
@@ -1304,8 +1266,6 @@ namespace DBLayer.Persistence
         public async Task<R> InsertEntityAsync<T, R>(T entity, params string[] inclusionList)
             where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var cmdText = new StringBuilder();
             object newID = null;
 
@@ -1314,6 +1274,8 @@ namespace DBLayer.Persistence
             R result = default;
 
             var para = paramerList.ToArray();
+
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             if (newID == null)
             {
                 newID = await _pagerGenerator.InsertExecutorAsync<T>(_dataSource, cmdText, paramerList, conn);
@@ -1345,10 +1307,10 @@ namespace DBLayer.Persistence
         private object InsertEntity<T>(Expression<Func<T>> expression) 
             where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var retval = -1;
             var (newID, cmdText, paramerList) = GetInsertText(expression);
+
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             if (newID == null)
             {
                 newID = _pagerGenerator.InsertExecutor<T>(_dataSource, cmdText, paramerList, conn);
@@ -1510,8 +1472,8 @@ namespace DBLayer.Persistence
         public int UpdateEntity<T>(Expression<Func<T>> expression, Expression<Func<T, bool>> where) 
             where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var (cmdText, paramerList) = getUpdateText(expression, where);
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             int result = _dataSource.ExecuteNonQuery(cmdText, conn, CommandType.Text, paramerList);
             if (Uow.ActiveNumber == 0)
             {
@@ -1594,9 +1556,8 @@ namespace DBLayer.Persistence
         /// <returns>影响数据条数</returns>
         public int UpdateEntity<T>(T entity, params string[] inclusionList)
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-            
             var (paramerList, cmdText) = CreateUpdateSql(entity, inclusionList);
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var result = _dataSource.ExecuteNonQuery(cmdText, conn, CommandType.Text, paramerList.ToArray());
 
             if (Uow.ActiveNumber == 0)
@@ -1637,8 +1598,8 @@ namespace DBLayer.Persistence
         /// <returns>影响数据条数</returns>
         public async Task<int> UpdateEntityAsync<T>(T entity, params string[] inclusionList)
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var (paramerList, cmdText) = CreateUpdateSql(entity, inclusionList);
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var result = await _dataSource.ExecuteNonQueryAsync(cmdText, conn, CommandType.Text, paramerList.ToArray());
             if (Uow.ActiveNumber == 0)
             {
@@ -1662,9 +1623,9 @@ namespace DBLayer.Persistence
         public int DeleteEntity<T>(Expression<Func<T, bool>> where, bool isLogic = true) 
             where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
+            var (cmdText, paramerList) = GetDeleteText(where, isLogic);
 
-            var (cmdText, paramerList) = GetDeleteText(where,isLogic);
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var result = _dataSource.ExecuteNonQuery(cmdText, conn, CommandType.Text, paramerList);
 
             if (Uow.ActiveNumber == 0)
@@ -1714,9 +1675,9 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public async Task<int> DeleteEntityAsync<T>(Expression<Func<T, bool>> where, bool isLogic = true) where T : new()
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var (cmdText, paramerList) = GetDeleteText(where, isLogic);
+
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var result = await _dataSource.ExecuteNonQueryAsync(cmdText, conn, CommandType.Text, paramerList.ToArray());
 
             if (Uow.ActiveNumber == 0)
@@ -1741,7 +1702,6 @@ namespace DBLayer.Persistence
         public int ExecuteNonQuery(string cmdText, params DbParameter[] paramers)
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var returnValue = _dataSource.ExecuteNonQuery(cmdText, conn, CommandType.Text, paramers);
 
             if (Uow.ActiveNumber == 0)
@@ -1760,9 +1720,8 @@ namespace DBLayer.Persistence
         /// <returns>SQL 语句所影响的行数</returns>
         public int ExecuteNonQuery(string cmdText, object obj)
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var parameters = _dataSource.ToDbParameters(obj);
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var returnValue = _dataSource.ExecuteNonQuery(cmdText, conn, CommandType.Text, parameters);
 
             if (Uow.ActiveNumber == 0)
@@ -1803,9 +1762,9 @@ namespace DBLayer.Persistence
         /// <returns>SQL 语句所影响的行数</returns>
         public async Task<int> ExecuteNonQueryAsync(string cmdText, object obj)
         {
-            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
-
             var parameters = _dataSource.ToDbParameters(obj);
+
+            var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
             var returnValue = await _dataSource.ExecuteNonQueryAsync(cmdText, conn, CommandType.Text, parameters);
 
             if (Uow.ActiveNumber == 0)
@@ -2324,13 +2283,11 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<T> result;
-            using (var reader = GetResultByPager<T, T1>(page, conn, inclusionList))
-            {
-                var totalCount = 0;
-                result = reader.ReadList(r => r.ReadObject<T>(inclusionList), ref totalCount);
-                page.SetTotalCount(totalCount);
-            }
+            using var reader = GetResultByPager<T, T1>(page, conn, inclusionList);
+            var totalCount = 0;
+            var result = reader.ReadList(r => r.ReadObject<T>(inclusionList), ref totalCount);
+            page.SetTotalCount(totalCount);
+
 
             if (Uow.ActiveNumber == 0)
             {
@@ -2353,13 +2310,10 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<T> result = new List<T>();
-            using (var reader = await GetResultByPagerAsync<T, T1>(page, conn, inclusionList))
-            {
-                var totalCount = 0;
-                result = reader.ReadList(r => r.ReadObject<T>(inclusionList), ref totalCount);
-                page.SetTotalCount(totalCount);
-            }
+            using var reader = await GetResultByPagerAsync<T, T1>(page, conn, inclusionList);
+            var totalCount = 0;
+            var result = reader.ReadList(r => r.ReadObject<T>(inclusionList), ref totalCount);
+            page.SetTotalCount(totalCount);
 
             if (Uow.ActiveNumber == 0)
             {
@@ -2380,13 +2334,10 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, object>> result = new List<IDictionary<string, object>>();
-            using (var reader = GetResultByPager(page, conn))
-            {
-                var totalCount = 0;
-                result = reader.ReadList(r => r.ReadSelf(), ref totalCount);
-                page.SetTotalCount(totalCount);
-            }
+            using var reader = GetResultByPager(page, conn);
+            var totalCount = 0;
+            var result = reader.ReadList(r => r.ReadSelf(), ref totalCount);
+            page.SetTotalCount(totalCount);
 
             if (Uow.ActiveNumber == 0)
             {
@@ -2407,13 +2358,10 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, object>> result = new List<IDictionary<string, object>>();
-            using (var reader = await GetResultByPagerAsync(page, conn)) 
-            {
-                var totalCount = 0;
-                result = reader.ReadList(r => r.ReadSelf(), ref totalCount);
-                page.SetTotalCount(totalCount);
-            }
+            using var reader = await GetResultByPagerAsync(page, conn);
+            var totalCount = 0;
+            var result = reader.ReadList(r => r.ReadSelf(), ref totalCount);
+            page.SetTotalCount(totalCount);
 
             if (Uow.ActiveNumber == 0)
             {
@@ -2437,13 +2385,10 @@ namespace DBLayer.Persistence
         {
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, object>> result = new List<IDictionary<string, object>>();
-            using (var reader = GetResultByPager<T, T1>(page, conn, inclusionList)) 
-            {
-                var totalCount = 0;
-                result = reader.ReadList(r => r.ReadSelf(inclusionList), ref totalCount);
-                page.SetTotalCount(totalCount);
-            }
+            using var reader = GetResultByPager<T, T1>(page, conn, inclusionList);
+            var totalCount = 0;
+            var result = reader.ReadList(r => r.ReadSelf(inclusionList), ref totalCount);
+            page.SetTotalCount(totalCount);
 
             if (Uow.ActiveNumber == 0)
             {
@@ -2467,13 +2412,10 @@ namespace DBLayer.Persistence
 
             var conn = Uow.ActiveNumber == 0 ? _dataSource.DbFactory.ShortDbConnection : _dataSource.DbFactory.LongDbConnection;
 
-            IEnumerable<IDictionary<string, object>> result = new List<IDictionary<string, object>>();
-            using (var reader = await GetResultByPagerAsync<T, T1>(page, conn, inclusionList))
-            {
-                var totalCount = 0;
-                result = reader.ReadList(r => r.ReadSelf(inclusionList), ref totalCount);
-                page.SetTotalCount(totalCount);
-            }
+            using var reader = await GetResultByPagerAsync<T, T1>(page, conn, inclusionList);
+            var totalCount = 0;
+            var result = reader.ReadList(r => r.ReadSelf(inclusionList), ref totalCount);
+            page.SetTotalCount(totalCount);
 
             if (Uow.ActiveNumber == 0)
             {
@@ -2863,6 +2805,14 @@ namespace DBLayer.Persistence
         /// <returns>返回[T-SQL:UPDATE]</returns>
         private (List<DbParameter>,string) CreateUpdateSql<T>(T entity, params string[] inclusionList)
         {
+            var isBaseEntity = typeof(T).HasImplementedRawGeneric(typeof(BaseEntity<>));
+            if (isBaseEntity)
+            {
+                var username = GetText();
+                entity.SetValueByPropertyName(nameof(BaseEntity<long>.Updater), username);
+                entity.SetValueByPropertyName(nameof(BaseEntity<long>.UpdateDt), DateTime.Now);
+            }
+
             var paramerList = new List<DbParameter>();
             var entityType = typeof(T);
             var propertyInfos = entityType.GetProperties();
@@ -2884,22 +2834,26 @@ namespace DBLayer.Persistence
                 var (datafieldAttribute, fieldName) = property.GetDataFieldAttribute();
 
                 object oval;
-                if (datafieldAttribute != null)
+                if (datafieldAttribute?.IsKey == true)
                 {
-                    if (datafieldAttribute.IsKey)
-                    {
-
-                        sqlValues.AppendFormat(_dataSource.DbFactory.DbProvider.FieldFormat, fieldName);
-                        sqlValues.Append("=");
-                        sqlValues.Append(_dataSource.DbFactory.DbProvider.ParameterPrefix);
-                        sqlValues.Append(fieldName);
-                        sqlValues.Append(",");
-                        oval = property.GetValue(entity, null);
-                        oval ??= DBNull.Value;
-                        paramerList.Add(_dataSource.CreateParameter(_dataSource.DbFactory.DbProvider.ParameterPrefix + fieldName, oval));
-                        continue;
-                    }
+                    sqlValues.AppendFormat(_dataSource.DbFactory.DbProvider.FieldFormat, fieldName);
+                    sqlValues.Append("=");
+                    sqlValues.Append(_dataSource.DbFactory.DbProvider.ParameterPrefix);
+                    sqlValues.Append(fieldName);
+                    sqlValues.Append(",");
+                    oval = property.GetValue(entity, null);
+                    oval ??= DBNull.Value;
+                    paramerList.Add(_dataSource.CreateParameter(_dataSource.DbFactory.DbProvider.ParameterPrefix + fieldName, oval));
+                    continue;
                 }
+
+                if (isBaseEntity 
+                    && (fieldName.Equals(nameof(BaseEntity<long>.Creater), StringComparison.OrdinalIgnoreCase) 
+                        || fieldName.Equals(nameof(BaseEntity<long>.CreateDt), StringComparison.OrdinalIgnoreCase))) 
+                {
+                    continue;
+                }
+
                 oval = property.GetValue(entity, null);
 
                 if (oval == null && datafieldAttribute.DefaultValue != null)

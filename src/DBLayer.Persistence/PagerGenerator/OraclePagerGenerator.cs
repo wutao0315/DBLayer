@@ -165,7 +165,7 @@ namespace DBLayer.Persistence.PagerGenerator
             object newID = null;
             if (retval > 0)
             {
-                newID = paras[paras.Length - 1].Value;
+                newID = paras[^1].Value;
             }
             return newID;
         }
