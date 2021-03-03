@@ -50,6 +50,19 @@ namespace DbLayer.CoreTest
             using var bsp = services.BuildServiceProvider();
             var service = bsp.GetService<IUcHelpRepository>();
 
+            var userId = 1L;
+            var text = "test";
+            var username = "test";
+            var job = new { WjPaId=1L };
+
+            await service.UpdateEntityAsync(() => new ParkArea
+            {
+                PaWorkerId = userId,
+                PaWorkerName = text,
+                PaWorkerNo = username
+            }, w => w.PaId == job.WjPaId);
+
+
             var data = new UcHelp
             {
                 Title = "title2",
@@ -476,6 +489,171 @@ namespace DbLayer.CoreTest
         public bool IsEnable { get; set; } = true;
         
 
+    }
+
+    /// <summary>
+    /// 停车点
+    /// ParkArea
+    /// </summary>
+    [Serializable]
+    [DataTable("park_area")]
+    public class ParkArea
+    {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        [DataField("pa_id", IsAuto = true, IsKey = true, KeyType = KeyType.MANUAL)]
+        public long PaId { get; set; } = -1;
+        /// <summary>
+        /// 收费标准外键
+        /// </summary>
+        [DataField("pa_pf_id")]
+        public long PaPfId { get; set; } = 0;
+        /// <summary>
+        /// 收费标准名称
+        /// </summary>
+        [DataField("pa_pf_name")]
+        public string PaPfName { get; set; } = string.Empty;
+        /// <summary>
+        /// 所属组织机构外键
+        /// </summary>
+        [DataField("pa_addr_id")]
+        public long PaAddrId { get; set; } = 0;
+        /// <summary>
+        /// 所属组织机构名称
+        /// </summary>
+        [DataField("pa_addr_name")]
+        public string PaAddrName { get; set; } = string.Empty;
+        /// <summary>
+        /// 编号
+        /// </summary>
+        [DataField("pa_code")]
+        public string PaCode { get; set; } = string.Empty;
+        /// <summary>
+        /// 停车点名称
+        /// </summary>
+        [DataField("pa_name")]
+        public string PaName { get; set; } = string.Empty;
+        /// <summary>
+        /// 停车点名称快捷键
+        /// </summary>
+        [DataField("pa_name_key")]
+        public string PaNameKey { get; set; } = string.Empty;
+        /// <summary>
+        /// 总泊位数
+        /// </summary>
+        [DataField("pa_count")]
+        public int PaCount { get; set; } = 0;
+        /// <summary>
+        /// 收费机串号
+        /// </summary>
+        [DataField("pa_serial_no")]
+        public string PaSerialNo { get; set; } = string.Empty;
+        /// <summary>
+        /// 收费员外键
+        /// </summary>
+        [DataField("pa_worker_id")]
+        public long PaWorkerId { get; set; } = -1;
+        /// <summary>
+        /// 收费员
+        /// </summary>
+        [DataField("pa_worker_name")]
+        public string PaWorkerName { get; set; } = string.Empty;
+        /// <summary>
+        /// 收费员工号
+        /// </summary>
+        [DataField("pa_worker_no")]
+        public string PaWorkerNo { get; set; } = string.Empty;
+        /// <summary>
+        /// 包月费标准
+        /// </summary>
+        [DataField("pa_fees_monthly")]
+        public decimal PaFeesMonthly { get; set; } = 0;
+        /// <summary>
+        /// 免收费时长
+        /// </summary>
+        [DataField("pa_fees_free")]
+        public int PaFeesFree { get; set; } = 0;
+        /// <summary>
+        /// 免费时长是否计费
+        /// </summary>
+        [DataField("pa_fees_free_cal")]
+        public bool PaFeesFreeCal { get; set; } = false;
+        /// <summary>
+        /// 经度
+        /// </summary>
+        [DataField("pa_lat")]
+        public decimal PaLat { get; set; }
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        [DataField("pa_lng")]
+        public decimal PaLng { get; set; }
+        /// <summary>
+        /// 缩放比例
+        /// </summary>
+        [DataField("pa_zoom")]
+        public int PaZoom { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [DataField("pa_remark")]
+        public string PaRemark { get; set; } = string.Empty;
+        /// <summary>
+        /// 类型:1：停车点,2：停车场
+        /// </summary>
+        [DataField("pa_type")]
+        public int PaType { get; set; } = 0;
+        /// <summary>
+        /// 泊位状态
+        /// </summary>
+        [DataField("pa_status")]
+        public int PaStatus { get; set; } = 0;
+        /// <summary>
+        /// 地磁状态
+        /// </summary>
+        [DataField("pa_iot_status")]
+        public int PaIotStatus { get; set; } = 0;
+        /// <summary>
+        /// 排序值
+        /// </summary>
+        [DataField("pa_sort")]
+        public int PaSort { get; set; } = 0;
+        /// <summary>
+        /// 最小计费时长
+        /// </summary>
+        [DataField("pa_fees_min")]
+        public int PaFeesMin { get; set; } = 0;
+        /// <summary>
+        /// 分组外键
+        /// </summary>
+        [DataField("pa_wt_id")]
+        public long PaWtId { get; set; } = 0;
+        /// <summary>
+        /// 分组名称
+        /// </summary>
+        [DataField("pa_wt_name")]
+        public string PaWtName { get; set; } = string.Empty;
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        [DataField("pa_creater")]
+        public string PaCreater { get; set; } = string.Empty;
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        [DataField("pa_createtime")]
+        public DateTime PaCreatetime { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 修改人
+        /// </summary>
+        [DataField("pa_updater")]
+        public string PaUpdater { get; set; } = string.Empty;
+        /// <summary>
+        /// 修改时间
+        /// </summary>
+        [DataField("pa_updatetime")]
+        public DateTime PaUpdatetime { get; set; } = DateTime.Now;
     }
     /// <summary>
     /// 前台账户动态信息

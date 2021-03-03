@@ -418,7 +418,7 @@ namespace DBLayer.Persistence
                 }
                 if (result.Length > 0)
                 {
-                    result.Length -= - 1;
+                    result.Length -= 1;
                 }
             }
             else if (exp is MemberExpression mbe)

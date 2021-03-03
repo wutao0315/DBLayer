@@ -8,7 +8,7 @@
     <PackageReleaseNotes />
     <Description>DBLayer simple orm</Description>
     <Authors>wutao0315</Authors>
-    <Version>1.4.4</Version>
+    <Version>1.4.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
