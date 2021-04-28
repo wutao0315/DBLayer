@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBLayer.Core.Interface;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,14 @@ using System.Threading;
 
 namespace DBLayer.Persistence.Linq
 {
-    public class SqlQueryable<T> : IQueryable<T>
+    public class SqlQueryable<T> : IQueryable<T>,IOrderedQueryable<T>
     {
-        protected Expression _expression;
-        protected IQueryProvider _provider;
+        protected readonly Expression _expression;
+        protected readonly IQueryProvider _provider;
 
-        public SqlQueryable()
+        public SqlQueryable(IRepository repository)
         {
-            _provider = new SqlQueryProvider();
+            _provider = new SqlQueryProvider(repository);
             _expression = Expression.Constant(this);
         }
 
@@ -36,19 +37,10 @@ namespace DBLayer.Persistence.Linq
             return result;
         }
 
-        public virtual Type ElementType
-        {
-            get { return typeof(SqlQueryable<>); }
-        }
+        public virtual Type ElementType => typeof(SqlQueryable<>);
 
-        public Expression Expression
-        {
-            get { return _expression; }
-        }
+        public Expression Expression => _expression;
 
-        public IQueryProvider Provider
-        {
-            get { return _provider; }
-        }
+        public IQueryProvider Provider => _provider;
     }
 }

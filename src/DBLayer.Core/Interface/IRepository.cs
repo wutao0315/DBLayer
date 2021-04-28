@@ -17,6 +17,7 @@ namespace DBLayer.Core.Interface
         {
             get => ()=>LogManager.CreateLogger(typeof(IRepository));
         }
+        IDataSource DataSource { get; }
         IUnitOfWork Uow { get; }
         IQueryable<T> Queryable<T>();
 

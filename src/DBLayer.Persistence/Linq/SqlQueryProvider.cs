@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DBLayer.Core.Interface;
+using DBLayer.Core.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -6,11 +8,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DBLayer.Persistence.Linq
 {
-    public class SqlQueryProvider : IQueryProvider
+    public class SqlQueryProvider : IQueryProvider, IAsyncQueryProvider
     {
+        private readonly IRepository _repository;
+        public SqlQueryProvider(IRepository repository) 
+        {
+            _repository = repository;
+        }
+
         //private static readonly MethodInfo _genericCreateQueryMethod
         //    = typeof(SqlQueryProvider).GetRuntimeMethods()
         //        .Single(m => (m.Name == "CreateQuery") && m.IsGenericMethod);
@@ -30,11 +39,13 @@ namespace DBLayer.Persistence.Linq
 
         public IQueryable CreateQuery(Expression expression)
         {
-            throw new NotImplementedException();
+            var query = new SqlQueryable<object>(this, expression);
+            return query;
         }
 
         public T Execute<T>(Expression expression)
         {
+            //解析表达式，这里的T可能是泛型本身，也可能是集合，或者是动态值
             MethodCallExpression methodCall = expression as MethodCallExpression;
             Expression<Func<T, bool>> result = null;
             while (methodCall != null)
@@ -55,16 +66,56 @@ namespace DBLayer.Persistence.Linq
                 methodCall = method as MethodCallExpression;
             }
 
+            var cmdText = string.Format("SELECT * FROM {0}", typeof(T).Name);
+            if (result != null)
+            {
+                var resolve = new ResolveExpression(_repository.DataSource);
+                resolve.ResolveToSql(result);
+                cmdText = string.Format("{0} WHERE {1}", cmdText, resolve.SqlWhere);
+                //Command.Parameters.AddRange(resolve.Paras);
+                //_repository.GetEntity<T>(cmdText,resolve.Paras);
+            }
+            
+
+            //_resolveExpression.ResolveToSql(result);
             //var source = new DBSql().FindAs<T>(result);
-            //dynamic _temp = source;
-            //T t = (T)_temp;
-            //return t;
+            //var t = _repository.GetEntity<T>(result);
             return default;
         }
 
         public object Execute(Expression expression)
         {
-            throw new NotImplementedException();
+            var result = Execute<object>(expression);
+            return result;
         }
+
+        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = default)
+        {
+            //throw new NotImplementedException();
+            return default;
+        }
+
+        //public async IEnumerable<T> FindAs<T>(Expression<Func<T, bool>> lambdawhere,
+        //    params string[] inclusionList)
+        //{
+        //    //var (cmdText, paramerArray) = _repository.GetEntityText(where, (whereStr, paramerList) => {
+        //    //    var orderStr = _dataSource.Order(order);
+        //    //    var text = _pagerGenerator.GetSelectCmdText<T>(_dataSource, ref paramerList, whereStr, orderStr, top, inclusionList);
+        //    //    return text.ToString();
+        //    //});
+
+        //    //var result = await GetEntityListAsync<T>(cmdText.ToString(), CommandType.Text, paramerArray, inclusionList);
+
+
+        //    var cmdText = string.Format("SELECT * FROM {0}", typeof(T).Name);
+        //    if (lambdawhere != null)
+        //    {
+        //        ResolveExpression resolve = new ResolveExpression(_repository.DataSource);
+        //        resolve.ResolveToSql(lambdawhere);
+        //        cmdText = string.Format("{0} WHERE {1}", cmdText, resolve.SqlWhere);
+        //        Command.Parameters.AddRange(resolve.Paras);
+        //    }
+        //    var result = _repository.GetEntityListAsync<T>(inclusionList);
+        //}
     }
 }

@@ -168,7 +168,7 @@ namespace DBLayer.Persistence.Generator
         /// </summary>
         /// <param name="lastTimestamp">上次生成ID的时间截</param>
         /// <returns>当前时间戳</returns>
-        private long GetNextTimestamp(long lastTimestamp)
+        private static long GetNextTimestamp(long lastTimestamp)
         {
             long timestamp = GetCurrentTimestamp();
             while (timestamp <= lastTimestamp)
@@ -182,11 +182,11 @@ namespace DBLayer.Persistence.Generator
         /// 获取当前时间戳
         /// </summary>
         /// <returns></returns>
-        private long GetCurrentTimestamp()
+        private static long GetCurrentTimestamp()
         {
             return (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
         }
 
-        private static readonly DateTime Jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime Jan1st1970 = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     }
 }

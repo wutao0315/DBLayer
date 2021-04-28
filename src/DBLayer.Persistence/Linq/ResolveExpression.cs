@@ -209,7 +209,7 @@ namespace DBLayer.Persistence.Linq
             string temp = name;
             while (Argument.ContainsKey(temp))
             {
-                temp = name + index;
+                temp = $"{name}_{index}";
                 index += 1;
             }
             Argument[temp] = value;

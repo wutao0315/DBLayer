@@ -361,6 +361,46 @@ namespace DbLayer.CoreTest
             //    }
             //}
         }
+
+
+
+        [TestMethod]
+        public async Task TestQueryable()
+        {
+            var builder = new ConfigurationBuilder()
+                 .SetBasePath(Directory.GetCurrentDirectory() + "/Config")
+                 .AddJsonFile("dblayer_two.json", false, true);
+
+            var config = builder.Build();
+
+            IServiceCollection services = new ServiceCollection();
+            services.Configure<DBLayerOption>(config.GetSection("dblayer"));
+            services.AddLogging();
+
+            services.AddDBLayerDefault("DbLayer.CoreTest");
+
+            services.AddLogging((loggerBuilder) =>
+            {
+                loggerBuilder.ClearProviders();
+                loggerBuilder.SetMinimumLevel(LogLevel.Debug);
+                loggerBuilder.AddConsole();
+            });
+
+            //services.AddTransient<IUcDynamicRepository, UcDynamicRepository>();
+
+            using var bsp = services.BuildServiceProvider();
+            var service = bsp.GetService<IUcDynamicRepository>();
+
+            var wkgJobRecord = service.Queryable<WkgJobRecord>();
+           
+
+            var id = 261772383541661696L;
+            //var record = await service.GetEntityAsync<WkgJobRecord>(w => w.WjrId == id && w.WjrStatus > 1);
+            var record = wkgJobRecord.FirstOrDefault(w => w.WjrId == id || w.WjrId > 1);
+            var records = wkgJobRecord.Where(w => w.WjrId == id && w.WjrStatus > 1).OrderBy(w => w.WjrId).ToList();
+            
+
+        }
     }
     public interface IUcDynamicRepository : IRepository<UcDynamic, long>
     {

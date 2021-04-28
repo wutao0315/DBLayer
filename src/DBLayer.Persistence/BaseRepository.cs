@@ -42,9 +42,10 @@ namespace DBLayer.Persistence
             _pagerGenerator = dbContext.PagerGenerator;
             _httpContextAccessor = dbContext.HttpContextAccesser;
         }
+        public IDataSource DataSource => _dataSource;
         public IQueryable<T> Queryable<T>() 
         {
-            return new SqlQueryable<T>();
+            return new SqlQueryable<T>(this);
         }
         #region public method
         protected readonly IGenerator _generator;
@@ -1200,7 +1201,7 @@ namespace DBLayer.Persistence
         }
         #endregion
         #region Get
-        private (string, DbParameter[]) GetEntityText<T>(Expression<Func<T, bool>> where, Func<StringBuilder, List<DbParameter>, string> map)
+        internal (string, DbParameter[]) GetEntityText<T>(Expression<Func<T, bool>> where, Func<StringBuilder, List<DbParameter>, string> map)
             where T : new()
         {
             var paramerList = new List<DbParameter>();
