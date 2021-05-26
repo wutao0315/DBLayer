@@ -1643,7 +1643,7 @@ namespace DBLayer.Persistence
             var whereStr = _dataSource.Where(where, ref paramerList);
 
             string allDelete;
-            if (typeof(T).IsSubclassOf(typeof(VirtulDelEntity<>)) && isLogic)
+            if (typeof(T).HasImplementedRawGeneric(typeof(VirtulDelEntity<>)) && isLogic)
             {
                 allDelete = this.CreateUpdateAllSql<T>();
 
