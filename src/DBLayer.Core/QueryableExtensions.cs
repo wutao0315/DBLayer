@@ -58,7 +58,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<bool>>(QueryableMethods.AnyWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, bool>(QueryableMethods.AnyWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<bool>>(QueryableMethods.AnyWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, bool>(QueryableMethods.AnyWithPredicate, source, predicate, cancellationToken);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<bool>>(QueryableMethods.All, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, bool>(QueryableMethods.All, source, predicate, cancellationToken);
         }
 
         #endregion
@@ -149,7 +149,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<int>>(QueryableMethods.CountWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, int>(QueryableMethods.CountWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<int>>(QueryableMethods.CountWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, int>(QueryableMethods.CountWithPredicate, source, predicate, cancellationToken);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<long>>(QueryableMethods.LongCountWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, long>(QueryableMethods.LongCountWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<long>>(QueryableMethods.LongCountWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, long>(QueryableMethods.LongCountWithPredicate, source, predicate, cancellationToken);
         }
 
         #endregion
@@ -267,7 +267,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.FirstWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.FirstWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.FirstWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.FirstWithPredicate, source, predicate, cancellationToken);
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource?>>(QueryableMethods.FirstOrDefaultWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource?>(QueryableMethods.FirstOrDefaultWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<TSource?>>(QueryableMethods.FirstOrDefaultWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, TSource?>(QueryableMethods.FirstOrDefaultWithPredicate, source, predicate, cancellationToken);
         }
 
         #endregion
@@ -398,7 +398,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.LastWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.LastWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.LastWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.LastWithPredicate, source, predicate, cancellationToken);
         }
 
         /// <summary>
@@ -466,7 +466,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource?>>(QueryableMethods.LastOrDefaultWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource?>(QueryableMethods.LastOrDefaultWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<TSource?>>(QueryableMethods.LastOrDefaultWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, TSource?>(QueryableMethods.LastOrDefaultWithPredicate, source, predicate, cancellationToken);
         }
 
         #endregion
@@ -540,7 +540,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.SingleWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.SingleWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -589,7 +589,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.SingleWithPredicate, source, predicate, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.SingleWithPredicate, source, predicate, cancellationToken);
         }
 
         /// <summary>
@@ -618,7 +618,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource?>>(QueryableMethods.SingleOrDefaultWithoutPredicate, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource?>(QueryableMethods.SingleOrDefaultWithoutPredicate, source, cancellationToken);
         }
 
         /// <summary>
@@ -654,7 +654,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
 
-            return ExecuteAsync<TSource, Task<TSource?>>(
+            return ExecuteAsync<TSource, TSource?>(
                 QueryableMethods.SingleOrDefaultWithPredicate, source, predicate, cancellationToken);
         }
 
@@ -685,7 +685,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.MinWithoutSelector, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.MinWithoutSelector, source, cancellationToken);
         }
 
         /// <summary>
@@ -719,7 +719,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<TResult>>(QueryableMethods.MinWithSelector, source, selector, cancellationToken);
+            return ExecuteAsync<TSource, TResult>(QueryableMethods.MinWithSelector, source, selector, cancellationToken);
         }
 
         #endregion
@@ -749,7 +749,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<TSource>>(QueryableMethods.MaxWithoutSelector, source, cancellationToken);
+            return ExecuteAsync<TSource, TSource>(QueryableMethods.MaxWithoutSelector, source, cancellationToken);
         }
 
         /// <summary>
@@ -783,7 +783,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<TResult>>(QueryableMethods.MaxWithSelector, source, selector, cancellationToken);
+            return ExecuteAsync<TSource, TResult>(QueryableMethods.MaxWithSelector, source, selector, cancellationToken);
         }
 
         #endregion
@@ -811,7 +811,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<decimal, Task<decimal>>(QueryableMethods.GetSumWithoutSelector(typeof(decimal)), source, cancellationToken);
+            return ExecuteAsync<decimal, decimal>(QueryableMethods.GetSumWithoutSelector(typeof(decimal)), source, cancellationToken);
         }
 
         /// <summary>
@@ -835,7 +835,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<decimal?, Task<decimal?>>(
+            return ExecuteAsync<decimal?, decimal?>(
                 QueryableMethods.GetSumWithoutSelector(typeof(decimal?)), source, cancellationToken);
         }
 
@@ -866,7 +866,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<decimal>>(
+            return ExecuteAsync<TSource, decimal>(
                 QueryableMethods.GetSumWithSelector(typeof(decimal)), source, selector, cancellationToken);
         }
 
@@ -897,7 +897,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<decimal?>>(
+            return ExecuteAsync<TSource, decimal?>(
                 QueryableMethods.GetSumWithSelector(typeof(decimal?)), source, selector, cancellationToken);
         }
 
@@ -922,7 +922,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<int, Task<int>>(QueryableMethods.GetSumWithoutSelector(typeof(int)), source, cancellationToken);
+            return ExecuteAsync<int, int>(QueryableMethods.GetSumWithoutSelector(typeof(int)), source, cancellationToken);
         }
 
         /// <summary>
@@ -946,7 +946,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<int?, Task<int?>>(QueryableMethods.GetSumWithoutSelector(typeof(int?)), source, cancellationToken);
+            return ExecuteAsync<int?, int?>(QueryableMethods.GetSumWithoutSelector(typeof(int?)), source, cancellationToken);
         }
 
         /// <summary>
@@ -976,7 +976,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<int>>(QueryableMethods.GetSumWithSelector(typeof(int)), source, selector, cancellationToken);
+            return ExecuteAsync<TSource, int>(QueryableMethods.GetSumWithSelector(typeof(int)), source, selector, cancellationToken);
         }
 
         /// <summary>
@@ -1006,7 +1006,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<int?>>(
+            return ExecuteAsync<TSource, int?>(
                 QueryableMethods.GetSumWithSelector(typeof(int?)), source, selector, cancellationToken);
         }
 
@@ -1031,7 +1031,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<long, Task<long>>(QueryableMethods.GetSumWithoutSelector(typeof(long)), source, cancellationToken);
+            return ExecuteAsync<long, long>(QueryableMethods.GetSumWithoutSelector(typeof(long)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1055,7 +1055,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<long?, Task<long?>>(QueryableMethods.GetSumWithoutSelector(typeof(long?)), source, cancellationToken);
+            return ExecuteAsync<long?, long?>(QueryableMethods.GetSumWithoutSelector(typeof(long?)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1085,7 +1085,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<long>>(
+            return ExecuteAsync<TSource, long>(
                 QueryableMethods.GetSumWithSelector(typeof(long)), source, selector, cancellationToken);
         }
 
@@ -1116,7 +1116,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<long?>>(
+            return ExecuteAsync<TSource, long?>(
                 QueryableMethods.GetSumWithSelector(typeof(long?)), source, selector, cancellationToken);
         }
 
@@ -1141,7 +1141,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<double, Task<double>>(QueryableMethods.GetSumWithoutSelector(typeof(double)), source, cancellationToken);
+            return ExecuteAsync<double, double>(QueryableMethods.GetSumWithoutSelector(typeof(double)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1165,7 +1165,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<double?, Task<double?>>(QueryableMethods.GetSumWithoutSelector(typeof(double?)), source, cancellationToken);
+            return ExecuteAsync<double?, double?>(QueryableMethods.GetSumWithoutSelector(typeof(double?)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1195,7 +1195,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double>>(
+            return ExecuteAsync<TSource, double>(
                 QueryableMethods.GetSumWithSelector(typeof(double)), source, selector, cancellationToken);
         }
 
@@ -1226,7 +1226,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double?>>(
+            return ExecuteAsync<TSource, double?>(
                 QueryableMethods.GetSumWithSelector(typeof(double?)), source, selector, cancellationToken);
         }
 
@@ -1251,7 +1251,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<float, Task<float>>(QueryableMethods.GetSumWithoutSelector(typeof(float)), source, cancellationToken);
+            return ExecuteAsync<float, float>(QueryableMethods.GetSumWithoutSelector(typeof(float)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1275,7 +1275,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<float?, Task<float?>>(QueryableMethods.GetSumWithoutSelector(typeof(float?)), source, cancellationToken);
+            return ExecuteAsync<float?, float?>(QueryableMethods.GetSumWithoutSelector(typeof(float?)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1305,7 +1305,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<float>>(
+            return ExecuteAsync<TSource, float>(
                 QueryableMethods.GetSumWithSelector(typeof(float)), source, selector, cancellationToken);
         }
 
@@ -1336,7 +1336,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<float?>>(
+            return ExecuteAsync<TSource, float?>(
                 QueryableMethods.GetSumWithSelector(typeof(float?)), source, selector, cancellationToken);
         }
 
@@ -1366,7 +1366,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<decimal, Task<decimal>>(
+            return ExecuteAsync<decimal, decimal>(
                 QueryableMethods.GetAverageWithoutSelector(typeof(decimal)), source, cancellationToken);
         }
 
@@ -1391,7 +1391,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<decimal?, Task<decimal?>>(
+            return ExecuteAsync<decimal?, decimal?>(
                 QueryableMethods.GetAverageWithoutSelector(typeof(decimal?)), source, cancellationToken);
         }
 
@@ -1424,7 +1424,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<decimal>>(
+            return ExecuteAsync<TSource, decimal>(
                 QueryableMethods.GetAverageWithSelector(typeof(decimal)), source, selector, cancellationToken);
         }
 
@@ -1456,7 +1456,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<decimal?>>(
+            return ExecuteAsync<TSource, decimal?>(
                 QueryableMethods.GetAverageWithSelector(typeof(decimal?)), source, selector, cancellationToken);
         }
 
@@ -1482,7 +1482,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<int, Task<double>>(QueryableMethods.GetAverageWithoutSelector(typeof(int)), source, cancellationToken);
+            return ExecuteAsync<int, double>(QueryableMethods.GetAverageWithoutSelector(typeof(int)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1506,7 +1506,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<int?, Task<double?>>(QueryableMethods.GetAverageWithoutSelector(typeof(int?)), source, cancellationToken);
+            return ExecuteAsync<int?, double?>(QueryableMethods.GetAverageWithoutSelector(typeof(int?)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1538,7 +1538,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double>>(
+            return ExecuteAsync<TSource, double>(
                 QueryableMethods.GetAverageWithSelector(typeof(int)), source, selector, cancellationToken);
         }
 
@@ -1570,7 +1570,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double?>>(
+            return ExecuteAsync<TSource, double?>(
                 QueryableMethods.GetAverageWithSelector(typeof(int?)), source, selector, cancellationToken);
         }
 
@@ -1596,7 +1596,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<long, Task<double>>(QueryableMethods.GetAverageWithoutSelector(typeof(long)), source, cancellationToken);
+            return ExecuteAsync<long, double>(QueryableMethods.GetAverageWithoutSelector(typeof(long)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1620,7 +1620,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<long?, Task<double?>>(QueryableMethods.GetAverageWithoutSelector(typeof(long?)), source, cancellationToken);
+            return ExecuteAsync<long?, double?>(QueryableMethods.GetAverageWithoutSelector(typeof(long?)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1652,7 +1652,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double>>(
+            return ExecuteAsync<TSource, double>(
                 QueryableMethods.GetAverageWithSelector(typeof(long)), source, selector, cancellationToken);
         }
 
@@ -1684,7 +1684,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double?>>(
+            return ExecuteAsync<TSource, double?>(
                 QueryableMethods.GetAverageWithSelector(typeof(long?)), source, selector, cancellationToken);
         }
 
@@ -1710,7 +1710,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<double, Task<double>>(
+            return ExecuteAsync<double, double>(
                 QueryableMethods.GetAverageWithoutSelector(typeof(double)), source, cancellationToken);
         }
 
@@ -1735,7 +1735,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<double?, Task<double?>>(
+            return ExecuteAsync<double?, double?>(
                 QueryableMethods.GetAverageWithoutSelector(typeof(double?)), source, cancellationToken);
         }
 
@@ -1768,7 +1768,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double>>(
+            return ExecuteAsync<TSource, double>(
                 QueryableMethods.GetAverageWithSelector(typeof(double)), source, selector, cancellationToken);
         }
 
@@ -1800,7 +1800,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<double?>>(
+            return ExecuteAsync<TSource, double?>(
                 QueryableMethods.GetAverageWithSelector(typeof(double?)), source, selector, cancellationToken);
         }
 
@@ -1826,7 +1826,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<float, Task<float>>(QueryableMethods.GetAverageWithoutSelector(typeof(float)), source, cancellationToken);
+            return ExecuteAsync<float, float>(QueryableMethods.GetAverageWithoutSelector(typeof(float)), source, cancellationToken);
         }
 
         /// <summary>
@@ -1850,7 +1850,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<float?, Task<float?>>(
+            return ExecuteAsync<float?, float?>(
                 QueryableMethods.GetAverageWithoutSelector(typeof(float?)), source, cancellationToken);
         }
 
@@ -1883,7 +1883,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<float>>(
+            return ExecuteAsync<TSource, float>(
                 QueryableMethods.GetAverageWithSelector(typeof(float)), source, selector, cancellationToken);
         }
 
@@ -1915,7 +1915,7 @@ namespace DBLayer.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
 
-            return ExecuteAsync<TSource, Task<float?>>(
+            return ExecuteAsync<TSource, float?>(
                 QueryableMethods.GetAverageWithSelector(typeof(float?)), source, selector, cancellationToken);
         }
 
@@ -1948,7 +1948,7 @@ namespace DBLayer.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return ExecuteAsync<TSource, Task<bool>>(
+            return ExecuteAsync<TSource, bool>(
                 QueryableMethods.Contains,
                 source,
                 Expression.Constant(item, typeof(TSource)),
@@ -2267,7 +2267,7 @@ namespace DBLayer.Core
 
         #region Impl.
 
-        private static TResult ExecuteAsync<TSource, TResult>(
+        private static Task<TResult> ExecuteAsync<TSource, TResult>(
             MethodInfo operatorMethodInfo,
             IQueryable<TSource> source,
             Expression? expression,
@@ -2296,7 +2296,7 @@ namespace DBLayer.Core
             throw new InvalidOperationException($"IQueryableProviderNotAsync");
         }
 
-        private static TResult ExecuteAsync<TSource, TResult>(
+        private static Task<TResult> ExecuteAsync<TSource, TResult>(
             MethodInfo operatorMethodInfo,
             IQueryable<TSource> source,
             LambdaExpression expression,
@@ -2304,7 +2304,7 @@ namespace DBLayer.Core
             => ExecuteAsync<TSource, TResult>(
                 operatorMethodInfo, source, Expression.Quote(expression), cancellationToken);
 
-        private static TResult ExecuteAsync<TSource, TResult>(
+        private static Task<TResult> ExecuteAsync<TSource, TResult>(
             MethodInfo operatorMethodInfo,
             IQueryable<TSource> source,
             CancellationToken cancellationToken = default)
