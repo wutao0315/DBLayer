@@ -332,6 +332,7 @@ namespace DBLayer.Core
         public static Task<TSource?> FirstOrDefaultAsync<TSource>(
             this IQueryable<TSource> source,
             CancellationToken cancellationToken = default)
+            where TSource:struct
         {
             Check.NotNull(source, nameof(source));
 
@@ -364,6 +365,7 @@ namespace DBLayer.Core
             this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate,
             CancellationToken cancellationToken = default)
+            where TSource : struct
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
@@ -463,6 +465,7 @@ namespace DBLayer.Core
         public static Task<TSource?> LastOrDefaultAsync<TSource>(
             this IQueryable<TSource> source,
             CancellationToken cancellationToken = default)
+            where TSource : struct
         {
             Check.NotNull(source, nameof(source));
 
@@ -495,6 +498,7 @@ namespace DBLayer.Core
             this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate,
             CancellationToken cancellationToken = default)
+            where TSource : struct
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
@@ -615,6 +619,7 @@ namespace DBLayer.Core
         public static Task<TSource?> SingleOrDefaultAsync<TSource>(
             this IQueryable<TSource> source,
             CancellationToken cancellationToken = default)
+            where TSource : struct
         {
             Check.NotNull(source, nameof(source));
 
@@ -650,6 +655,7 @@ namespace DBLayer.Core
             this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate,
             CancellationToken cancellationToken = default)
+            where TSource : struct
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(predicate, nameof(predicate));
