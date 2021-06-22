@@ -12,7 +12,7 @@ namespace DBLayer.Persistence
             IConnectionString connectionString,
             IGenerator generator,
             IPagerGenerator pagerGenerator,
-            ClaimsPrincipal claimsPrincipal)
+            ClaimsPrincipal claimsPrincipal = null)
         {
             this.Uow = uow;
             this.DbProvider = dbProvider;

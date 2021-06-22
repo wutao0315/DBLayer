@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MySqlX.XDevAPI.Common;
 using System.Threading;
+using System.Security.Claims;
 
 namespace DbLayer.CoreTest
 {
@@ -46,6 +47,8 @@ namespace DbLayer.CoreTest
                 loggerBuilder.SetMinimumLevel(LogLevel.Debug);
                 loggerBuilder.AddConsole();
             });
+
+            services.AddTransient(provider => new ClaimsPrincipal());
 
             using var bsp = services.BuildServiceProvider();
             var service = bsp.GetService<IUcHelpRepository>();
