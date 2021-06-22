@@ -57,9 +57,6 @@ namespace DBLayer.Core.Extensions
                 return provider;
             });
 
-            //services.AddHttpContextAccessor();
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddScoped<IDbFactory, DbFactory>();
             services.AddScoped<IDataSource, DataSource>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
