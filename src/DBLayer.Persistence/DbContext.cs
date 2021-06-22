@@ -1,8 +1,5 @@
 ﻿using DBLayer.Core.Interface;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Security.Claims;
 
 namespace DBLayer.Persistence
 {
@@ -15,7 +12,7 @@ namespace DBLayer.Persistence
             IConnectionString connectionString,
             IGenerator generator,
             IPagerGenerator pagerGenerator,
-            IHttpContextAccessor httpContextAccessor)
+            ClaimsPrincipal claimsPrincipal)
         {
             this.Uow = uow;
             this.DbProvider = dbProvider;
@@ -24,7 +21,7 @@ namespace DBLayer.Persistence
             this.PagerGenerator = pagerGenerator;
             this.DbFactory = dbFactory;
             this.DataSource = dataSource;
-            this.HttpContextAccesser = httpContextAccessor;
+            this.User = claimsPrincipal;
         }
         public IUnitOfWork Uow { get; private set; }
         public IDbProvider DbProvider { get; private set; }
@@ -39,6 +36,6 @@ namespace DBLayer.Persistence
 
         public IDataSource DataSource { get; private set; }
 
-        public IHttpContextAccessor HttpContextAccesser { get; private set; }
+        public ClaimsPrincipal User { get; private set; }
     }
 }

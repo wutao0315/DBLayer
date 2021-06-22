@@ -4,7 +4,6 @@ using DBLayer.Core.Interface;
 using DBLayer.Core.Logging;
 using DBLayer.Core.Utilities;
 using DBLayer.Persistence.Linq;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +31,7 @@ namespace DBLayer.Persistence
         public IUnitOfWork Uow { get; }
 
         internal readonly IDataSource _dataSource;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ClaimsPrincipal _user;
 
         public BaseRepository(IDbContext dbContext)
         {
@@ -40,7 +39,7 @@ namespace DBLayer.Persistence
             _dataSource = dbContext.DataSource;
             _generator = dbContext.Generator;
             _pagerGenerator = dbContext.PagerGenerator;
-            _httpContextAccessor = dbContext.HttpContextAccesser;
+            _user = dbContext.User;
         }
         public IDataSource DataSource => _dataSource;
         public IQueryable<T> Queryable<T>() 
@@ -2560,7 +2559,7 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public ClaimsPrincipal GetUser() 
         {
-            return _httpContextAccessor.HttpContext.User;
+            return _user;
         }
         /// <summary>
         /// 获取权限集合
@@ -2568,7 +2567,7 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public IEnumerable<string> GetPermissions()
         {
-            var permission = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(w => w.Type.Equals("Permission", StringComparison.OrdinalIgnoreCase));
+            var permission = _user?.Claims?.FirstOrDefault(w => w.Type.Equals("Permission", StringComparison.OrdinalIgnoreCase));
             if (permission == null) 
             {
                 return new List<string>();
@@ -2585,7 +2584,7 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public string GetUserName()
         {
-            var username = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase))?.Value?? "anonymous";
+            var username = _user?.Claims?.FirstOrDefault(w => w.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase))?.Value?? "anonymous";
             return username;
         }
         /// <summary>
@@ -2594,7 +2593,7 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public string GetText()
         {
-            var text = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("Text", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
+            var text = _user?.Claims?.FirstOrDefault(w => w.Type.Equals("Text", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
             return text;
         }
         /// <summary>
@@ -2603,9 +2602,9 @@ namespace DBLayer.Persistence
         /// <returns></returns>
         public string GetUserText(string split="/")
         {
-            var username = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase))?.Value ?? "anonymous"; 
-            var nickname = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("NickName", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
-            var realname = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(w => w.Type.Equals("RealName", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
+            var username = _user?.Claims?.FirstOrDefault(w => w.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase))?.Value ?? "anonymous"; 
+            var nickname = _user?.Claims?.FirstOrDefault(w => w.Type.Equals("NickName", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
+            var realname = _user?.Claims?.FirstOrDefault(w => w.Type.Equals("RealName", StringComparison.OrdinalIgnoreCase))?.Value ?? "匿名";
             var text = GetText();
             return $"{username}{split}{nickname}{split}{realname}";
         }
@@ -2618,7 +2617,7 @@ namespace DBLayer.Persistence
         {
             try
             {
-                var userId = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(w => w.Type.Equals("UserId", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
+                var userId = _user?.Claims.FirstOrDefault(w => w.Type.Equals("UserId", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
                 R result = (R)userId.ChangeType(typeof(R));
                 return result;
             }

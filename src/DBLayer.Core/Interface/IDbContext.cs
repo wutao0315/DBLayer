@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Security.Claims;
 
 namespace DBLayer.Core.Interface
 {
@@ -14,6 +11,7 @@ namespace DBLayer.Core.Interface
         IConnectionString ConnectionString { get; }
         IGenerator Generator { get; }
         IPagerGenerator PagerGenerator { get; }
-        IHttpContextAccessor HttpContextAccesser { get; }
+
+        ClaimsPrincipal User{ get; }
     }
 }

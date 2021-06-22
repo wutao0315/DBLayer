@@ -3,7 +3,6 @@ using DBLayer.Persistence;
 using DBLayer.Persistence.Data;
 using DBLayer.Persistence.Generator;
 using DBLayer.Persistence.PagerGenerator;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyModel;
@@ -58,7 +57,7 @@ namespace DBLayer.Core.Extensions
                 return provider;
             });
 
-            services.AddHttpContextAccessor();
+            //services.AddHttpContextAccessor();
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IDbFactory, DbFactory>();
