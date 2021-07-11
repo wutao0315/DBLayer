@@ -297,7 +297,6 @@ namespace DbLayer.CoreTest
             //}
         }
 
-
         [TestMethod]
         public async Task TestIocConfigAddUpdateSelectDelete2()
         {
@@ -365,8 +364,6 @@ namespace DbLayer.CoreTest
             //}
         }
 
-
-
         [TestMethod]
         public async Task TestQueryable()
         {
@@ -402,6 +399,52 @@ namespace DbLayer.CoreTest
             var record = wkgJobRecord.FirstOrDefault(w => w.WjrId == id || w.WjrId > 1);
             var records = wkgJobRecord.Where(w => w.WjrId == id && w.WjrStatus > 1).OrderBy(w => w.WjrId).ToList();
             
+
+        }
+
+        [TestMethod]
+        public async Task TestCachedProperty()
+        {
+            var ud = new UcDynamic();
+            var propList = ud.GetCachedProperties();
+            foreach (var item in propList)
+            {
+                if (item.Key.Name == nameof(UcDynamic.Id)) 
+                {
+                    var setData = 10000;
+                    item.Value.Setter(ud, setData);
+                    var id = item.Value.Getter(ud);
+                    Assert.IsTrue(setData.ToString() ==  id.ToString());
+                }
+
+                if (item.Key.Name == nameof(UcDynamic.Type))
+                {
+                    var setData = 1;
+                    item.Value.Setter(ud, setData);
+                    var id = item.Value.Getter(ud);
+                    Assert.IsTrue(setData.ToString() == id.ToString());
+                }
+
+                if (item.Key.Name == nameof(UcDynamic.Data))
+                {
+                    var setData = "aaaaa";
+                    item.Value.Setter(ud, setData);
+                    var id = item.Value.Getter(ud);
+                    Assert.IsTrue(setData.ToString() == id.ToString());
+                }
+
+                if (item.Key.Name == nameof(UcDynamic.CreateDt))
+                {
+                    var setData = DateTime.Now;
+                    item.Value.Setter(ud, setData);
+                    var id = item.Value.Getter(ud);
+                    Assert.IsTrue(setData.ToString() == id.ToString());
+                }
+            }
+
+            var dto1 = ud.MapTo<UcDynamic, UcDynamicDto>();
+            //var dto2 = ud.GetData<UcDynamicDto>();
+            Console.WriteLine(dto1.ToString());
 
         }
     }
@@ -702,6 +745,33 @@ namespace DbLayer.CoreTest
     /// 前台账户动态信息
     /// UcDynamic
     /// </summary>
+    public class UcDynamicDto
+    {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public long Id { get; set; } = 0;
+        /// <summary>
+        /// 前台账户外键
+        /// </summary>
+        public long? UserId { get; set; } = 0;
+        /// <summary>
+        /// 类型:1、布局,2、颜色,3、菜单状态,4、提醒,5、信息,6、任务7、是否稽查
+        /// </summary>
+        public int Type { get; set; } = 1;
+        /// <summary>
+        /// 动态数据
+        /// </summary>
+        public string Data { get; set; } = "";
+        /// <summary>
+        /// 产生时间
+        /// </summary>
+        public DateTime? CreateDt { get; set; } = DateTime.Now;
+    }
+    /// <summary>
+    /// 前台账户动态信息
+    /// UcDynamic
+    /// </summary>
     [Serializable]
     [DataTable("uc_dynamic")]
     public class UcDynamic
@@ -715,7 +785,7 @@ namespace DbLayer.CoreTest
         /// 前台账户外键
         /// </summary>
         [DataField("user_id")]
-        public long UserId { get; set; } = 0;
+        public long? UserId { get; set; } = 0;
         /// <summary>
         /// 类型:1、布局,2、颜色,3、菜单状态,4、提醒,5、信息,6、任务7、是否稽查
         /// </summary>
@@ -730,7 +800,7 @@ namespace DbLayer.CoreTest
         /// 产生时间
         /// </summary>
         [DataField("create_dt")]
-        public DateTime CreateDt { get; set; } = DateTime.Now;
+        public DateTime? CreateDt { get; set; } = DateTime.Now;
 
     }
 

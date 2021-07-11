@@ -8,8 +8,13 @@
     <PackageReleaseNotes />
     <Description>DBLayer simple orm</Description>
     <Authors>wutao0315</Authors>
-    <Version>1.4.7</Version>
+    <Version>1.4.8</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ObjectExtensions.cs" />
+    <Compile Remove="TypeExtensions.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DBLayer.Core\DBLayer.Core.csproj" />

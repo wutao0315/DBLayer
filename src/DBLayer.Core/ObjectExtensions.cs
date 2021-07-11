@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DBLayer.Persistence
+namespace DBLayer.Core
 {
     public static class ObjectExtensions
     {
@@ -106,7 +106,6 @@ namespace DBLayer.Persistence
                 => generic == (test.IsGenericType ? test.GetGenericTypeDefinition() : test);
         }
     }
-
     public static class ObjectReflectionExtensions
     {
         private static readonly ConcurrentDictionary<Type, Dictionary<PropertyInfo, PropertyGetterSetter>> CachedProperties;
@@ -242,5 +241,188 @@ namespace DBLayer.Persistence
         }
         public Func<object, object> Getter { get; }
         public Action<object, object> Setter { get; }
+    }
+    public static class MapperExtensions
+    {
+        private static readonly ConcurrentDictionary<string, object> CachedProperties;
+        static MapperExtensions()
+        {
+            CachedProperties = new ConcurrentDictionary<string, object>();
+        }
+
+        public static TTarget MapTo<TSource, TTarget>(this TSource sourceObj)
+            where TSource : class
+            where TTarget : class
+        {
+            var func = GetCachedMap<TSource, TTarget>();
+            var result = func(sourceObj);
+            return result;
+        }
+
+        private static Func<TSource, TTarget> GetCachedMap<TSource, TTarget>()
+            where TSource : class
+            where TTarget : class
+        {
+            var sourceType = typeof(TSource);
+            var targetType = typeof(TTarget);
+            var key = $"{sourceType.FullName}@{targetType.FullName}";
+
+            if (CachedProperties.TryGetValue(key, out object func))
+            {
+                return (Func<TSource, TTarget>)func;
+            }
+
+            GetMapInternal<TSource, TTarget>();
+
+            return CachedProperties[key] as Func<TSource, TTarget>;
+        }
+
+        private static void GetMapInternal<TSource, TTarget>()
+            where TSource : class
+            where TTarget : class
+        {
+            var sourceType = typeof(TSource);
+            var targetType = typeof(TTarget);
+            var key = $"{sourceType.FullName}@{targetType.FullName}";
+
+            if (CachedProperties.ContainsKey(key))
+            {
+                return;
+            }
+
+            var parameterExpression = Expression.Parameter(sourceType, "p");
+            var memberInitExpression = GetExpression(parameterExpression, sourceType, targetType);
+            var lambda = Expression.Lambda<Func<TSource, TTarget>>(memberInitExpression, parameterExpression);
+            var result = lambda.Compile();
+
+            CachedProperties[key] = result;
+        }
+
+        /// <summary>
+        /// 根据转换源和目标获取表达式树
+        /// </summary>
+        /// <param name="parameterExpression">表达式参数p</param>
+        /// <param name="sourceType">转换源类型</param>
+        /// <param name="targetType">转换目标类型</param>
+        /// <returns></returns>
+        private static MemberInitExpression GetExpression(Expression parameterExpression, Type sourceType, Type targetType)
+        {
+            var memberBindings = new List<MemberBinding>();
+            var sourceTypeCache = sourceType.GetCachedProperties();
+            var targetTypeCache = targetType.GetCachedProperties();
+
+            foreach (var targetItem in targetTypeCache.Keys)
+            {
+                var sourceItem = sourceTypeCache.Keys.FirstOrDefault(w => w.Name == targetItem.Name);
+                //判断实体的读写权限
+                if (sourceItem == null)
+                    continue;
+
+                //标注NotMapped特性的属性忽略转换
+                var ignoreFlag = sourceItem.GetCustomAttributes().FirstOrDefault(w =>
+                    w.GetType().Name.Equals("NotMappedAttribute", StringComparison.OrdinalIgnoreCase)
+                   || w.GetType().Name.Equals("NotMapped", StringComparison.OrdinalIgnoreCase)
+                   || w.GetType().Name.Equals("JsonIgnoreAttribute", StringComparison.OrdinalIgnoreCase)
+                   || w.GetType().Name.Equals("JsonIgnore", StringComparison.OrdinalIgnoreCase)
+                   || w.GetType().Name.Equals("IgnoreAttribute", StringComparison.OrdinalIgnoreCase)
+                   || w.GetType().Name.Equals("Ignore", StringComparison.OrdinalIgnoreCase));
+
+                if (ignoreFlag != null)
+                    continue;
+
+                var propertyExpression = Expression.Property(parameterExpression, sourceItem);
+
+                //判断都是class 且类型不相同时
+                if (targetItem.PropertyType.IsClass && sourceItem.PropertyType.IsClass && targetItem.PropertyType != sourceItem.PropertyType)
+                {
+                    if (targetItem.PropertyType != targetType)//防止出现自己引用自己无限递归
+                    {
+                        var memberInit = GetExpression(propertyExpression, sourceItem.PropertyType, targetItem.PropertyType);
+                        memberBindings.Add(Expression.Bind(targetItem, memberInit));
+                        continue;
+                    }
+                }
+                if (targetItem.PropertyType != sourceItem.PropertyType)
+                    continue;
+                memberBindings.Add(Expression.Bind(targetItem, propertyExpression));
+            }
+            return Expression.MemberInit(Expression.New(targetType), memberBindings);
+        }
+
+        //public static TTarget ToData<TTarget>(this object sourceObj)
+        //    where TTarget : class
+        //{
+        //    var result = (TTarget)GetData(sourceObj, typeof(TTarget));
+        //    return result;
+        //}
+        //public static TTarget GetData<TSource, TTarget>(this TSource sourceObj)
+        //    where TSource : class
+        //    where TTarget : class
+        //{
+        //    var result = (TTarget)GetData(sourceObj, typeof(TTarget));
+        //    return result;
+        //}
+        //private static object GetData(object sourceObj, Type targetType)
+        //{
+        //    var sourceTypeCache = sourceObj.GetCachedProperties();
+        //    var targetTypeCache = targetType.GetCachedProperties();
+        //    var targetObj = targetType.GetConstructor(new Type[] { }).Invoke(new object[] { });
+
+        //    foreach (var (targetProperty, targetAccesser) in targetTypeCache)
+        //    {
+        //        var sourceItem = sourceTypeCache.Keys.FirstOrDefault(w => w.Name == targetProperty.Name);
+        //        //判断实体的读写权限
+        //        if (sourceItem == null)
+        //            continue;
+
+        //        //标注NotMapped特性的属性忽略转换
+        //        var ignoreFlag = sourceItem.GetCustomAttributes().FirstOrDefault(w =>
+        //            w.GetType().Name.Equals("NotMappedAttribute", StringComparison.OrdinalIgnoreCase)
+        //           || w.GetType().Name.Equals("NotMapped", StringComparison.OrdinalIgnoreCase)
+        //           || w.GetType().Name.Equals("JsonIgnoreAttribute", StringComparison.OrdinalIgnoreCase)
+        //           || w.GetType().Name.Equals("JsonIgnore", StringComparison.OrdinalIgnoreCase)
+        //           || w.GetType().Name.Equals("IgnoreAttribute", StringComparison.OrdinalIgnoreCase)
+        //           || w.GetType().Name.Equals("Ignore", StringComparison.OrdinalIgnoreCase));
+
+        //        if (ignoreFlag != null)
+        //            continue;
+
+        //        var sourceTypeVal = sourceTypeCache[sourceItem].Getter(sourceObj);
+                
+        //        if (targetProperty.PropertyType.IsValueTypeOrString())
+        //        {
+        //            targetAccesser.Setter(targetObj, sourceTypeVal);
+        //        }
+        //        else 
+        //        {
+        //            if (sourceTypeVal is IEnumerable enumerable)
+        //            {
+        //                var list = new List<object>();
+        //                foreach (var item in enumerable)
+        //                {
+        //                    var itemType = item.GetType();
+
+        //                    if (itemType.IsValueTypeOrString())
+        //                    {
+        //                        list.Add(item);
+        //                    }
+        //                    else
+        //                    {
+        //                        var targetPObj = GetData(item, itemType);
+        //                        list.Add(targetPObj);
+        //                    }
+        //                }
+        //                targetAccesser.Setter(targetObj, list);
+        //            }
+        //            else
+        //            {
+        //                var targetPropVal = GetData(sourceTypeVal, targetProperty.PropertyType);
+        //                targetAccesser.Setter(targetObj, targetPropVal);
+        //            }
+        //        }
+        //    }
+        //    return targetObj;
+        //}
+
     }
 }

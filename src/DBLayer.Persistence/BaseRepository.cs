@@ -2677,7 +2677,8 @@ namespace DBLayer.Persistence
 
             var paramerList = new List<DbParameter>();
             var entityType = typeof(T);
-            var propertyInfos = entityType.GetProperties();
+            //var propertyInfos = entityType.GetProperties();
+            var propertyInfos = entityType.GetCachedProperties();//.GetProperties();
             var sqlFields = new StringBuilder();
             var sqlValues = new StringBuilder();
 
@@ -2688,7 +2689,7 @@ namespace DBLayer.Persistence
             foreach (var property in propertyInfos)
             {
                 //不可读
-                if (!property.CanRead ||!property.CanWrite||(inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Name)))
+                if (!property.Key.CanRead ||!property.Key.CanWrite||(inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Key.Name)))
                 {
                     continue;
                 }
@@ -2696,9 +2697,9 @@ namespace DBLayer.Persistence
                 object oval = null;
                 object genOval=null;
 
-                var propVal = property.GetValue(entity, null);
+                var propVal = property.Value.Getter(entity);//.GetValue(entity, null);
 
-                var (da, fieldName) = property.GetDataFieldAttribute();
+                var (da, fieldName) = property.Key.GetDataFieldAttribute();
                 if (da != null)
                 {
                     if (da.IsKey && da.IsAuto && da.KeyType == KeyType.SEQ)
@@ -2815,7 +2816,8 @@ namespace DBLayer.Persistence
 
             var paramerList = new List<DbParameter>();
             var entityType = typeof(T);
-            var propertyInfos = entityType.GetProperties();
+            //var propertyInfos = entityType.GetProperties();
+            var propertyInfos = entityType.GetCachedProperties();
             var sqlFields = new StringBuilder();
             var sqlValues = new StringBuilder();
             string tableName = entityType.GetDataTableName();
@@ -2824,14 +2826,14 @@ namespace DBLayer.Persistence
             foreach (var property in propertyInfos)
             {
                 //不可读
-                if (!property.CanRead 
-                    || !property.CanWrite 
-                    || (inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Name)))
+                if (!property.Key.CanRead 
+                    || !property.Key.CanWrite 
+                    || (inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Key.Name)))
                 {
                     continue;
                 }
                 
-                var (datafieldAttribute, fieldName) = property.GetDataFieldAttribute();
+                var (datafieldAttribute, fieldName) = property.Key.GetDataFieldAttribute();
 
                 object oval;
                 if (datafieldAttribute?.IsKey == true)
@@ -2841,7 +2843,8 @@ namespace DBLayer.Persistence
                     sqlValues.Append(_dataSource.DbFactory.DbProvider.ParameterPrefix);
                     sqlValues.Append(fieldName);
                     sqlValues.Append(",");
-                    oval = property.GetValue(entity, null);
+                    //oval = property.GetValue(entity, null);
+                    oval = property.Value.Getter(entity);//.GetValue(entity, null);
                     oval ??= DBNull.Value;
                     paramerList.Add(_dataSource.CreateParameter(_dataSource.DbFactory.DbProvider.ParameterPrefix + fieldName, oval));
                     continue;
@@ -2854,7 +2857,7 @@ namespace DBLayer.Persistence
                     continue;
                 }
 
-                oval = property.GetValue(entity, null);
+                oval = property.Value.Getter(entity);//.GetValue(entity, null);
 
                 if (oval == null && datafieldAttribute.DefaultValue != null)
                 {

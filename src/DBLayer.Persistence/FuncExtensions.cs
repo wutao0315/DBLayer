@@ -450,12 +450,13 @@ namespace DBLayer.Persistence
                         {
                             var memberList = new List<MemberBinding>();
                             var mbeType = typeof(T);
-                            foreach (var member in mbeType.GetProperties())
+                            //foreach (var member in mbeType.GetProperties())
+                            foreach (var member in mbeType.GetCachedProperties())
                             {
-                                if (member.MemberType == MemberTypes.Property)
+                                if (member.Key.MemberType == MemberTypes.Property)
                                 {
-                                    var popValue = member.GetValue(maValue, null);
-                                    var binding = Expression.Bind(member, Expression.Constant(popValue, member.PropertyType));
+                                    var popValue = member.Value.Getter(maValue);//.GetValue(maValue, null);
+                                    var binding = Expression.Bind(member.Key, Expression.Constant(popValue, member.Key.PropertyType));
                                     memberList.Add(binding);
                                 }
                             }
@@ -665,12 +666,13 @@ namespace DBLayer.Persistence
                             {
                                 var memberList = new List<MemberBinding>();
                                 var mbeType = typeof(T);
-                                foreach (var member in mbeType.GetProperties())
+                                //foreach (var member in mbeType.GetProperties())
+                                foreach (var member in mbeType.GetCachedProperties())
                                 {
-                                    if (member.MemberType == MemberTypes.Property)
+                                    if (member.Key.MemberType == MemberTypes.Property)
                                     {
-                                        var popValue = member.GetValue(maValue, null);
-                                         var binding = Expression.Bind(member, Expression.Constant(popValue, member.PropertyType));
+                                        var popValue = member.Value.Getter(maValue);//.GetValue(maValue, null);
+                                         var binding = Expression.Bind(member.Key, Expression.Constant(popValue, member.Key.PropertyType));
                                          memberList.Add(binding);
 
                                     }
@@ -758,12 +760,13 @@ namespace DBLayer.Persistence
 
             var result = new List<DbParameter>();
             var tpEntity = obEntity.GetType();
-            var pis = tpEntity.GetProperties();
+            //var pis = tpEntity.GetProperties();
+            var pis = tpEntity.GetCachedProperties();
 
             foreach (var item in pis)
             {
-                var obj = item.GetValue(obEntity);
-                var parameter = dataSource.CreateParameter(dataSource.DbFactory.DbProvider.ParameterPrefix + item.Name, obj);
+                var obj = item.Value.Getter(obEntity);//.GetValue(obEntity);
+                var parameter = dataSource.CreateParameter(dataSource.DbFactory.DbProvider.ParameterPrefix + item.Key.Name, obj);
                 result.Add(parameter);
             }
             return result.ToArray();

@@ -156,14 +156,16 @@ namespace DBLayer.Persistence
             {
                 var item = new T();
                 var entityType = item.GetType();
-                var propertyInfos = entityType.GetProperties();
+                //var propertyInfos = entityType.GetProperties();
+
+                var propertyInfos = entityType.GetCachedProperties();
 
                 foreach (var property in propertyInfos)
                 {
                     //不可读
-                    if (!property.CanRead
-                        || !property.CanWrite
-                        || (inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Name)))
+                    if (!property.Key.CanRead
+                        || !property.Key.CanWrite
+                        || (inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Key.Name)))
                     {
                         continue;
                     }
@@ -172,30 +174,31 @@ namespace DBLayer.Persistence
                     // It'd be nice to have a cleaner way of doing this.
                     try
                     {
-                        var fieldName = property.GetFieldName();
+                        var fieldName = property.Key.GetFieldName();
 
                         object value = null;
                         if (reader.ReaderExists(fieldName)) 
                         {
                             value = reader[fieldName];
                         } 
-                        else if (reader.ReaderExists(property.Name))
+                        else if (reader.ReaderExists(property.Key.Name))
                         {
-                            value = reader[property.Name];
+                            value = reader[property.Key.Name];
                         }
 
                         if (value != null && !(value is DBNull))
                         {
-                            if (property.PropertyType != typeof(Uri))
+                            if (property.Key.PropertyType != typeof(Uri))
                             {
-                                if (property.PropertyType == value.GetType())
-                                {
-                                    property.SetValue(item, value, null);
-                                }
-                                else
-                                {
-                                    property.SetValue(item, value.ChangeType(property.PropertyType), null);
-                                }
+                                property.Value.Setter(item, value);
+                                //if (property.Key.PropertyType == value.GetType())
+                                //{
+                                //    property.SetValue(item, value, null);
+                                //}
+                                //else
+                                //{
+                                //    property.SetValue(item, value.ChangeType(property.PropertyType), null);
+                                //}
                             }
                             else
                             {
@@ -204,7 +207,8 @@ namespace DBLayer.Persistence
                                 {
                                     if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri uri))
                                     {
-                                        property.SetValue(item, uri, null);
+                                        property.Value.Setter(item, uri);
+                                        //property.SetValue(item, uri, null);
                                     }
                                 }
                             }
@@ -279,58 +283,7 @@ namespace DBLayer.Persistence
                 throw ex;
             }
         }
-        
-        /// <summary>
-        /// 将table转换为相应对象集合
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dt"></param>
-        /// <returns></returns>
-        public static IList<T> ConvertToModel<T>(this DataTable dt) where T : new()
-        {
-            // 定义集合
-            var ts = new List<T>();
 
-            // 获得此模型的类型
-            foreach (DataRow dr in dt.Rows)
-            {
-                T t = new T();
-
-                // 获得此模型的公共属性
-                var propertys = t.GetType().GetProperties();
-
-                foreach (var pi in propertys)
-                {
-
-                    var tempName = pi.GetFieldName();
-                    // 检查DataTable是否包含此列
-                    if (dt.Columns.Contains(tempName))
-                    {
-                        // 判断此属性是否有Setter
-                        if (!pi.CanWrite) continue;
-
-                        var value = dr[tempName];
-                        if (value != DBNull.Value)
-                        {
-                            var dataType = value.GetType();
-                            if (pi.PropertyType == dataType)
-                            {
-                                pi.SetValue(t, value, null);
-                            }
-                            else
-                            {
-                                pi.SetValue(t, value.ChangeType(pi.PropertyType), null);
-                            }
-                        }
-
-                    }
-                }
-
-                ts.Add(t);
-            }
-
-            return ts;
-        }
         /// <summary>
         /// SqlDataReader对象是否包含此字段
         /// </summary>
@@ -348,45 +301,6 @@ namespace DBLayer.Persistence
             }
             return false;
         }
-        /// <summary>
-        /// 读取ip地址
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="columnName">Name of the coumn.</param>
-        /// <returns></returns>
-        public static IPAddress ReadIpAddress(this IDataReader reader, string columnName)
-        {
-            try
-            {
-                return reader.ReadValue(columnName, value => IPAddress.Parse((string)value), IPAddress.None);
-            }
-            catch (Exception ex)
-            {
-                if (reader != null && !reader.IsClosed) { reader.Close(); }
-                throw ex;
-            }
-            
-        }
-
-        /// <summary>
-        /// 从数据库里面读取一个URI
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="columnName"></param>
-        /// <returns></returns>
-        public static Uri ReadUri(this IDataReader reader, string columnName)
-        {
-            try
-            {
-                return reader.ReadValue(columnName, value => new Uri((string)value), null);
-            }
-            catch (Exception ex)
-            {
-                if (reader != null && !reader.IsClosed) { reader.Close(); }
-                throw ex;
-            }
-            
-        }
 
         public static StringBuilder CreateAllEntityDicSql<T>(this IDataSource dataSource,string[] inclusionList, string prex = "")
         {
@@ -398,22 +312,23 @@ namespace DBLayer.Persistence
             }
 
             var entityType = typeof(T);
-            var propertyInfos = entityType.GetProperties();
+            //var propertyInfos = entityType.GetProperties();
+            var propertyInfos = entityType.GetCachedProperties();
             var prexAppend = string.IsNullOrEmpty(prex) ? "" : (prex + ".");
             foreach (var property in propertyInfos)
             {
                 //不可读
-                if (!property.CanRead || !property.CanWrite || (inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Name)))
+                if (!property.Key.CanRead || !property.Key.CanWrite || (inclusionList?.Count()>0 && inclusionList.IsExcluded(property.Key.Name)))
                 {
                     continue;
                 }
 
-                var fieldName = property.GetFieldName();
+                var fieldName = property.Key.GetFieldName();
 
                 sqlFields.Append(prexAppend);
                 sqlFields.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, fieldName);
                 sqlFields.Append(" ");
-                sqlFields.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, property.Name);
+                sqlFields.AppendFormat(dataSource.DbFactory.DbProvider.FieldFormat, property.Key.Name);
                 sqlFields.Append(",");
             }
 
