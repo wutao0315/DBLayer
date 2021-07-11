@@ -405,6 +405,21 @@ namespace DbLayer.CoreTest
         [TestMethod]
         public async Task TestCachedProperty()
         {
+            var aa = new { id=-1,name="aaa" };
+            var aaList = aa.GetCachedProperties();
+            foreach (var item in aaList)
+            {
+                if (item.Key.Name == nameof(aa.id)) 
+                {
+                    var id = item.Value.Getter(aa);
+                }
+                if (item.Key.Name == nameof(aa.name))
+                {
+                    var name = item.Value.Getter(aa);
+                }
+            }
+
+
             var ud = new UcDynamic();
             var propList = ud.GetCachedProperties();
             foreach (var item in propList)

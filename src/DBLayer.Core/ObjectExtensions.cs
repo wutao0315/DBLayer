@@ -50,7 +50,7 @@ namespace DBLayer.Core
         {
             var tpEntity = obEntity.GetType();
             var pis = tpEntity.GetCachedProperties();
-            var a = pis.Keys.FirstOrDefault(m => m.Name == feildname);
+            var a = pis.Keys.FirstOrDefault(m =>m.CanRead && m.Name == feildname);
             if (a != null)
             {
                 object obj = pis[a].Getter(obEntity);
@@ -68,7 +68,7 @@ namespace DBLayer.Core
         {
             var tpEntity = obEntity.GetType();
             var pis = tpEntity.GetCachedProperties();
-            var a = pis.Keys.FirstOrDefault(m => m.Name == feildname);
+            var a = pis.Keys.FirstOrDefault(m => m.CanWrite && m.Name == feildname);
             if (a != null)
             {
                 pis[a].Setter(obEntity, Value);
@@ -140,11 +140,19 @@ namespace DBLayer.Core
             }
 
             CachedProperties[type] = new Dictionary<PropertyInfo, PropertyGetterSetter>();
-            var properties = type.GetProperties().Where(x => x.PropertyType.IsPublic && x.CanRead && x.CanWrite);
+            var properties = type.GetProperties().Where(x => x.PropertyType.IsPublic);
             foreach (var propertyInfo in properties)
             {
-                var getter = CompilePropertyGetter(propertyInfo);
-                var setter = CompilePropertySetter(propertyInfo);
+                Func<object, object> getter = (obj) => default;
+                Action<object, object> setter = (obj1, obj2) => { };
+                if (propertyInfo.CanRead) 
+                {
+                    getter = CompilePropertyGetter(propertyInfo);
+                }
+                if (propertyInfo.CanWrite) 
+                {
+                    setter = CompilePropertySetter(propertyInfo);
+                }
                 var val = new PropertyGetterSetter(getter, setter);
                 CachedProperties[type].Add(propertyInfo, val);
                 if (!propertyInfo.PropertyType.IsValueTypeOrString())
@@ -313,7 +321,12 @@ namespace DBLayer.Core
 
             foreach (var targetItem in targetTypeCache.Keys)
             {
-                var sourceItem = sourceTypeCache.Keys.FirstOrDefault(w => w.Name == targetItem.Name);
+                if (!targetItem.CanWrite) 
+                {
+                    continue;
+                }
+
+                var sourceItem = sourceTypeCache.Keys.FirstOrDefault(w =>w.CanRead && w.Name == targetItem.Name);
                 //判断实体的读写权限
                 if (sourceItem == null)
                     continue;
