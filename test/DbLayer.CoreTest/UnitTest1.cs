@@ -58,12 +58,14 @@ namespace DbLayer.CoreTest
             var username = "test";
             var job = new { WjPaId=1L };
 
+            await service.GetEntityCountAsync<ParkArea>(w => w.Id == job.WjPaId);
+
             await service.UpdateEntityAsync(() => new ParkArea
             {
                 PaWorkerId = userId,
                 PaWorkerName = text,
                 PaWorkerNo = username
-            }, w => w.PaId == job.WjPaId);
+            }, w => w.Id == job.WjPaId);
 
 
             var data = new UcHelp
@@ -560,7 +562,7 @@ namespace DbLayer.CoreTest
     /// </summary>
     [Serializable]
     [DataTable("uc_help")]
-    public class UcHelp : BaseEntity<long>
+    public class UcHelp : VirtulDelEntity<long>
     {
         /// <summary>
         /// 标题
@@ -598,13 +600,8 @@ namespace DbLayer.CoreTest
     /// </summary>
     [Serializable]
     [DataTable("park_area")]
-    public class ParkArea
+    public class ParkArea: VirtulDelEntity<long>
     {
-        /// <summary>
-        /// 主键
-        /// </summary>
-        [DataField("pa_id", IsAuto = true, IsKey = true, KeyType = KeyType.MANUAL)]
-        public long PaId { get; set; } = -1;
         /// <summary>
         /// 收费标准外键
         /// </summary>
