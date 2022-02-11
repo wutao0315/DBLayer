@@ -1,17 +1,16 @@
 ﻿using System.Security.Claims;
 
-namespace DBLayer.Core.Interface
-{
-    public interface IDbContext
-    {
-        IUnitOfWork Uow { get; }
-        IDbProvider DbProvider { get; }
-        IDbFactory DbFactory { get; }
-        IDataSource DataSource { get; }
-        IConnectionString ConnectionString { get; }
-        IGenerator Generator { get; }
-        IPagerGenerator PagerGenerator { get; }
+namespace DBLayer.Core.Interface;
 
-        ClaimsPrincipal User{ get; }
-    }
+public interface IDbContext
+{
+    IUnitOfWork Uow { get; }
+    IDbProvider DbProvider { get; }
+    IDbFactory DbFactory { get; }
+    IDataSource DataSource { get; }
+    IConnectionString ConnectionString { get; }
+    IGenerator Generator { get; }
+    IPagerGenerator PagerGenerator { get; }
+
+    ClaimsPrincipal? User { get; }
 }

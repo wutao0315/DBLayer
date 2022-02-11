@@ -367,7 +367,7 @@ namespace DbLayer.CoreTest
         }
 
         [TestMethod]
-        public async Task TestQueryable()
+        public void TestQueryable()
         {
             var builder = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory() + "/Config")

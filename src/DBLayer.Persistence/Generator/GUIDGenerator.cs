@@ -1,14 +1,11 @@
 ﻿using DBLayer.Core.Interface;
-using System;
 
-namespace DBLayer.Persistence.Generator
+namespace DBLayer.Persistence.Generator;
+
+public class GUIDGenerator : IGenerator
 {
-
-    public class GUIDGenerator : IGenerator
+    public object Generate()
     {
-        public object Generate()
-        {
-            return Guid.NewGuid();
-        }
+        return Guid.NewGuid();
     }
 }

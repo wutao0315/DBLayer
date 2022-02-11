@@ -1,8 +1,7 @@
-﻿namespace DBLayer.Core
+﻿namespace DBLayer.Core;
+
+public static class PropertyConstants
 {
-    public static class PropertyConstants
-    {
-        public const string PASSWORD = "password"; 
-        public const string PASSWORDKEY = "passwordKey";
-    }
+    public const string PASSWORD = "password";
+    public const string PASSWORDKEY = "passwordKey";
 }

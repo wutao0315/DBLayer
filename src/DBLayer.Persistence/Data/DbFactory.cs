@@ -1,111 +1,106 @@
 ﻿using DBLayer.Core.Interface;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
-using System.Threading;
 
-namespace DBLayer.Persistence.Data
+namespace DBLayer.Persistence.Data;
+
+/// <summary>
+/// 数据库链接工厂类，负责生成和销毁数据库链接
+/// </summary>
+public class DbFactory : IDbFactory
 {
-    /// <summary>
-    /// 数据库链接工厂类，负责生成和销毁数据库链接
-    /// </summary>
-    public class DbFactory : IDbFactory
+    private readonly IConnectionString _connectionString;
+    private AsyncLocal<DbConnection> _asyncConn = new AsyncLocal<DbConnection>();
+    private AsyncLocal<DbTransaction> _asyncTrans = new AsyncLocal<DbTransaction>();
+
+    public DbFactory(IDbProvider dbProvider, IConnectionString connectionString)
     {
-        private readonly IConnectionString _connectionString;
-        private AsyncLocal<DbConnection> _asyncConn = new AsyncLocal<DbConnection>();
-        private AsyncLocal<DbTransaction> _asyncTrans = new AsyncLocal<DbTransaction>();
+        DbProvider = dbProvider;
+        _connectionString = connectionString;
+    }
+    /// <summary>
+    /// 长连接
+    /// </summary>
+    public DbConnection LongDbConnection
+    {
+        private set
+        {
+            _asyncConn.Value = value;
+        }
+        get
+        {
+            return _asyncConn.Value;
+        }
+    }
 
-        public DbFactory(IDbProvider dbProvider, IConnectionString connectionString)
+    /// <summary>
+    /// 长连接的事物
+    /// </summary>
+    public DbTransaction LongDbTransaction
+    {
+        private set
         {
-            DbProvider = dbProvider;
-            _connectionString = connectionString;
+            _asyncTrans.Value = value;
         }
-        /// <summary>
-        /// 长连接
-        /// </summary>
-        public DbConnection LongDbConnection 
-        { 
-            private set 
-            {
-                _asyncConn.Value = value;
-            } 
-            get 
-            {
-                return _asyncConn.Value;
-            }
+        get
+        {
+            return _asyncTrans.Value;
         }
+    }
+    /// <summary>
+    /// 数据库提供者
+    /// </summary>
+    public IDbProvider DbProvider { private set; get; }
+    /// <summary>
+    /// 数据库提供工厂
+    /// </summary>
+    public DbProviderFactory DbProviderFactory
+    {
+        get
+        {
+            var dbProviderFactory = DbProvider.GetDbProviderFactory();
+            return dbProviderFactory;
+        }
+    }
 
-        /// <summary>
-        /// 长连接的事物
-        /// </summary>
-        public DbTransaction LongDbTransaction
+    /// <summary>
+    /// 短链接
+    /// </summary>
+    public DbConnection ShortDbConnection
+    {
+        get
         {
-            private set
-            {
-                _asyncTrans.Value = value;
-            }
-            get
-            {
-                return _asyncTrans.Value;
-            }
+            var dbConnection = DbProvider.GetDbProviderFactory().CreateConnection();
+            dbConnection.ConnectionString = _connectionString.ConnectionValue;
+            dbConnection.Open();
+            return dbConnection;
         }
-        /// <summary>
-        /// 数据库提供者
-        /// </summary>
-        public IDbProvider DbProvider { private set; get; }
-        /// <summary>
-        /// 数据库提供工厂
-        /// </summary>
-        public DbProviderFactory DbProviderFactory
-        {
-            get
-            {
-                var dbProviderFactory = DbProvider.GetDbProviderFactory();
-                return dbProviderFactory;
-            }
-        }
+    }
 
-        /// <summary>
-        /// 短链接
-        /// </summary>
-        public DbConnection ShortDbConnection
+    /// <summary>
+    /// 开启事务
+    /// </summary>
+    /// <returns></returns>
+    public void BeginTransaction()
+    {
+        if (LongDbConnection == null)
         {
-            get
-            {
-                var dbConnection = DbProvider.GetDbProviderFactory().CreateConnection();
-                dbConnection.ConnectionString = _connectionString.ConnectionValue;
-                dbConnection.Open();
-                return dbConnection;
-            }
+            LongDbConnection = DbProvider.GetDbProviderFactory().CreateConnection();
+            LongDbConnection.ConnectionString = _connectionString.ConnectionValue;
+            LongDbConnection.Open();
+            LongDbTransaction = LongDbConnection.BeginTransaction();
         }
+    }
 
-        /// <summary>
-        /// 开启事务
-        /// </summary>
-        /// <returns></returns>
-        public void BeginTransaction()
+    public void Dispose()
+    {
+        LongDbTransaction?.Dispose();
+        if (LongDbConnection?.State != ConnectionState.Closed)
         {
-            if (LongDbConnection == null)
-            {
-                LongDbConnection = DbProvider.GetDbProviderFactory().CreateConnection();
-                LongDbConnection.ConnectionString = _connectionString.ConnectionValue;
-                LongDbConnection.Open();
-                LongDbTransaction = LongDbConnection.BeginTransaction();
-            }
+            LongDbConnection?.Close();
         }
-
-        public void Dispose()
-        {
-            LongDbTransaction?.Dispose();
-            if (LongDbConnection?.State != ConnectionState.Closed)
-            {
-                LongDbConnection?.Close();
-            }
-            LongDbConnection?.Dispose();
-            LongDbTransaction = null;
-            LongDbConnection = null;
-        }
+        LongDbConnection?.Dispose();
+        LongDbTransaction = null;
+        LongDbConnection = null;
     }
 }
