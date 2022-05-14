@@ -10,8 +10,8 @@ namespace DBLayer.Persistence.Data;
 public class DbFactory : IDbFactory
 {
     private readonly IConnectionString _connectionString;
-    private AsyncLocal<DbConnection> _asyncConn = new AsyncLocal<DbConnection>();
-    private AsyncLocal<DbTransaction> _asyncTrans = new AsyncLocal<DbTransaction>();
+    private AsyncLocal<DbConnection> _asyncConn = new ();
+    private AsyncLocal<DbTransaction> _asyncTrans = new ();
 
     public DbFactory(IDbProvider dbProvider, IConnectionString connectionString)
     {
@@ -21,7 +21,7 @@ public class DbFactory : IDbFactory
     /// <summary>
     /// 长连接
     /// </summary>
-    public DbConnection LongDbConnection
+    public DbConnection? LongDbConnection
     {
         private set
         {
@@ -36,7 +36,7 @@ public class DbFactory : IDbFactory
     /// <summary>
     /// 长连接的事物
     /// </summary>
-    public DbTransaction LongDbTransaction
+    public DbTransaction? LongDbTransaction
     {
         private set
         {
