@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace DBLayer.Persistence.Linq;
 
-public class SqlQueryable<T> : IQueryable<T>, IOrderedQueryable<T>
+public class SqlQueryable<T> : IOrderedQueryable<T>
 {
     protected readonly Expression _expression;
     protected readonly IQueryProvider _provider;

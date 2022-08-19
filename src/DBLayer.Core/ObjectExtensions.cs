@@ -8,27 +8,27 @@ namespace DBLayer.Core;
 
 public static class ObjectExtensions
 {
-    public static object ChangeType(this object value, Type type)
+    public static object? ChangeType(this object value, Type type)
     {
         if (value == null && type.IsGenericType) return Activator.CreateInstance(type);
         if (value == null) return null;
         if (type == value.GetType()) return value;
         if (type.IsEnum)
         {
-            if (value is string)
-                return Enum.Parse(type, value as string);
+            if (value is string str)
+                return Enum.Parse(type, str);
             else
                 return Enum.ToObject(type, value);
         }
         if (!type.IsInterface && type.IsGenericType)
         {
             Type innerType = type.GetGenericArguments()[0];
-            object innerValue = ChangeType(value, innerType);
-            return Activator.CreateInstance(type, new object[] { innerValue });
+            object? innerValue = ChangeType(value, innerType);
+            return Activator.CreateInstance(type, new object?[] { innerValue });
         }
-        if (value is string && type == typeof(Guid)) return new Guid(value as string);
-        if (value is string && type == typeof(Version)) return new Version(value as string);
-        if (!(value is IConvertible)) return value;
+        if (value is string guidStr && type == typeof(Guid)) return new Guid(guidStr);
+        if (value is string verionStr && type == typeof(Version)) return new Version(verionStr);
+        if (value is not IConvertible) return value;
 
         if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
         {
@@ -53,7 +53,7 @@ public static class ObjectExtensions
             object obj = pis[a].Getter(obEntity);
             return obj;
         }
-        return default;
+        return default!;
     }
     /// <summary>
     /// 利用反射根据对象和属性名为对应的属性赋值
@@ -69,7 +69,6 @@ public static class ObjectExtensions
         if (a != null)
         {
             pis[a].Setter(obEntity, Value);
-            //a.SetValue(obEntity, Value.ChangeType(a.PropertyType), null);
         }
     }
     /// <summary>
@@ -78,7 +77,7 @@ public static class ObjectExtensions
     /// <param name="type">需要测试的类型。</param>
     /// <param name="generic">泛型接口类型，传入 typeof(IXxx&lt;&gt;)</param>
     /// <returns>如果是泛型接口的子类型，则返回 true，否则返回 false。</returns>
-    public static bool HasImplementedRawGeneric([NotNull] this Type type, [NotNull] Type generic)
+    public static bool HasImplementedRawGeneric(this Type? type, Type? generic)
     {
         if (type == null) throw new ArgumentNullException(nameof(type));
         if (generic == null) throw new ArgumentNullException(nameof(generic));
@@ -140,7 +139,7 @@ public static class ObjectReflectionExtensions
         var properties = type.GetProperties().Where(x => x.PropertyType.IsPublic);
         foreach (var propertyInfo in properties)
         {
-            Func<object, object> getter = (obj) => default;
+            Func<object, object> getter = (obj) => default!;
             Action<object, object> setter = (obj1, obj2) => { };
             if (propertyInfo.CanRead)
             {
@@ -179,7 +178,7 @@ public static class ObjectReflectionExtensions
     {
         var objectType = typeof(object);
         var objectParameter = Expression.Parameter(objectType);
-        var castExpression = Expression.TypeAs(objectParameter, property.DeclaringType);
+        var castExpression = Expression.TypeAs(objectParameter, property.DeclaringType!);
         var convertExpression = Expression.Convert(
             Expression.Property(castExpression, property),
             objectType);
@@ -193,12 +192,12 @@ public static class ObjectReflectionExtensions
         var objectType = typeof(object);
 
         var targetParameter = Expression.Parameter(objectType);
-        var castExpression = Expression.TypeAs(targetParameter, property.DeclaringType);
+        var castExpression = Expression.TypeAs(targetParameter, property.DeclaringType!);
         var propertyExpression = Expression.Property(castExpression, property);
 
         var valueExpression = Expression.Parameter(objectType);
 
-        var changeTypeMethod = typeof(ObjectExtensions).GetMethod("ChangeType");
+        var changeTypeMethod = typeof(ObjectExtensions).GetMethod("ChangeType")!;
         var valueConvertExpression = Expression.Convert(
             Expression.Call(changeTypeMethod, valueExpression, Expression.Constant(property.PropertyType)),
             property.PropertyType);
@@ -217,25 +216,25 @@ public static class ObjectReflectionExtensions
         return type.IsValueType || type == typeof(string);
     }
 
-    internal static string ToStringValueType(this object value)
-    {
-        return value switch
-        {
-            DateTime dateTime => dateTime.ToString("o"),
-            bool boolean => boolean.ToStringLowerCase(),
-            _ => value.ToString()
-        };
-    }
+    //internal static string ToStringValueType(this object value)
+    //{
+    //    return value switch
+    //    {
+    //        DateTime dateTime => dateTime.ToString("o"),
+    //        bool boolean => boolean.ToStringLowerCase(),
+    //        _ => value.ToString()
+    //    };
+    //}
 
     internal static bool IsIEnumerable(this Type type)
     {
         return type.IsAssignableFrom(typeof(IEnumerable));
     }
 
-    internal static string ToStringLowerCase(this bool boolean)
-    {
-        return boolean ? "true" : "false";
-    }
+    //internal static string ToStringLowerCase(this bool boolean)
+    //{
+    //    return boolean ? "true" : "false";
+    //}
 }
 public class PropertyGetterSetter
 {
@@ -272,14 +271,14 @@ public static class MapperExtensions
         var targetType = typeof(TTarget);
         var key = $"{sourceType.FullName}@{targetType.FullName}";
 
-        if (CachedProperties.TryGetValue(key, out object func))
+        if (CachedProperties.TryGetValue(key, out object? func))
         {
             return (Func<TSource, TTarget>)func;
         }
 
         GetMapInternal<TSource, TTarget>();
 
-        return CachedProperties[key] as Func<TSource, TTarget>;
+        return (Func<TSource, TTarget>)CachedProperties[key];
     }
 
     private static void GetMapInternal<TSource, TTarget>()
@@ -343,7 +342,9 @@ public static class MapperExtensions
             var propertyExpression = Expression.Property(parameterExpression, sourceItem);
 
             //判断都是class 且类型不相同时
-            if (targetItem.PropertyType.IsClass && sourceItem.PropertyType.IsClass && targetItem.PropertyType != sourceItem.PropertyType)
+            if (targetItem.PropertyType.IsClass 
+                && sourceItem.PropertyType.IsClass 
+                && targetItem.PropertyType != sourceItem.PropertyType)
             {
                 if (targetItem.PropertyType != targetType)//防止出现自己引用自己无限递归
                 {

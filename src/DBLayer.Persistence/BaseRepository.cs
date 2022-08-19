@@ -2568,7 +2568,7 @@ public abstract class BaseRepository : IRepository
     /// 获取用户申明
     /// </summary>
     /// <returns></returns>
-    public ClaimsPrincipal GetUser()
+    public ClaimsPrincipal? GetUser()
     {
         return _user;
     }

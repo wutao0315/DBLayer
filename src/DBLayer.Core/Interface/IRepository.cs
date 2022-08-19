@@ -701,7 +701,7 @@ public interface IRepository
     /// 获取用户申明
     /// </summary>
     /// <returns></returns>
-    ClaimsPrincipal GetUser();
+    ClaimsPrincipal? GetUser();
     /// <summary>
     /// 获取用户名
     /// </summary>

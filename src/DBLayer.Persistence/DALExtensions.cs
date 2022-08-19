@@ -3,6 +3,7 @@ using DBLayer.Core.Interface;
 using DBLayer.Core.Logging;
 using DBLayer.Core.Utilities;
 using System.Data;
+using System.Runtime.InteropServices;
 using System.Text;
 /*------------------------------------------------------------------------------
 * 单元名称：数据库层--数据处理扩展类
@@ -73,7 +74,6 @@ public static class DALExtensions
         try
         {
             var item = new Dictionary<string, object>();
-
             for (int i = 0; i < reader.FieldCount; i++)
             {
                 var name = reader.GetName(i);
@@ -115,7 +115,6 @@ public static class DALExtensions
         try
         {
             var item = new Dictionary<string, string>();
-
             for (int i = 0; i < reader.FieldCount; i++)
             {
                 var name = reader.GetName(i);
@@ -305,7 +304,9 @@ public static class DALExtensions
         foreach (var property in propertyInfos)
         {
             //不可读
-            if (!property.Key.CanRead || !property.Key.CanWrite || (inclusionList?.Length > 0 && inclusionList.IsExcluded(property.Key.Name)))
+            if (!property.Key.CanRead 
+            || !property.Key.CanWrite 
+            || (inclusionList?.Length > 0 && inclusionList.IsExcluded(property.Key.Name)))
             {
                 continue;
             }
@@ -325,4 +326,4 @@ public static class DALExtensions
         }
         return sqlFields;
     }
-} //end class
+}
