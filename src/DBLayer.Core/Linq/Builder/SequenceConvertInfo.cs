@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace DBLayer.Linq.Builder
+namespace DBLayer.Linq.Builder;
+
+public class SequenceConvertInfo
 {
-	public class SequenceConvertInfo
-	{
-		public ParameterExpression?       Parameter;
-		public Expression                 Expression = null!;
-		public List<SequenceConvertPath>? ExpressionsToReplace;
-	}
+	public ParameterExpression?       Parameter;
+	public Expression                 Expression = null!;
+	public List<SequenceConvertPath>? ExpressionsToReplace;
 }

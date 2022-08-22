@@ -1,47 +1,45 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using DBLayer.Expressions;
+using DBLayer.SqlQuery;
 
-namespace DBLayer.Linq.Builder
+using static DBLayer.Reflection.Methods.DBLayer.Merge;
+
+namespace DBLayer.Linq.Builder;
+
+internal partial class MergeBuilder
 {
-	using DBLayer.Expressions;
-	using DBLayer.SqlQuery;
-
-	using static DBLayer.Reflection.Methods.DBLayer.Merge;
-
-	internal partial class MergeBuilder
+	internal class Merge : MethodCallBuilder
 	{
-		internal class Merge : MethodCallBuilder
+		static readonly MethodInfo[] _supportedMethods = {MergeMethodInfo1, MergeMethodInfo2};
+
+		protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
 		{
-			static readonly MethodInfo[] _supportedMethods = {MergeMethodInfo1, MergeMethodInfo2};
+			return methodCall.IsSameGenericMethod(_supportedMethods);
+		}
 
-			protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
+		protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
+		{
+			// Merge(ITable<TTarget> target, string hint)
+			var target = builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0], new SelectQuery()) { AssociationsAsSubQueries = true });
+
+			if (target is not TableBuilder.TableContext tableContext
+				|| !tableContext.SelectQuery.IsSimple)
 			{
-				return methodCall.IsSameGenericMethod(_supportedMethods);
+				throw new NotImplementedException("Currently, only CTEs are supported as the target of a merge. You can fix by calling .AsCte() before calling .Merge()");
 			}
 
-			protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
-			{
-				// Merge(ITable<TTarget> target, string hint)
-				var target = builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0], new SelectQuery()) { AssociationsAsSubQueries = true });
+			var targetTable = tableContext.SqlTable;
 
-				if (target is not TableBuilder.TableContext tableContext
-					|| !tableContext.SelectQuery.IsSimple)
-				{
-					throw new NotImplementedException("Currently, only CTEs are supported as the target of a merge. You can fix by calling .AsCte() before calling .Merge()");
-				}
+			var merge = new SqlMergeStatement(targetTable);
+			if (methodCall.Arguments.Count == 2)
+				merge.Hint = (string?)methodCall.Arguments[1].EvaluateExpression();
 
-				var targetTable = tableContext.SqlTable;
+			target.SetAlias(merge.Target.Alias!);
+			target.Statement = merge;
 
-				var merge = new SqlMergeStatement(targetTable);
-				if (methodCall.Arguments.Count == 2)
-					merge.Hint = (string?)methodCall.Arguments[1].EvaluateExpression();
-
-				target.SetAlias(merge.Target.Alias!);
-				target.Statement = merge;
-
-				return new MergeContext(merge, target);
-			}
+			return new MergeContext(merge, target);
 		}
 	}
 }

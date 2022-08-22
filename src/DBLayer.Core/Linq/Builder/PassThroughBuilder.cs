@@ -1,24 +1,20 @@
-﻿using System;
-using System.Reflection;
+﻿using DBLayer.Expressions;
+using DBLayer.Reflection;
 using System.Linq.Expressions;
+using System.Reflection;
 
-namespace DBLayer.Linq.Builder
+namespace DBLayer.Linq.Builder;
+class PassThroughBuilder : MethodCallBuilder
 {
-	using DBLayer.Expressions;
-	using DBLayer.Reflection;
+	static readonly MethodInfo[] _supportedMethods = { Methods.Enumerable.AsQueryable, Methods.DBLayer.AsQueryable, Methods.DBLayer.SqlExt.Alias };
 
-	class PassThroughBuilder : MethodCallBuilder
+	protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
 	{
-		static readonly MethodInfo[] _supportedMethods = { Methods.Enumerable.AsQueryable, Methods.DBLayer.AsQueryable, Methods.DBLayer.SqlExt.Alias };
+		return methodCall.IsSameGenericMethod(_supportedMethods);
+	}
 
-		protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
-		{
-			return methodCall.IsSameGenericMethod(_supportedMethods);
-		}
-
-		protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
-		{
-			return builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0]));
-		}
+	protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
+	{
+		return builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0]));
 	}
 }
