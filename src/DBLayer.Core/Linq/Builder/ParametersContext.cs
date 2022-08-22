@@ -5,13 +5,13 @@ using System.Reflection;
 
 namespace DBLayer.Linq.Builder
 {
-	using Common;
-	using Data;
+	using DBLayer.Common;
+	using DBLayer.Data;
 	using DBLayer.Expressions;
-	using Extensions;
-	using Mapping;
-	using Reflection;
-	using SqlQuery;
+	using DBLayer.Extensions;
+	using DBLayer.Mapping;
+	using DBLayer.Reflection;
+	using DBLayer.SqlQuery;
 
 	class ParametersContext
 	{

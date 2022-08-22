@@ -1,7 +1,7 @@
 ﻿namespace DBLayer.SqlProvider
 {
-	using Mapping;
-	using SqlQuery;
+	using DBLayer.Mapping;
+	using DBLayer.SqlQuery;
 
 	internal static class SqlOptimizerExtensions
 	{

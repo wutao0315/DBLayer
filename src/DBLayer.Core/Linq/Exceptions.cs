@@ -4,7 +4,7 @@ namespace DBLayer.Linq
 {
 	using System;
 	using System.Linq;
-	using Common;
+	using DBLayer.Common;
 	using DBLayer.Linq.Builder;
 	using DBLayer.Mapping;
 

@@ -8,10 +8,10 @@ using System.Text;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
-	using Common.Internal;
+	using DBLayer.Common;
+	using DBLayer.Common.Internal;
 	using DBLayer.Extensions;
-	using Mapping;
+	using DBLayer.Mapping;
 
 	public class SqlDataType : ISqlExpression, IEquatable<SqlDataType>
 	{

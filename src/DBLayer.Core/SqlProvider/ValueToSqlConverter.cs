@@ -6,9 +6,9 @@ using System.Text;
 
 namespace DBLayer.SqlProvider
 {
-	using Common;
-	using Extensions;
-	using SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.Extensions;
+	using DBLayer.SqlQuery;
 
 	using ConverterType = Action<StringBuilder,SqlQuery.SqlDataType,object>;
 

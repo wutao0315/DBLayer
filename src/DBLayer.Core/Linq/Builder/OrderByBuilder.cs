@@ -5,7 +5,7 @@ using DBLayer.SqlQuery;
 
 namespace DBLayer.Linq.Builder
 {
-	using Common;
+	using DBLayer.Common;
 	using DBLayer.Expressions;
 
 	class OrderByBuilder : MethodCallBuilder

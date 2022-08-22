@@ -2,7 +2,7 @@
 
 namespace DBLayer.SqlProvider
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	class NoneExtensionBuilder : ISqlExtensionBuilder
 	{

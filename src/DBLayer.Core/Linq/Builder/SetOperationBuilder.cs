@@ -8,9 +8,9 @@ using System.Reflection;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using Extensions;
-	using Reflection;
-	using SqlQuery;
+	using DBLayer.Extensions;
+	using DBLayer.Reflection;
+	using DBLayer.SqlQuery;
 
 	class SetOperationBuilder : MethodCallBuilder
 	{

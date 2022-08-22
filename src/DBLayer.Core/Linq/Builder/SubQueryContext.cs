@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace DBLayer.Linq.Builder
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	class SubQueryContext : PassThroughContext
 	{

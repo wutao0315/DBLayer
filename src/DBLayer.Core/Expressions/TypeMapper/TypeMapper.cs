@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DBLayer.Common;
+using DBLayer.Extensions;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace DBLayer.Expressions
 {
-	using System.Collections;
-	using System.Diagnostics.CodeAnalysis;
-	using System.Threading;
-	using System.Threading.Tasks;
-	using Common;
-	using DBLayer.Extensions;
-
 	/// <summary>
 	/// Implements typed mappings support for dynamically loaded types.
 	/// </summary>
@@ -47,16 +41,16 @@ namespace DBLayer.Expressions
 		public void RegisterTypeWrapper(Type wrapperType, Type originalType)
 		{
 			if (_finalized)
-				throw new LinqToDBException($"Wrappers registration is not allowed after {nameof(FinalizeMappings)}() call");
+				throw new DBLayerException($"Wrappers registration is not allowed after {nameof(FinalizeMappings)}() call");
 
 			var wrapperAttr = wrapperType.GetCustomAttribute<WrapperAttribute>(true);
 
 			if ((wrapperAttr?.TypeName ?? wrapperType.Name) != originalType.Name)
-				throw new LinqToDBException($"Original and wraped types should have same type name. {wrapperType.Name} != {originalType.Name}");
+				throw new DBLayerException($"Original and wraped types should have same type name. {wrapperType.Name} != {originalType.Name}");
 
 			var typeName = originalType.FullName ?? originalType.Name;
 			if (_types.ContainsKey(typeName))
-				throw new LinqToDBException($"Type with name {typeName} already registered in mapper");
+				throw new DBLayerException($"Type with name {typeName} already registered in mapper");
 
 			_types                  .Add(typeName    , originalType);
 			_typeMappingCache       .Add(wrapperType , originalType);
@@ -74,7 +68,7 @@ namespace DBLayer.Expressions
 				}
 			}
 			else
-				throw new LinqToDBException($"Type {wrapperType} should inherit from {typeof(TypeWrapper)} or marked with {typeof(WrapperAttribute)} attribute");
+				throw new DBLayerException($"Type {wrapperType} should inherit from {typeof(TypeWrapper)} or marked with {typeof(WrapperAttribute)} attribute");
 		}
 
 		private void BuildEnumConverters(Type wrapperType, Type originalType)
@@ -89,7 +83,7 @@ namespace DBLayer.Expressions
 			var baseType = Enum.GetUnderlyingType(wrapperType);
 
 			if (baseType != Enum.GetUnderlyingType(originalType))
-				throw new LinqToDBException($"Enums {wrapperType} and {originalType} have different base types: {baseType} vs {Enum.GetUnderlyingType(originalType)}");
+				throw new DBLayerException($"Enums {wrapperType} and {originalType} have different base types: {baseType} vs {Enum.GetUnderlyingType(originalType)}");
 
 			var wrapperValues  = Enum.GetValues(wrapperType) .OfType<object>().Distinct().ToDictionary(_ => _.ToString()!, _ => _);
 			var originalValues = Enum.GetValues(originalType).OfType<object>().Distinct().ToDictionary(_ => _.ToString()!, _ => _);
@@ -110,7 +104,7 @@ namespace DBLayer.Expressions
 			}
 
 			if (!hasCommonMembers)
-				throw new LinqToDBException($"Enums {wrapperType} and {originalType} have no common values");
+				throw new DBLayerException($"Enums {wrapperType} and {originalType} have no common values");
 
 			// build by-value converters
 			var pWrapper  = Expression.Parameter(wrapperType);
@@ -123,7 +117,7 @@ namespace DBLayer.Expressions
 				// this should never happen, but it we will have such situation it is better to fail
 				if (wrapperType.GetCustomAttribute(typeof(FlagsAttribute)) != null
 					|| originalType.GetCustomAttribute(typeof(FlagsAttribute)) != null)
-					throw new LinqToDBException($"Flags enums {wrapperType} and {originalType} are not compatible by values");
+					throw new DBLayerException($"Flags enums {wrapperType} and {originalType} are not compatible by values");
 
 				// build dictionary-based converters
 
@@ -195,7 +189,7 @@ namespace DBLayer.Expressions
 		public void FinalizeMappings()
 		{
 			if (_finalized)
-				throw new LinqToDBException($"{nameof(FinalizeMappings)}() cannot be called multiple times");
+				throw new DBLayerException($"{nameof(FinalizeMappings)}() cannot be called multiple times");
 
 			foreach (var wrapperType in _typeMappingCache.Keys.Where(t => typeof(TypeWrapper).IsSameOrParentOf(t)).ToList())
 			{
@@ -208,7 +202,7 @@ namespace DBLayer.Expressions
 				var ctor = wrapperType.GetConstructor(types);
 
 				if (ctor == null)
-					throw new LinqToDBException($"Cannot find contructor ({string.Join(", ", types.Select(t => t.ToString()))}) in type {wrapperType}");
+					throw new DBLayerException($"Cannot find contructor ({string.Join(", ", types.Select(t => t.ToString()))}) in type {wrapperType}");
 
 				var pInstance = Expression.Parameter(typeof(object));
 
@@ -419,7 +413,7 @@ namespace DBLayer.Expressions
 				return expression;
 
 			if (!replacementType.IsEnum)
-				throw new LinqToDBException("Only enums converted automatically.");
+				throw new DBLayerException("Only enums converted automatically.");
 
 			return _enumFromWrapperCache[valueType].GetBody(expression);
 		}
@@ -430,7 +424,7 @@ namespace DBLayer.Expressions
 			var toType    = typeof(TTarget);
 
 			if (!toType.IsEnum)
-				throw new LinqToDBException("Only enums converted automatically.");
+				throw new DBLayerException("Only enums converted automatically.");
 
 			return _enumToWrapperCache[valueType].GetBody(expression);
 		}
@@ -488,9 +482,9 @@ namespace DBLayer.Expressions
 		{
 			var newMembers = targetType.GetMember(memberInfo.Name);
 			if (newMembers.Length == 0)
-				throw new LinqToDBException($"There is no member '{memberInfo.Name}' in type '{targetType.FullName}'");
+				throw new DBLayerException($"There is no member '{memberInfo.Name}' in type '{targetType.FullName}'");
 			if (newMembers.Length > 1)
-				throw new LinqToDBException($"Ambiguous member '{memberInfo.Name}' in type '{targetType.FullName}'");
+				throw new DBLayerException($"Ambiguous member '{memberInfo.Name}' in type '{targetType.FullName}'");
 			return newMembers[0];
 		}
 
@@ -533,7 +527,7 @@ namespace DBLayer.Expressions
 
 										var name = replacement.FullName + "." + ue.Method.Name + "(" +
 												   string.Join(", ", types.Select(t => t.Name)) + ")";
-										throw new LinqToDBException($"Method not found in target type: {name}");
+										throw new DBLayerException($"Method not found in target type: {name}");
 									}
 
 									return Expression.Convert(expr, type, method);
@@ -591,7 +585,7 @@ namespace DBLayer.Expressions
 							{
 								var expr = context.Mapper.ReplaceTypes(ma.Expression, context)!;
 								if (expr.Type != replacement)
-									throw new LinqToDBException($"Invalid replacement of '{ma.Expression}' to type '{replacement.FullName}'.");
+									throw new DBLayerException($"Invalid replacement of '{ma.Expression}' to type '{replacement.FullName}'.");
 
 								var prop = replacement.GetProperty(ma.Member.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
 								if (prop == null)
@@ -604,7 +598,7 @@ namespace DBLayer.Expressions
 										return e;
 									}
 
-									throw new LinqToDBException($"Property not found in target type: {replacement.FullName}.{ma.Member.Name}");
+									throw new DBLayerException($"Property not found in target type: {replacement.FullName}.{ma.Member.Name}");
 								}
 
 								return Expression.MakeMemberAccess(expr, prop);
@@ -644,7 +638,7 @@ namespace DBLayer.Expressions
 
 									var name = replacement.FullName + "." + ne.Constructor.Name + "(" +
 									           string.Join(", ", paramTypes.Select(t => t.Name)) + ")";
-									throw new LinqToDBException($"Constructor not found in target type: {name}");
+									throw new DBLayerException($"Constructor not found in target type: {name}");
 								}
 
 								var newArguments  = ne.Arguments.Select(a => context.Mapper.ReplaceTypes(a, context)!);
@@ -727,7 +721,7 @@ namespace DBLayer.Expressions
 										var name = replacement.FullName + "." + methodName + "<" +
 												   string.Join(", ", typeArgs.Select(t => t.Name))+ ">(" +
 												   string.Join(", ", types.Select(t => t.Name)) + ")";
-										throw new LinqToDBException($"Method not found in target type: {name}");
+										throw new DBLayerException($"Method not found in target type: {name}");
 									}
 
 									var newArguments  = mc.Arguments.Select(a => context.Mapper.ReplaceTypes(a, context)!);
@@ -743,7 +737,7 @@ namespace DBLayer.Expressions
 												return e;
 											}
 
-											throw new LinqToDBException($"Cannot map return type: {newMethodCall.Type} using {customReturnMapper.GetType()} mapper");
+											throw new DBLayerException($"Cannot map return type: {newMethodCall.Type} using {customReturnMapper.GetType()} mapper");
 										}
 
 										return customReturnMapper.Map(newMethodCall);
@@ -766,7 +760,7 @@ namespace DBLayer.Expressions
 
 										var name = replacement.FullName + "." + methodName + "(" +
 												   string.Join(", ", types.Select(t => t.Name)) + ")";
-										throw new LinqToDBException($"Method not found in target type: {name}");
+										throw new DBLayerException($"Method not found in target type: {name}");
 									}
 
 									var newArguments  = mc.Arguments.Select(a => context.Mapper.ReplaceTypes(a, context)!);
@@ -782,7 +776,7 @@ namespace DBLayer.Expressions
 												return e;
 											}
 
-											throw new LinqToDBException($"Cannot map return type: {newMethodCall.Type} using {customReturnMapper.GetType()} mapper");
+											throw new DBLayerException($"Cannot map return type: {newMethodCall.Type} using {customReturnMapper.GetType()} mapper");
 										}
 
 										return customReturnMapper.Map(newMethodCall);
@@ -812,7 +806,7 @@ namespace DBLayer.Expressions
 			{
 				mapper = Activator.CreateInstance(mapperType) as ICustomMapper;
 				if (mapper == null)
-					throw new LinqToDBException($"Type {mapperType} must implement {nameof(ICustomMapper)} interface.");
+					throw new DBLayerException($"Type {mapperType} must implement {nameof(ICustomMapper)} interface.");
 
 				_typeMapperInstancesCache[mapperType] = mapper;
 			}
@@ -823,7 +817,7 @@ namespace DBLayer.Expressions
 		private Expression MapExpressionInternal(LambdaExpression lambdaExpression, params Expression[] parameters)
 		{
 			if (lambdaExpression.Parameters.Count != parameters.Length)
-				throw new LinqToDBException($"Parameters count is different: {lambdaExpression.Parameters.Count} != {parameters.Length}.");
+				throw new DBLayerException($"Parameters count is different: {lambdaExpression.Parameters.Count} != {parameters.Length}.");
 
 			var lambda = MapLambdaInternal(lambdaExpression, true)!;
 			var expr   = lambda.Body.Transform((lambdaParams: lambda.Parameters, parameters), static (context, e) =>
@@ -844,7 +838,7 @@ namespace DBLayer.Expressions
 		private LambdaExpression CorrectLambdaParameters(LambdaExpression lambda, Type? resultType, params Type[] paramTypes)
 		{
 			if (lambda.Parameters.Count != paramTypes.Length)
-				throw new LinqToDBException("Invalid count of types.");
+				throw new DBLayerException("Invalid count of types.");
 
 			var parameters = new ParameterExpression[paramTypes.Length];
 			var generator  = new ExpressionGenerator(this);
@@ -1173,7 +1167,7 @@ namespace DBLayer.Expressions
 			// 2. generate wrapper constructor call instead of Wrap method call (will need null check of wrapped value)
 			var wrapperType = typeof(T);
 			if (!TryMapType(wrapperType, out var _))
-				throw new LinqToDBException($"Wrapper type {wrapperType} is not registered");
+				throw new DBLayerException($"Wrapper type {wrapperType} is not registered");
 
 			return BuildWrapperImpl(lambda, wrapResult, false)!;
 		}
@@ -1265,7 +1259,7 @@ namespace DBLayer.Expressions
 				return null;
 
 			if (!_wrapperFactoryCache.TryGetValue(wrapperType, out var factory))
-				throw new LinqToDBException($"Missing type wrapper factory registration for type {wrapperType}");
+				throw new DBLayerException($"Missing type wrapper factory registration for type {wrapperType}");
 
 			return factory(instance);
 		}
@@ -1273,7 +1267,7 @@ namespace DBLayer.Expressions
 		public async Task<TR?> WrapTask<TR>(Task instanceTask, Type instanceType, CancellationToken cancellationToken)
 			where TR : TypeWrapper
 		{
-			await instanceTask.ConfigureAwait(Configuration.ContinueOnCapturedContext);
+			await instanceTask.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 			return (TR?)WrapTask(typeof(TR), instanceTask);
 		}
@@ -1281,7 +1275,7 @@ namespace DBLayer.Expressions
 		private object? WrapTask(Type wrapperType, Task instance)
 		{
 			if (!_taskWrapperFactoryCache.TryGetValue(wrapperType, out var factory))
-				throw new LinqToDBException($"Missing type wrapper factory registration for type {wrapperType}");
+				throw new DBLayerException($"Missing type wrapper factory registration for type {wrapperType}");
 
 			return factory(instance);
 		}

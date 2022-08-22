@@ -1,9 +1,8 @@
-﻿namespace DBLayer.Linq.Builder
+﻿namespace DBLayer.Linq.Builder;
+
+public enum ConvertFlags
 {
-	public enum ConvertFlags
-	{
-		Field,
-		Key,
-		All,
-	}
+	Field,
+	Key,
+	All,
 }

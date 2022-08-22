@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace DBLayer.Linq
 {
 	using Async;
-	using Extensions;
-	using Data;
+	using DBLayer.Extensions;
+	using DBLayer.Data;
 
 	abstract class ExpressionQuery<T> : IExpressionQuery<T>, IAsyncEnumerable<T>
 	{

@@ -1,7 +1,6 @@
-﻿using System;
+﻿using DBLayer.Common;
 using System.Linq.Expressions;
 using System.Reflection;
-using DBLayer.Common;
 
 namespace DBLayer.Expressions
 {
@@ -58,7 +57,7 @@ namespace DBLayer.Expressions
 		{
 			if (!(getter.Body is MemberExpression me)
 				|| !(me.Member is PropertyInfo pi))
-				throw new LinqToDBException($"Expected property accessor expression");
+				throw new DBLayerException($"Expected property accessor expression");
 
 			var pThis  = Expression.Parameter(typeof(TI));
 			var pValue = Expression.Parameter(typeof(TP));

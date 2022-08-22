@@ -2,7 +2,7 @@
 
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-using Common;
+using DBLayer.Common;
 
 namespace DBLayer.Data.RetryPolicy;
 
@@ -153,12 +153,12 @@ public abstract class RetryPolicyBase : IRetryPolicy
 	{
 		if (Suspended)
 		{
-			await operation(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+			await operation(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 			return;
 		}
 
 		OnFirstExecution();
-		await ExecuteImplementationAsync(async ct => { await operation(ct).ConfigureAwait(Configuration.ContinueOnCapturedContext); return 0; }, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await ExecuteImplementationAsync(async ct => { await operation(ct).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext); return 0; }, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 	}
 
 	async Task<TResult> ExecuteImplementationAsync<TResult>(
@@ -175,7 +175,7 @@ public abstract class RetryPolicyBase : IRetryPolicy
 			try
 			{
 				Suspended = true;
-				var result = await operation(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				var result = await operation(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 				Suspended = false;
 				return result;
 			}
@@ -195,7 +195,7 @@ public abstract class RetryPolicyBase : IRetryPolicy
 				OnRetry();
 			}
 
-			await Task.Delay(delay.Value, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+			await Task.Delay(delay.Value, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		}
 	}
 

@@ -9,8 +9,8 @@ using System.Linq.Expressions;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using Extensions;
-	using Reflection;
+	using DBLayer.Extensions;
+	using DBLayer.Reflection;
 	using System.Data.Common;
 
 	class SelectBuilder : MethodCallBuilder

@@ -5,8 +5,8 @@ using System.Linq.Expressions;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using Extensions;
-	using SqlQuery;
+	using DBLayer.Extensions;
+	using DBLayer.SqlQuery;
 
 	class OfTypeBuilder : MethodCallBuilder
 	{

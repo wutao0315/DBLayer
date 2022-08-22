@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace DBLayer.Linq.Builder
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	[DebuggerDisplay("{BuildContextDebuggingHelper.GetContextInfo(this)}")]
 	abstract class SequenceContextBase : IBuildContext

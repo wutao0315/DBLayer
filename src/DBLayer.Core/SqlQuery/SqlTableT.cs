@@ -1,6 +1,6 @@
 ﻿namespace DBLayer.SqlQuery
 {
-	using Mapping;
+	using DBLayer.Mapping;
 
 	public class SqlTable<T> : SqlTable
 	{

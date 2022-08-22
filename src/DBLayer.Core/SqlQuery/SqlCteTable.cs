@@ -5,7 +5,7 @@ using System.Text;
 namespace DBLayer.SqlQuery
 {
 	using System.Diagnostics.CodeAnalysis;
-	using Mapping;
+	using DBLayer.Mapping;
 
 	public class SqlCteTable : SqlTable
 	{

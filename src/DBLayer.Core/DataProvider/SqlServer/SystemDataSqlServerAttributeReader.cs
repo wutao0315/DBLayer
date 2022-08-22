@@ -1,15 +1,11 @@
-﻿using System;
+﻿using DBLayer.Common;
+using DBLayer.Extensions;
+using DBLayer.Mapping;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Reflection;
 
 namespace DBLayer.Metadata
 {
-	using Common;
-	using Extensions;
-	using DBLayer.DataProvider.SqlServer;
-	using Mapping;
-
 	/// <summary>
 	/// Adds support for types and functions, defined in Microsoft.SqlServer.Types spatial types
 	/// (or any other types and methods, that use SqlMethodAttribute or SqlUserDefinedTypeAttribute mapping attributes).

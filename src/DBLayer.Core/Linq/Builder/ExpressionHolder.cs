@@ -1,8 +1,7 @@
-﻿namespace DBLayer.Linq.Builder
+﻿namespace DBLayer.Linq.Builder;
+
+class ExpressionHolder<TP,TE>
 {
-	class ExpressionHolder<TP,TE>
-	{
-		public TP p  = default!;
-		public TE ex = default!;
-	}
+	public TP p  = default!;
+	public TE ex = default!;
 }

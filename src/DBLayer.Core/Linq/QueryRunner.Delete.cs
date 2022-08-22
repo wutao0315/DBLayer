@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Linq
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 	using Common.Internal.Cache;
 
 	static partial class QueryRunner

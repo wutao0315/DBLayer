@@ -16,13 +16,13 @@ namespace DBLayer.Linq
 	using Async;
 #endif
 	using Builder;
-	using Common;
+	using DBLayer.Common;
 	using Common.Logging;
 	using Interceptors;
 	using DBLayer.Expressions;
-	using Mapping;
-	using SqlProvider;
-	using SqlQuery;
+	using DBLayer.Mapping;
+	using DBLayer.SqlProvider;
+	using DBLayer.SqlQuery;
 
 	public abstract class Query
 	{
@@ -237,7 +237,7 @@ namespace DBLayer.Linq
 			var preambles = new object?[_preambles.Length];
 			for (var i = 0; i < preambles.Length; i++)
 			{
-				preambles[i] = await _preambles[i].Item3(_preambles[i].Item1, dc, rootExpression, ps, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				preambles[i] = await _preambles[i].Item3(_preambles[i].Item1, dc, rootExpression, ps, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 			}
 
 			return preambles;
@@ -526,7 +526,7 @@ namespace DBLayer.Linq
 				if (!Configuration.Linq.GenerateExpressionTest)
 				{
 					dataContext.WriteTraceLine(
-						"To generate test code to diagnose the problem set 'LinqToDB.Common.Configuration.Linq.GenerateExpressionTest = true'.",
+						"To generate test code to diagnose the problem set 'DBLayer.Common.Configuration.Linq.GenerateExpressionTest = true'.",
 						dataContext.GetTraceSwitch().DisplayName,
 						TraceLevel.Error);
 				}

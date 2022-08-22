@@ -5,8 +5,8 @@ using DBLayer.Common;
 
 namespace DBLayer.Linq.Builder
 {
-	using Extensions;
-	using SqlQuery;
+	using DBLayer.Extensions;
+	using DBLayer.SqlQuery;
 
 	public class SqlInfo
 	{

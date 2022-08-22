@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace DBLayer.Mapping
 {
-	using Expressions;
-	using Extensions;
-	using SqlQuery;
-	using Common;
+	using DBLayer.Expressions;
+	using DBLayer.Extensions;
+	using DBLayer.SqlQuery;
+	using DBLayer.Common;
 
 	/// <summary>
 	/// Column or association fluent mapping builder.

@@ -1,6 +1,6 @@
 ﻿// IsTransient property added in .NET 5
 // Some providers implement it for other runtimes (e.g. MySqlConnector), but we don't handle them here (could be added on request)
-using Common;
+using DBLayer.Common;
 
 namespace DBLayer.Data.RetryPolicy;
 
@@ -13,7 +13,7 @@ public sealed class TransientRetryPolicy : RetryPolicyBase
 	/// Creates a new instance of <see cref="TransientRetryPolicy" />.
 	/// </summary>
 	public TransientRetryPolicy()
-		: this(Configuration.RetryPolicy.DefaultMaxRetryCount)
+		: this(DBLayer.Common.Configuration.RetryPolicy.DefaultMaxRetryCount)
 	{ }
 
 	/// <summary>
@@ -21,7 +21,7 @@ public sealed class TransientRetryPolicy : RetryPolicyBase
 	/// </summary>
 	/// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
 	public TransientRetryPolicy(int maxRetryCount)
-		: this(maxRetryCount, Configuration.RetryPolicy.DefaultMaxDelay)
+		: this(maxRetryCount, DBLayer.Common.Configuration.RetryPolicy.DefaultMaxDelay)
 	{ }
 
 	/// <summary>

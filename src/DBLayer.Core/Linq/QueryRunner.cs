@@ -16,14 +16,14 @@ namespace DBLayer.Linq
 	using Async;
 #endif
 	using Builder;
-	using Common;
+	using DBLayer.Common;
 	using Common.Internal.Cache;
 	using Common.Logging;
-	using Data;
-	using Extensions;
+	using DBLayer.Data;
+	using DBLayer.Extensions;
 	using DBLayer.Expressions;
-	using Reflection;
-	using SqlQuery;
+	using DBLayer.Reflection;
+	using DBLayer.SqlQuery;
 
 	static partial class QueryRunner
 	{
@@ -69,7 +69,7 @@ namespace DBLayer.Linq
 				}
 				// SqlNullValueException: MySqlData
 				// OracleNullValueException: managed and native oracle providers
-				catch (Exception ex) when (ex is FormatException or InvalidCastException or LinqToDBConvertException || ex.GetType().Name.Contains("NullValueException"))
+				catch (Exception ex) when (ex is FormatException or InvalidCastException or DBLayerConvertException || ex.GetType().Name.Contains("NullValueException"))
 				{
 					// TODO: debug cases when our tests go into slow-mode (e.g. sqlite.ms)
 					if (mapperInfo.IsFaulted)
@@ -304,8 +304,8 @@ namespace DBLayer.Linq
 			{
 				dbDataTypeExpression = Expression.Call(Expression.Constant(field.ColumnDescriptor.GetDbDataType(false)),
 					DbDataType.WithSetValuesMethodInfo,
-					Expression.Property(valueGetter, Methods.LinqToDB.DataParameter.DbDataType));
-				valueGetter          = Expression.Property(valueGetter, Methods.LinqToDB.DataParameter.Value);
+					Expression.Property(valueGetter, Methods.DBLayer.DataParameter.DbDataType));
+				valueGetter          = Expression.Property(valueGetter, Methods.DBLayer.DataParameter.Value);
 			}
 			else
 			{
@@ -399,7 +399,7 @@ namespace DBLayer.Linq
 						res = mapperInfo.Mapper(runner, origDataReader);
 						runner.RowsCount++;
 					}
-					catch (Exception ex) when (ex is FormatException or InvalidCastException or LinqToDBConvertException || ex.GetType().Name.Contains("NullValueException"))
+					catch (Exception ex) when (ex is FormatException or InvalidCastException or DBLayerConvertException || ex.GetType().Name.Contains("NullValueException"))
 					{
 						// TODO: debug cases when our tests go into slow-mode (e.g. sqlite.ms)
 						if (mapperInfo.IsFaulted)
@@ -429,26 +429,26 @@ namespace DBLayer.Linq
 		{
 			var runner = dataContext.GetQueryRunner(query, queryNumber, expression, ps, preambles);
 #if NATIVE_ASYNC
-			await using (runner.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			await using (runner.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 			await using (runner)
 #endif
 			{
-				var dr = await runner.ExecuteReaderAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				var dr = await runner.ExecuteReaderAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 #if NATIVE_ASYNC
-				await using (dr.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+				await using (dr.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 				await using (dr)
 #endif
 				{
 					var skip = skipAction?.Invoke(query, expression, dataContext, ps) ?? 0;
 
-					while (skip-- > 0 && await dr.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+					while (skip-- > 0 && await dr.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 					{}
 
 					var take = takeAction?.Invoke(query, expression, dataContext, ps) ?? int.MaxValue;
 
-					if (take-- > 0 && await dr.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+					if (take-- > 0 && await dr.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 					{
 						var dataReader = dataContext.UnwrapDataObjectInterceptor?.UnwrapDataReader(dataContext, dr.DataReader) ?? dr.DataReader;
 						var mapperInfo = mapper.GetMapperInfo(dataContext, runner, dataReader);
@@ -459,7 +459,7 @@ namespace DBLayer.Linq
 								break;
 							runner.RowsCount++;
 						}
-						while (take-- > 0 && await dr.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext));
+						while (take-- > 0 && await dr.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext));
 					}
 				}
 			}
@@ -517,20 +517,20 @@ namespace DBLayer.Linq
 				if (_queryRunner == null)
 				{
 					_queryRunner = _dataContext.GetQueryRunner(_query, _queryNumber, _expression, _ps, _preambles);
-					_dataReader  = await _queryRunner.ExecuteReaderAsync(_cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+					_dataReader  = await _queryRunner.ExecuteReaderAsync(_cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 					var skip = _skipAction?.Invoke(_query, _expression, _dataContext, _ps) ?? 0;
 
 					while (skip-- > 0)
 					{
-						if (!await _dataReader.ReadAsync(_cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+						if (!await _dataReader.ReadAsync(_cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 							return false;
 					}
 
 					_take = _takeAction?.Invoke(_query, _expression, _dataContext, _ps) ?? int.MaxValue;
 				}
 
-				if (_take-- > 0 && await _dataReader!.ReadAsync(_cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+				if (_take-- > 0 && await _dataReader!.ReadAsync(_cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 				{
 					var dataReader = _dataContext.UnwrapDataObjectInterceptor?.UnwrapDataReader(_dataContext, _dataReader.DataReader) ?? _dataReader.DataReader;
 					var mapperInfo = _mapper.GetMapperInfo(_dataContext, _queryRunner, dataReader);
@@ -561,10 +561,10 @@ namespace DBLayer.Linq
 #endif
 			{
 				if (_queryRunner != null)
-					await _queryRunner.DisposeAsync().ConfigureAwait(Configuration.ContinueOnCapturedContext);
+					await _queryRunner.DisposeAsync().ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 				if (_dataReader != null)
-					await _dataReader.DisposeAsync().ConfigureAwait(Configuration.ContinueOnCapturedContext);
+					await _dataReader.DisposeAsync().ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 				_queryRunner = null;
 				_dataReader  = null;
@@ -810,19 +810,19 @@ namespace DBLayer.Linq
 		{
 			var runner = dataContext.GetQueryRunner(query, 0, expression, ps, preambles);
 #if NATIVE_ASYNC
-			await using (runner.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			await using (runner.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 			await using (runner)
 #endif
 			{
-				var dr = await runner.ExecuteReaderAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				var dr = await runner.ExecuteReaderAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 #if NATIVE_ASYNC
-				await using (dr.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+				await using (dr.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 				await using (dr)
 #endif
 				{
-					if (await dr.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+					if (await dr.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 					{
 						var dataReader = dataContext.UnwrapDataObjectInterceptor?.UnwrapDataReader(dataContext, dr.DataReader) ?? dr.DataReader;
 						var mapperInfo = mapper.GetMapperInfo(dataContext, runner, dataReader);
@@ -871,11 +871,11 @@ namespace DBLayer.Linq
 		{
 			var runner = dataContext.GetQueryRunner(query, 0, expression, ps, preambles);
 #if NATIVE_ASYNC
-			await using (runner.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			await using (runner.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 			await using (runner)
 #endif
-				return await runner.ExecuteScalarAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				return await runner.ExecuteScalarAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		}
 
 		#endregion
@@ -911,11 +911,11 @@ namespace DBLayer.Linq
 		{
 			var runner = dataContext.GetQueryRunner(query, 0, expression, ps, preambles);
 #if NATIVE_ASYNC
-			await using (runner.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			await using (runner.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 			await using (runner)
 #endif
-				return await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				return await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		}
 
 		#endregion
@@ -960,19 +960,19 @@ namespace DBLayer.Linq
 		{
 			var runner = dataContext.GetQueryRunner(query, 0, expr, parameters, preambles);
 #if NATIVE_ASYNC
-			await using (runner.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			await using (runner.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 			await using (runner)
 #endif
 			{
-				var n = await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				var n = await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 				if (n != 0)
 					return n;
 
 				runner.QueryNumber = 1;
 
-				return await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				return await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 			}
 		}
 
@@ -1018,19 +1018,19 @@ namespace DBLayer.Linq
 		{
 			var runner = dataContext.GetQueryRunner(query, 0, expr, parameters, preambles);
 #if NATIVE_ASYNC
-			await using (runner.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			await using (runner.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
 			await using (runner)
 #endif
 			{
-				var n = await runner.ExecuteScalarAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				var n = await runner.ExecuteScalarAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 				if (n != null)
 					return 0;
 
 				runner.QueryNumber = 1;
 
-				return await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				return await runner.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 			}
 		}
 

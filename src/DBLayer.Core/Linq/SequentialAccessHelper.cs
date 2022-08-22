@@ -8,11 +8,11 @@ using System.Collections.Generic;
 
 namespace DBLayer.Linq
 {
-	using Extensions;
-	using Common;
+	using DBLayer.Extensions;
+	using DBLayer.Common;
 	using DBLayer.Expressions;
 	using Internal;
-	using Reflection;
+	using DBLayer.Reflection;
 	using DBLayer.Common.Internal;
 
 	internal static class SequentialAccessHelper
@@ -133,7 +133,7 @@ namespace DBLayer.Linq
 							return context.Replacements[index]!;
 						}
 					}
-					else if (call.Method == Methods.LinqToDB.ColumnReader.GetValueSequential
+					else if (call.Method == Methods.DBLayer.ColumnReader.GetValueSequential
 						&& call.Object is ConstantExpression c3
 						&& c3.Value is ConvertFromDataReaderExpression.ColumnReader columnReader)
 					{
@@ -201,7 +201,7 @@ namespace DBLayer.Linq
 
 			// expression cannot be optimized
 			if (ctx.FailMessage != null)
-				throw new LinqToDBException($"{nameof(OptimizeMappingExpressionForSequentialAccess)} optimization failed: {ctx.FailMessage}");
+				throw new DBLayerException($"{nameof(OptimizeMappingExpressionForSequentialAccess)} optimization failed: {ctx.FailMessage}");
 
 			// generate value readers for slow mode
 			if (ctx.SlowColumnTypes != null)
@@ -218,7 +218,7 @@ namespace DBLayer.Linq
 							Expression.Constant(null, valueVariable.Type),
 							Expression.Call(
 								Expression.Constant(kvp.Value.Item1),
-								Methods.LinqToDB.ColumnReader.GetRawValueSequential,
+								Methods.DBLayer.ColumnReader.GetRawValueSequential,
 								ctx.DataReaderExpr!,
 								Expression.Constant(kvp.Value.Item2.ToArray())),
 							valueVariable.Type));
@@ -247,7 +247,7 @@ namespace DBLayer.Linq
 					}
 
 					if (!found)
-						throw new LinqToDBException($"{nameof(OptimizeMappingExpressionForSequentialAccess)} optimization failed: cannot find data reader assignment");
+						throw new DBLayerException($"{nameof(OptimizeMappingExpressionForSequentialAccess)} optimization failed: cannot find data reader assignment");
 
 					// first N expressions init context variables
 					return block.Update(
@@ -340,7 +340,7 @@ namespace DBLayer.Linq
 
 			// expression cannot be optimized
 			if (ctx.FailMessage != null)
-				throw new LinqToDBException($"{nameof(OptimizeColumnReaderForSequentialAccess)} optimization failed (slow mode): {ctx.FailMessage}");
+				throw new DBLayerException($"{nameof(OptimizeColumnReaderForSequentialAccess)} optimization failed (slow mode): {ctx.FailMessage}");
 
 			return expression;
 		}
@@ -384,7 +384,7 @@ namespace DBLayer.Linq
 							if (context.RawCall == null)
 								context.RawCall = call;
 							else if (context.RawCall.Method != call.Method)
-								throw new LinqToDBConvertException(
+								throw new DBLayerConvertException(
 									$"Different data reader methods used for same column: '{context.RawCall.Method.DeclaringType?.Name}.{context.RawCall.Method.Name}' vs '{call.Method.DeclaringType?.Name}.{call.Method.Name}'");
 						}
 					}
@@ -392,10 +392,10 @@ namespace DBLayer.Linq
 			});
 
 			if (ctx.FailMessage != null)
-				throw new LinqToDBException($"{nameof(OptimizeColumnReaderForSequentialAccess)} optimization failed (slow mode): {ctx.FailMessage}");
+				throw new DBLayerException($"{nameof(OptimizeColumnReaderForSequentialAccess)} optimization failed (slow mode): {ctx.FailMessage}");
 
 			if (ctx.RawCall == null)
-				throw new LinqToDBException($"Cannot find column value reader in expression");
+				throw new DBLayerException($"Cannot find column value reader in expression");
 
 			return ctx.RawCall;
 		}

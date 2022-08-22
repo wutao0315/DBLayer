@@ -4,8 +4,8 @@ using System.Text;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
-	using Mapping;
+	using DBLayer.Common;
+	using DBLayer.Mapping;
 
 	public class SqlField : ISqlExpression
 	{

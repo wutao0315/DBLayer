@@ -6,9 +6,9 @@ using System.Text;
 namespace DBLayer.SqlQuery
 {
 	using DBLayer.Extensions;
-	using Linq.Builder;
-	using Mapping;
-	using Reflection;
+	using DBLayer.Linq.Builder;
+	using DBLayer.Mapping;
+	using DBLayer.Reflection;
 
 	public class SqlObjectExpression : ISqlExpression
 	{

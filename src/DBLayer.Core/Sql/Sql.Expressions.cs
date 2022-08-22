@@ -4,17 +4,17 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-using JetBrains.Annotations;
+
 
 namespace DBLayer
 {
-	using Common;
-	using Expressions;
-	using Linq;
-	using Mapping;
-	using SqlProvider;
-	using SqlQuery;
-	using Extensions;
+	using DBLayer.Common;
+	using DBLayer.Expressions;
+	using DBLayer.Linq;
+	using DBLayer.Mapping;
+	using DBLayer.SqlProvider;
+	using DBLayer.SqlQuery;
+	using DBLayer.Extensions;
 
 	public partial class Sql
 	{
@@ -102,7 +102,7 @@ namespace DBLayer
 			}
 		}
 
-		[Pure]
+		
 		[Extension("", BuilderType = typeof(FieldNameBuilderDirect), ServerSideOnly = false)]
 		public static string FieldName<T>([NoEnumeration] ITable<T> table, Expression<Func<T, object>> fieldExpr)
 			where T : notnull
@@ -110,7 +110,7 @@ namespace DBLayer
 			return FieldName(table, fieldExpr, true);
 		}
 
-		[Pure]
+		
 		[Extension("", BuilderType = typeof(FieldNameBuilderDirect), ServerSideOnly = false)]
 		public static string FieldName<T>([NoEnumeration] ITable<T> table, Expression<Func<T, object>> fieldExpr, [SqlQueryDependent] bool qualified)
 			where T : notnull
@@ -261,28 +261,28 @@ namespace DBLayer
 			return column;
 		}
 
-		[Pure]
+		
 		[Extension("", BuilderType = typeof(FieldNameBuilder), ServerSideOnly = true)]
 		public static string FieldName(object fieldExpr)
 		{
 			throw new DBLayerException("'Sql.FieldName' is server side only method and used only for generating custom SQL parts");
 		}
 
-		[Pure]
+		
 		[Extension("", BuilderType = typeof(FieldNameBuilder), ServerSideOnly = true)]
 		public static string FieldName(object fieldExpr, bool qualified)
 		{
 			throw new DBLayerException("'Sql.FieldName' is server side only method and used only for generating custom SQL parts");
 		}
 
-		[Pure]
+		
 		[Extension("", BuilderType = typeof(FieldNameBuilder), ServerSideOnly = true)]
 		public static ISqlExpression FieldExpr(object fieldExpr)
 		{
 			throw new DBLayerException("'Sql.FieldExpr' is server side only method and used only for generating custom SQL parts");
 		}
 
-		[Pure]
+		
 		[Extension("", BuilderType = typeof(FieldNameBuilder), ServerSideOnly = true)]
 		public static ISqlExpression FieldExpr(object fieldExpr, bool qualified)
 		{

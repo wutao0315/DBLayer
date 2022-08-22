@@ -27,7 +27,7 @@ static class MappingExtensions
 				{
 					var type = Converter.GetDefaultMappingFromEnumType(mappingSchema, systemType)!;
 
-					if (Configuration.UseEnumValueNameForStringColumns && type == typeof(string) &&
+					if (DBLayer.Common.Configuration.UseEnumValueNameForStringColumns && type == typeof(string) &&
 					    mappingSchema.GetMapValues(underlyingType)             == null)
 						return new SqlValue(type, originalValue!.ToString());
 
@@ -62,7 +62,7 @@ static class MappingExtensions
 				{
 					var type = Converter.GetDefaultMappingFromEnumType(mappingSchema, systemType)!;
 
-					if (Configuration.UseEnumValueNameForStringColumns && type == typeof(string) &&
+					if (DBLayer.Common.Configuration.UseEnumValueNameForStringColumns && type == typeof(string) &&
 					    mappingSchema.GetMapValues(underlyingType)             == null)
 						value = value.ToString();
 					else

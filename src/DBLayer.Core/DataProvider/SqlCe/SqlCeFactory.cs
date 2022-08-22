@@ -1,16 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using DBLayer.Configuration;
 
-namespace DBLayer.DataProvider.SqlCe
+namespace DBLayer.DataProvider.SqlCe;
+
+class SqlCeFactory : IDataProviderFactory
 {
-	using System.Collections.Generic;
-	using Configuration;
-
-	[UsedImplicitly]
-	class SqlCeFactory : IDataProviderFactory
+	IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
 	{
-		IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
-		{
-			return SqlCeTools.GetDataProvider();
-		}
+		return SqlCeTools.GetDataProvider();
 	}
 }

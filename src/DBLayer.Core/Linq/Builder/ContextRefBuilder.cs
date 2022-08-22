@@ -1,33 +1,31 @@
 ﻿using System.Linq.Expressions;
+using DBLayer.Expressions;
 
-namespace DBLayer.Linq.Builder
+namespace DBLayer.Linq.Builder;
+
+class ContextRefBuilder : ISequenceBuilder
 {
-	using DBLayer.Expressions;
+	public int BuildCounter { get; set; }
 
-	class ContextRefBuilder : ISequenceBuilder
+	public bool CanBuild(ExpressionBuilder builder, BuildInfo buildInfo)
 	{
-		public int BuildCounter { get; set; }
+		return buildInfo.Expression is ContextRefExpression;
+	}
 
-		public bool CanBuild(ExpressionBuilder builder, BuildInfo buildInfo)
-		{
-			return buildInfo.Expression is ContextRefExpression;
-		}
+	public IBuildContext BuildSequence(ExpressionBuilder builder, BuildInfo buildInfo)
+	{
+		var context = ((ContextRefExpression)buildInfo.Expression).BuildContext;
 
-		public IBuildContext BuildSequence(ExpressionBuilder builder, BuildInfo buildInfo)
-		{
-			var context = ((ContextRefExpression)buildInfo.Expression).BuildContext;
+		return context;
+	}
 
-			return context;
-		}
+	public SequenceConvertInfo? Convert(ExpressionBuilder builder, BuildInfo buildInfo, ParameterExpression? param)
+	{
+		return null;
+	}
 
-		public SequenceConvertInfo? Convert(ExpressionBuilder builder, BuildInfo buildInfo, ParameterExpression? param)
-		{
-			return null;
-		}
-
-		public bool IsSequence(ExpressionBuilder builder, BuildInfo buildInfo)
-		{
-			return buildInfo.Expression is ContextRefExpression;
-		}
+	public bool IsSequence(ExpressionBuilder builder, BuildInfo buildInfo)
+	{
+		return buildInfo.Expression is ContextRefExpression;
 	}
 }

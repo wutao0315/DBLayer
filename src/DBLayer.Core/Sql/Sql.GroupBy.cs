@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace DBLayer
 {
-	using Linq;
+	using DBLayer.Linq;
 
 	partial class Sql
 	{

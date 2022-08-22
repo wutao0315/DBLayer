@@ -1,33 +1,29 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-
-using DBLayer.Linq.Builder;
+﻿using DBLayer.Linq.Builder;
 using DBLayer.Mapping;
 using DBLayer.Reflection;
+using System.Linq.Expressions;
 
-namespace DBLayer.Expressions
+namespace DBLayer.Expressions;
+
+class GetItemExpression : Expression
 {
-	class GetItemExpression : Expression
+	public GetItemExpression(Expression expression, MappingSchema mappingSchema)
 	{
-		public GetItemExpression(Expression expression, MappingSchema mappingSchema)
-		{
-			Expression = expression;
-			_type       = EagerLoading.GetEnumerableElementType(expression.Type, mappingSchema);
-		}
+		Expression = expression;
+		_type       = EagerLoading.GetEnumerableElementType(expression.Type, mappingSchema);
+	}
 
-		readonly Type       _type;
+	readonly Type       _type;
 
-		public          Expression     Expression { get; }
-		public override Type           Type       => _type;
-		public override ExpressionType NodeType   => ExpressionType.Extension;
-		public override bool           CanReduce  => true;
+	public          Expression     Expression { get; }
+	public override Type           Type       => _type;
+	public override ExpressionType NodeType   => ExpressionType.Extension;
+	public override bool           CanReduce  => true;
 
-		public override Expression Reduce()
-		{
-			var gi = Methods.Enumerable.First.MakeGenericMethod(_type);
+	public override Expression Reduce()
+	{
+		var gi = Methods.Enumerable.First.MakeGenericMethod(_type);
 
-			return Call(null, gi, Expression);
-		}
+		return Call(null, gi, Expression);
 	}
 }

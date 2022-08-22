@@ -3,8 +3,8 @@ using System.Reflection;
 
 namespace DBLayer.Metadata
 {
-	using Common;
-	using Mapping;
+	using DBLayer.Common;
+	using DBLayer.Mapping;
 
 	public class SystemComponentModelDataAnnotationsSchemaAttributeReader : IMetadataReader
 	{

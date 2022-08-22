@@ -180,7 +180,7 @@ public class EnumerableHelper
 		{
 			if (_finished) return false;
 
-			_isCurrent = await _source.MoveNextAsync().ConfigureAwait(Configuration.ContinueOnCapturedContext);
+			_isCurrent = await _source.MoveNextAsync().ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 			_current   = _isCurrent ? GetNewEnumerable() : null;
 			_finished  = !_isCurrent;
 
@@ -193,7 +193,7 @@ public class EnumerableHelper
 			yield return _source.Current;
 			while (++returned < _batchSize)
 			{
-				if (_finished || !await _source.MoveNextAsync().ConfigureAwait(Configuration.ContinueOnCapturedContext))
+				if (_finished || !await _source.MoveNextAsync().ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 				{
 					_finished = true;
 					yield break;

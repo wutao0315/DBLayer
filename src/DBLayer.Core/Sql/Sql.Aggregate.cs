@@ -6,7 +6,7 @@ using PN = DBLayer.ProviderName;
 
 namespace DBLayer
 {
-	using Linq;
+	using DBLayer.Linq;
 
 	public static class StringAggregateExtensions
 	{

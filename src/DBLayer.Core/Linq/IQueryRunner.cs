@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Linq
 {
-	using Data;
+	using DBLayer.Data;
 
 	public interface IQueryRunner: IDisposable
 #if NATIVE_ASYNC

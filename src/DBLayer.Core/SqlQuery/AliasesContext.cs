@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
+	using DBLayer.Common;
 
 	public class AliasesContext
 	{

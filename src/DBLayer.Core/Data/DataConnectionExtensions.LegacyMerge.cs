@@ -17,7 +17,7 @@ namespace DBLayer.Data
 		private static bool MergeWithUpdate<T>(ITable<T> table)
 			where T : class
 		{
-			if (!(table.DataContext is DataConnection dataConnection))
+			if (table.DataContext is not DataConnection dataConnection)
 				throw new ArgumentException("DataContext must be of DataConnection type.");
 
 			return dataConnection

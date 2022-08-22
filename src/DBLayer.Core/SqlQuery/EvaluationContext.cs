@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
+	using DBLayer.Common;
 
 	public class EvaluationContext
 	{

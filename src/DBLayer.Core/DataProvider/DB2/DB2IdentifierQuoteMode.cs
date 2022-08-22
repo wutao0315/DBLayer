@@ -1,9 +1,7 @@
-﻿namespace DBLayer.DataProvider.DB2
+﻿namespace DBLayer.DataProvider.DB2;
+public enum DB2IdentifierQuoteMode
 {
-	public enum DB2IdentifierQuoteMode
-	{
-		None,
-		Quote,
-		Auto
-	}
+	None,
+	Quote,
+	Auto
 }

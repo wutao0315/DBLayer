@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace DBLayer.Linq
 {
-	using Extensions;
+	using DBLayer.Extensions;
 
 	class MemberInfoComparer : IEqualityComparer<MemberInfo>
 	{

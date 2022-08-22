@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace DBLayer.Linq.Builder
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	public class SqlQueryExtensionData
 	{

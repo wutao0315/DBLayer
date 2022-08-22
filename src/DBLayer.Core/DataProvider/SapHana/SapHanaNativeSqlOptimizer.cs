@@ -1,12 +1,11 @@
-﻿namespace DBLayer.DataProvider.SapHana
+﻿using DBLayer.SqlProvider;
+
+namespace DBLayer.DataProvider.SapHana;
+
+class SapHanaNativeSqlOptimizer : SapHanaSqlOptimizer
 {
-	using SqlProvider;
-
-	class SapHanaNativeSqlOptimizer : SapHanaSqlOptimizer
+	public SapHanaNativeSqlOptimizer(SqlProviderFlags sqlProviderFlags) : base(sqlProviderFlags)
 	{
-		public SapHanaNativeSqlOptimizer(SqlProviderFlags sqlProviderFlags) : base(sqlProviderFlags)
-		{
-		}
 	}
-
 }
+

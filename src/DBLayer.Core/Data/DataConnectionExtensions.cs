@@ -5,14 +5,11 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace DBLayer.Data
 {
 	/// <summary>
 	/// Contains extension methods for <see cref="DataConnection"/> class.
 	/// </summary>
-	[PublicAPI]
 	public static partial class DataConnectionExtensions
 	{
 		#region SetCommand
@@ -2403,7 +2400,6 @@ namespace DBLayer.Data
 		#endregion
 
 		#region BulkCopy IAsyncEnumerable async
-#if NATIVE_ASYNC
 
 		/// <summary>
 		/// Asynchronously performs bulk insert operation.
@@ -2519,7 +2515,6 @@ namespace DBLayer.Data
 			return table.GetDataProvider().BulkCopyAsync(table, new BulkCopyOptions(), source, cancellationToken);
 		}
 
-#endif
 		#endregion
 
 	}

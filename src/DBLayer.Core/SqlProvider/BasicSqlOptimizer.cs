@@ -8,14 +8,14 @@ using System.Linq;
 
 namespace DBLayer.SqlProvider
 {
-	using Common;
-	using Common.Internal;
-	using DataProvider;
-	using Expressions;
-	using Extensions;
-	using Linq;
-	using Mapping;
-	using SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.Common.Internal;
+	using DBLayer.DataProvider;
+	using DBLayer.Expressions;
+	using DBLayer.Extensions;
+	using DBLayer.Linq;
+	using DBLayer.Mapping;
+	using DBLayer.SqlQuery;
 	using Tools;
 
 	public class BasicSqlOptimizer : ISqlOptimizer

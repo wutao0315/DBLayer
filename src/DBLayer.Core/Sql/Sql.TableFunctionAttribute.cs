@@ -7,7 +7,7 @@ using DBLayer.Mapping;
 namespace DBLayer
 {
 	using DBLayer.SqlProvider;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	partial class Sql
 	{

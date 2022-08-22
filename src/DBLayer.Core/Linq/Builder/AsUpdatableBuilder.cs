@@ -1,19 +1,17 @@
 ﻿using System.Linq.Expressions;
+using DBLayer.Expressions;
 
-namespace DBLayer.Linq.Builder
+namespace DBLayer.Linq.Builder;
+
+class AsUpdatableBuilder : MethodCallBuilder
 {
-	using DBLayer.Expressions;
-
-	class AsUpdatableBuilder : MethodCallBuilder
+	protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
 	{
-		protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
-		{
-			return methodCall.IsQueryable("AsUpdatable");
-		}
+		return methodCall.IsQueryable("AsUpdatable");
+	}
 
-		protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
-		{
-			return builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0]));
-		}
+	protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
+	{
+		return builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0]));
 	}
 }

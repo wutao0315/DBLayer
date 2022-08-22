@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DBLayer.Expressions
+﻿namespace DBLayer.Expressions
 {
 	// could allow more targets later if needed
 	[AttributeUsage(AttributeTargets.Method)]

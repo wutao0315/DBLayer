@@ -7,8 +7,8 @@ using DBLayer.Linq.Builder;
 
 namespace DBLayer.Mapping
 {
-	using Common;
-	using Extensions;
+	using DBLayer.Common;
+	using DBLayer.Extensions;
 
 	/// <summary>
 	/// Stores association descriptor.

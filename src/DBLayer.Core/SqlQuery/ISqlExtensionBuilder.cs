@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DBLayer.SqlQuery
 {
-	using SqlProvider;
+	using DBLayer.SqlProvider;
 
 	public interface ISqlExtensionBuilder
 	{

@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 
 namespace DBLayer
 {
-	using Expressions;
-	using Linq.Builder;
-	using SqlQuery;
+	using DBLayer.Expressions;
+	using DBLayer.Linq.Builder;
+	using DBLayer.SqlQuery;
 
 	public partial class Sql
 	{

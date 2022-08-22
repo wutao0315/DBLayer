@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Linq
 {
-	using Data;
-	using SqlQuery;
+	using DBLayer.Data;
+	using DBLayer.SqlQuery;
 
 	abstract class QueryRunnerBase : IQueryRunner
 	{

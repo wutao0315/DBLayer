@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-using JetBrains.Annotations;
+
 
 // ReSharper disable CheckNamespace
 
 namespace DBLayer
 {
-	using Mapping;
-	using SqlQuery;
+	using DBLayer.Mapping;
+	using DBLayer.SqlQuery;
 
 	partial class Sql
 	{
 		/// <summary>
 		/// Defines an SQL server-side Function with parameters passed in.
 		/// </summary>
-		[PublicAPI]
+		
 		[Serializable]
 		[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
 		public class FunctionAttribute : ExpressionAttribute

@@ -6,9 +6,9 @@ using System.Threading;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
-	using Data;
-	using Mapping;
+	using DBLayer.Common;
+	using DBLayer.Data;
+	using DBLayer.Mapping;
 	using Remote;
 
 	public class SqlTable : ISqlTableSource, IQueryExtendible

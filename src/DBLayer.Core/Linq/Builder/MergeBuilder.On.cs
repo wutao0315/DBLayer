@@ -6,7 +6,7 @@ namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
 
-	using static DBLayer.Reflection.Methods.LinqToDB.Merge;
+	using static DBLayer.Reflection.Methods.DBLayer.Merge;
 
 	internal partial class MergeBuilder
 	{
@@ -113,7 +113,7 @@ namespace DBLayer.Linq.Builder
 					}
 
 					if (ex == null)
-						throw new LinqToDBException("Method OnTargetKey() needs at least one primary key column");
+						throw new DBLayerException("Method OnTargetKey() needs at least one primary key column");
 
 					var condition = Expression.Lambda(ex, pTarget, pSource);
 

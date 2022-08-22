@@ -1,17 +1,11 @@
 ﻿using System.Collections.Generic;
+using DBLayer.Configuration;
 
-using JetBrains.Annotations;
-
-namespace DBLayer.DataProvider.PostgreSQL
+namespace DBLayer.DataProvider.PostgreSQL;
+class PostgreSQLFactory : IDataProviderFactory
 {
-	using Configuration;
-
-	[UsedImplicitly]
-	class PostgreSQLFactory : IDataProviderFactory
+	IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
 	{
-		IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
-		{
-			return PostgreSQLTools.GetDataProvider();
-		}
+		return PostgreSQLTools.GetDataProvider();
 	}
 }

@@ -6,8 +6,8 @@ using System.Text;
 
 namespace DBLayer.SqlProvider
 {
-	using Mapping;
-	using SqlQuery;
+	using DBLayer.Mapping;
+	using DBLayer.SqlQuery;
 
 	public interface ISqlBuilder
 	{

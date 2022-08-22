@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DBLayer.SqlProvider
 {
 	using DBLayer.Common;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	public abstract partial class BasicSqlBuilder : ISqlBuilder
 	{

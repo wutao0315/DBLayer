@@ -1,6 +1,6 @@
-﻿using Data;
-using Mapping;
-using SqlProvider;
+﻿using DBLayer.Data;
+using DBLayer.Mapping;
+using DBLayer.SqlProvider;
 
 namespace DBLayer.Tools;
 

@@ -2,7 +2,7 @@
 
 namespace DBLayer.Linq
 {
-	using Mapping;
+	using DBLayer.Mapping;
 
 	public interface IExpressionInfo
 	{

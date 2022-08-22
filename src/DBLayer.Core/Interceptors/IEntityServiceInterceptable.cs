@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace DBLayer.Interceptors;
 
-namespace DBLayer.Interceptors
+interface IEntityServiceInterceptable
 {
-	interface IEntityServiceInterceptable
-	{
-		AggregatedInterceptor<IEntityServiceInterceptor>? Interceptors { get; }
-	}
+	AggregatedInterceptor<IEntityServiceInterceptor>? Interceptors { get; }
 }

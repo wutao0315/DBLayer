@@ -1,4 +1,6 @@
-﻿namespace DBLayer;
+﻿using DBLayer.Linq;
+
+namespace DBLayer;
 /// <summary>
 /// Table-like queryable source, e.g. table, view or table-valued function.
 /// </summary>

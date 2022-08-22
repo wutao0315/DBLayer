@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
+	using DBLayer.Common;
 	using Remote;
 
 	[DebuggerDisplay("SQL = {" + nameof(DebugSqlText) + "}")]

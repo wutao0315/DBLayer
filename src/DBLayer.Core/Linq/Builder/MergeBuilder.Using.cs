@@ -8,7 +8,7 @@ using System.Reflection;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	using static DBLayer.Reflection.Methods.DBLayer.Merge;
 

@@ -1,16 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using DBLayer.Configuration;
 
-namespace DBLayer.DataProvider.MySql
+namespace DBLayer.DataProvider.MySql;
+
+class MySqlFactory : IDataProviderFactory
 {
-	using System.Collections.Generic;
-	using Configuration;
-
-	[UsedImplicitly]
-	class MySqlFactory : IDataProviderFactory
+	IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
 	{
-		IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
-		{
-			return MySqlTools.GetDataProvider();
-		}
+		return MySqlTools.GetDataProvider();
 	}
 }

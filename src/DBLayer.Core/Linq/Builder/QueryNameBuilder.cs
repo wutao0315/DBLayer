@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using Extensions;
+	using DBLayer.Extensions;
 
 	class QueryNameBuilder : MethodCallBuilder
 	{

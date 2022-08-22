@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DBLayer.Common;
+using DBLayer.Data;
+using DBLayer.Mapping;
+using DBLayer.SqlProvider;
 using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DBLayer.DataProvider.Firebird
 {
-	using Common;
-	using Data;
-	using Mapping;
-	using SqlProvider;
-
 	public class FirebirdDataProvider : DynamicDataProviderBase<FirebirdProviderAdapter>
 	{
 		public FirebirdDataProvider() : this(ProviderName.Firebird, null)

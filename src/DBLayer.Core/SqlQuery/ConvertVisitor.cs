@@ -7,7 +7,7 @@ using DBLayer.Remote;
 
 namespace DBLayer.SqlQuery
 {
-	using Linq.Builder;
+	using DBLayer.Linq.Builder;
 
 	public class ConvertVisitor<TContext>
 	{

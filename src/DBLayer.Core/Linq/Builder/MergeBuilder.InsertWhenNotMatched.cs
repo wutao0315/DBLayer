@@ -3,9 +3,9 @@
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
-	using static DBLayer.Reflection.Methods.LinqToDB.Merge;
+	using static DBLayer.Reflection.Methods.DBLayer.Merge;
 
 	internal partial class MergeBuilder
 	{

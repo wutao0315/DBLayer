@@ -1,28 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using DBLayer.Configuration;
+using DBLayer.DataProvider.MySql;
 
-namespace DBLayer.DataProvider.ClickHouse
+
+namespace DBLayer.DataProvider.ClickHouse;
+
+
+
+sealed class ClickHouseFactory : IDataProviderFactory
 {
-	using Configuration;
-	using MySql;
-
-	[UsedImplicitly]
-	sealed class ClickHouseFactory : IDataProviderFactory
+	IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
 	{
-		IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
+		var provider     = ClickHouseProvider.Octonica;
+		var assemblyName = attributes.FirstOrDefault(_ => _.Name == "assemblyName")?.Value;
+
+		provider = assemblyName switch
 		{
-			var provider     = ClickHouseProvider.Octonica;
-			var assemblyName = attributes.FirstOrDefault(_ => _.Name == "assemblyName")?.Value;
+			MySqlProviderAdapter.MySqlConnectorAssemblyName => ClickHouseProvider.MySqlConnector,
+			ClickHouseProviderAdapter.ClientAssemblyName    => ClickHouseProvider.ClickHouseClient,
+			_                                               => ClickHouseProvider.Octonica
+		};
 
-			provider = assemblyName switch
-			{
-				MySqlProviderAdapter.MySqlConnectorAssemblyName => ClickHouseProvider.MySqlConnector,
-				ClickHouseProviderAdapter.ClientAssemblyName    => ClickHouseProvider.ClickHouseClient,
-				_                                               => ClickHouseProvider.Octonica
-			};
-
-			return ClickHouseTools.GetDataProvider(provider);
-		}
+		return ClickHouseTools.GetDataProvider(provider);
 	}
 }

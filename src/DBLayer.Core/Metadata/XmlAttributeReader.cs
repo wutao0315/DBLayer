@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace DBLayer.Metadata
 {
-	using Common;
+	using DBLayer.Common;
 
 	public class XmlAttributeReader : IMetadataReader
 	{

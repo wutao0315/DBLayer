@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 
 namespace DBLayer.Linq.Builder
 {
-	using Common;
+	using DBLayer.Common;
 	using DBLayer.Expressions;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	partial class TableBuilder
 	{

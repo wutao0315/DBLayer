@@ -6,10 +6,10 @@ using System.Reflection;
 
 namespace DBLayer.Linq.Builder
 {
-	using Extensions;
+	using DBLayer.Extensions;
 	using DBLayer.Expressions;
-	using SqlQuery;
-	using Common;
+	using DBLayer.SqlQuery;
+	using DBLayer.Common;
 
 	class UpdateBuilder : MethodCallBuilder
 	{

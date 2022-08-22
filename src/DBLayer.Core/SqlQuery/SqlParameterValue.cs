@@ -2,7 +2,7 @@
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
+	using DBLayer.Common;
 
 	[DebuggerDisplay("{ProviderValue}, {DbDataType}")]
 	public class SqlParameterValue

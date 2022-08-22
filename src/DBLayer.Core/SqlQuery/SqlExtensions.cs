@@ -89,7 +89,7 @@ namespace DBLayer.SqlQuery
 		{
 			var result = statement.GetInsertClause();
 			if (result == null)
-				throw new LinqToDBException($"Insert clause not found in {statement.GetType().Name}");
+				throw new DBLayerException($"Insert clause not found in {statement.GetType().Name}");
 			return result;
 		}
 
@@ -115,7 +115,7 @@ namespace DBLayer.SqlQuery
 		{
 			var result = statement.GetUpdateClause();
 			if (result == null)
-				throw new LinqToDBException($"Update clause not found in {statement.GetType().Name}");
+				throw new DBLayerException($"Update clause not found in {statement.GetType().Name}");
 			return result;
 		}
 
@@ -142,7 +142,7 @@ namespace DBLayer.SqlQuery
 		{
 			var selectQuery = statement.SelectQuery;
 			if (selectQuery == null)
-				throw new LinqToDBException("Sqlect Query required");
+				throw new DBLayerException("Sqlect Query required");
 			return selectQuery;
 		}
 
@@ -156,7 +156,7 @@ namespace DBLayer.SqlQuery
 		{
 			return expr is MethodCallExpression { Method.Name: "Row" } call
 				? call.Arguments
-				: throw new LinqToDBException("Calls to Sql.Row() are the only valid expressions of type SqlRow.");
+				: throw new DBLayerException("Calls to Sql.Row() are the only valid expressions of type SqlRow.");
 		}
 	}
 }

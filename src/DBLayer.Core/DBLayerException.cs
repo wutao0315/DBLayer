@@ -13,7 +13,7 @@ namespace DBLayer;
 public class DBLayerException : Exception
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LinqToDBException"/> class.
+	/// Initializes a new instance of the <see cref="DBLayerException"/> class.
 	/// </summary>
 	/// <remarks>
 	/// This constructor initializes the <see cref="Exception.Message"/>
@@ -25,7 +25,7 @@ public class DBLayerException : Exception
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LinqToDBException"/> class
+	/// Initializes a new instance of the <see cref="DBLayerException"/> class
 	/// with the specified error message.
 	/// </summary>
 	/// <param name="message">The message to display to the client when the
@@ -37,7 +37,7 @@ public class DBLayerException : Exception
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LinqToDBException"/> class
+	/// Initializes a new instance of the <see cref="DBLayerException"/> class
 	/// with the specified error message and InnerException property.
 	/// </summary>
 	/// <param name="message">The message to display to the client when the
@@ -52,7 +52,7 @@ public class DBLayerException : Exception
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LinqToDBException"/> class
+	/// Initializes a new instance of the <see cref="DBLayerException"/> class
 	/// with the specified InnerException property.
 	/// </summary>
 	/// <param name="innerException">The InnerException, if any, that threw
@@ -64,7 +64,7 @@ public class DBLayerException : Exception
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LinqToDBException"/> class
+	/// Initializes a new instance of the <see cref="DBLayerException"/> class
 	/// with serialized data.
 	/// </summary>
 	/// <param name="info">The object that holds the serialized object data.</param>

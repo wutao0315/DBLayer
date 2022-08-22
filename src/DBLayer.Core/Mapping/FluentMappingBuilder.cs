@@ -4,8 +4,8 @@ using System.Reflection;
 
 namespace DBLayer.Mapping
 {
-	using Expressions;
-	using Metadata;
+	using DBLayer.Expressions;
+	using DBLayer.Metadata;
 
 	/// <summary>
 	/// Fluent mapping builder.

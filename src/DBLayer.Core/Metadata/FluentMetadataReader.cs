@@ -7,10 +7,10 @@ using System.Text;
 
 namespace DBLayer.Metadata
 {
-	using Common;
-	using Common.Internal;
-	using Extensions;
-	using Mapping;
+	using DBLayer.Common;
+	using DBLayer.Common.Internal;
+	using DBLayer.Extensions;
+	using DBLayer.Mapping;
 
 	public class FluentMetadataReader : IMetadataReader
 	{

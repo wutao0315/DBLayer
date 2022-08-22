@@ -1,28 +1,26 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace DBLayer.Expressions
+namespace DBLayer.Expressions;
+
+class ChangeTypeExpression : Expression
 {
-	class ChangeTypeExpression : Expression
+	public const ExpressionType ChangeTypeType = (ExpressionType)1000;
+
+	public ChangeTypeExpression(Expression expression, Type type)
 	{
-		public const ExpressionType ChangeTypeType = (ExpressionType)1000;
+		Expression = expression;
+		_type       = type;
+	}
 
-		public ChangeTypeExpression(Expression expression, Type type)
-		{
-			Expression = expression;
-			_type       = type;
-		}
+	readonly Type _type;
 
-		readonly Type _type;
+	public override Type           Type     { get { return _type;          } }
+	public override ExpressionType NodeType { get { return ChangeTypeType; } }
 
-		public override Type           Type     { get { return _type;          } }
-		public override ExpressionType NodeType { get { return ChangeTypeType; } }
+	public Expression Expression { get; private set; }
 
-		public Expression Expression { get; private set; }
-
-		public override string ToString()
-		{
-			return "(" + Type + ")" + Expression;
-		}
+	public override string ToString()
+	{
+		return "(" + Type + ")" + Expression;
 	}
 }

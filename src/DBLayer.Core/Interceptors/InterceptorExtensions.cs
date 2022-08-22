@@ -1,11 +1,9 @@
-﻿using System;
+﻿using DBLayer.Data;
+using DBLayer.Interceptors;
 using System.Data.Common;
 
 namespace DBLayer
 {
-	using Data;
-	using Interceptors;
-
 	/// <summary>
 	/// Contains extensions that add one-time interceptors to connection.
 	/// </summary>

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Linq
 {
-	using SqlQuery;
-	using Mapping;
+	using DBLayer.SqlQuery;
+	using DBLayer.Mapping;
 	using Common.Internal.Cache;
 	using System.Linq;
 

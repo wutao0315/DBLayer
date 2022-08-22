@@ -2,7 +2,7 @@
 
 namespace DBLayer.Linq
 {
-	using Common;
+	using DBLayer.Common;
 	using DBLayer.Linq.Builder;
 
 	internal static class BuilderExtensions

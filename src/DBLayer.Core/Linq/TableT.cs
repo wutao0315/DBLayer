@@ -4,9 +4,9 @@ using System.Text;
 
 namespace DBLayer.Linq
 {
-	using Extensions;
+	using DBLayer.Extensions;
 	using DBLayer.SqlQuery;
-	using Reflection;
+	using DBLayer.Reflection;
 
 	class Table<T> : ExpressionQuery<T>, ITable<T>, ITableMutable<T>, ITable
 		where T : notnull
@@ -15,7 +15,7 @@ namespace DBLayer.Linq
 		{
 			var expression = typeof(T).IsScalar()
 				? null
-				: Expression.Call(Methods.LinqToDB.GetTable.MakeGenericMethod(typeof(T)),
+				: Expression.Call(Methods.DBLayer.GetTable.MakeGenericMethod(typeof(T)),
 					Expression.Constant(dataContext));
 
 			InitTable(dataContext, expression);
@@ -56,7 +56,7 @@ namespace DBLayer.Linq
 				{
 					Expression = Expression.Call(
 						null,
-						_serverNameMethodInfo ??= Methods.LinqToDB.Table.ServerName.MakeGenericMethod(typeof(T)),
+						_serverNameMethodInfo ??= Methods.DBLayer.Table.ServerName.MakeGenericMethod(typeof(T)),
 						Expression, Expression.Constant(value));
 
 					_name = _name with { Server = value };
@@ -73,7 +73,7 @@ namespace DBLayer.Linq
 				{
 					Expression = Expression.Call(
 						null,
-						_databaseNameMethodInfo ??= Methods.LinqToDB.Table.DatabaseName.MakeGenericMethod(typeof(T)),
+						_databaseNameMethodInfo ??= Methods.DBLayer.Table.DatabaseName.MakeGenericMethod(typeof(T)),
 						Expression, Expression.Constant(value));
 
 					_name = _name with { Database = value };
@@ -90,7 +90,7 @@ namespace DBLayer.Linq
 				{
 					Expression = Expression.Call(
 						null,
-						_schemaNameMethodInfo ??= Methods.LinqToDB.Table.SchemaName.MakeGenericMethod(typeof(T)),
+						_schemaNameMethodInfo ??= Methods.DBLayer.Table.SchemaName.MakeGenericMethod(typeof(T)),
 						Expression, Expression.Constant(value));
 
 					_name = _name with { Schema = value };
@@ -108,7 +108,7 @@ namespace DBLayer.Linq
 				{
 					Expression = Expression.Call(
 						null,
-						_tableOptionsMethodInfo ??= Methods.LinqToDB.Table.TableOptions.MakeGenericMethod(typeof(T)),
+						_tableOptionsMethodInfo ??= Methods.DBLayer.Table.TableOptions.MakeGenericMethod(typeof(T)),
 						Expression, Expression.Constant(value));
 
 					_tableOptions = value;
@@ -125,7 +125,7 @@ namespace DBLayer.Linq
 				{
 					Expression = Expression.Call(
 						null,
-						_tableNameMethodInfo ??= Methods.LinqToDB.Table.TableName.MakeGenericMethod(typeof(T)),
+						_tableNameMethodInfo ??= Methods.DBLayer.Table.TableName.MakeGenericMethod(typeof(T)),
 						Expression, Expression.Constant(value));
 
 					_name = _name with { Name = value };
@@ -143,7 +143,7 @@ namespace DBLayer.Linq
 				{
 					Expression = Expression.Call(
 						null,
-						_tableIDMethodInfo ??= Methods.LinqToDB.Table.TableID.MakeGenericMethod(typeof(T)),
+						_tableIDMethodInfo ??= Methods.DBLayer.Table.TableID.MakeGenericMethod(typeof(T)),
 						Expression, Expression.Constant(value, typeof(string)));
 
 					_tableID = value;

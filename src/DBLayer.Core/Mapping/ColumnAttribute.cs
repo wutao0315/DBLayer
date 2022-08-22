@@ -2,7 +2,7 @@
 
 namespace DBLayer.Mapping
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	/// <summary>
 	/// Configures mapping of mapping class member to database column.

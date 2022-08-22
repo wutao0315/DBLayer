@@ -7,12 +7,12 @@ using System.Reflection;
 
 namespace DBLayer.Mapping
 {
-	using Common;
-	using Expressions;
-	using Extensions;
-	using Linq;
+	using DBLayer.Common;
+	using DBLayer.Expressions;
+	using DBLayer.Extensions;
+	using DBLayer.Linq;
 	using DBLayer.SqlQuery;
-	using Reflection;
+	using DBLayer.Reflection;
 
 	/// <summary>
 	/// Stores mapping entity descriptor.

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
+	using DBLayer.Common;
 
 	public class SqlParameter : ISqlExpression
 	{

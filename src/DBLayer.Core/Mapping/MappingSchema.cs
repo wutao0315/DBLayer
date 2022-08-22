@@ -14,23 +14,23 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-using JetBrains.Annotations;
+
 
 namespace DBLayer.Mapping
 {
-	using Common;
-	using Common.Internal;
+	using DBLayer.Common;
+	using DBLayer.Common.Internal;
 	using Common.Internal.Cache;
-	using Expressions;
-	using Extensions;
-	using Metadata;
-	using SqlProvider;
-	using SqlQuery;
+	using DBLayer.Expressions;
+	using DBLayer.Extensions;
+	using DBLayer.Metadata;
+	using DBLayer.SqlProvider;
+	using DBLayer.SqlQuery;
 
 	/// <summary>
 	/// Mapping schema.
 	/// </summary>
-	[PublicAPI]
+	
 	[DebuggerDisplay("{DisplayID}")]
 	public class MappingSchema
 	{
@@ -314,10 +314,10 @@ namespace DBLayer.Mapping
 		public void SetGenericConvertProvider(Type type)
 		{
 			if (!type.IsGenericTypeDefinition)
-				throw new LinqToDBException($"'{type}' must be a generic type.");
+				throw new DBLayerException($"'{type}' must be a generic type.");
 
 			if (!typeof(IGenericInfoProvider).IsSameOrParentOf(type))
-				throw new LinqToDBException($"'{type}' must inherit from '{nameof(IGenericInfoProvider)}'.");
+				throw new DBLayerException($"'{type}' must inherit from '{nameof(IGenericInfoProvider)}'.");
 
 			Schemas[0].SetGenericConvertProvider(type);
 		}
@@ -1248,7 +1248,7 @@ namespace DBLayer.Mapping
 		{
 			if (!IsLocked)
 				return new (this);
-			throw new LinqToDBException("MappingSchema is locked. Fluent Mapping is not supported.");
+			throw new DBLayerException("MappingSchema is locked. Fluent Mapping is not supported.");
 		}
 
 		#endregion

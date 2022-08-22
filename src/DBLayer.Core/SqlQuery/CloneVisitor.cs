@@ -6,8 +6,8 @@ using System.Threading;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
-	using Linq.Builder;
+	using DBLayer.Common;
+	using DBLayer.Linq.Builder;
 	using Remote;
 
 	public readonly struct CloneVisitor<TContext>

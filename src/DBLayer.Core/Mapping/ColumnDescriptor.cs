@@ -5,12 +5,12 @@ using System.Reflection;
 
 namespace DBLayer.Mapping
 {
-	using Common;
-	using Data;
-	using Expressions;
-	using Extensions;
-	using Reflection;
-	using SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.Data;
+	using DBLayer.Expressions;
+	using DBLayer.Extensions;
+	using DBLayer.Reflection;
+	using DBLayer.SqlQuery;
 
 	/// <summary>
 	/// Stores mapping entity column descriptor.

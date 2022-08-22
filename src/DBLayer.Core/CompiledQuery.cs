@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Expressions;
-using Extensions;
-using Linq;
+using DBLayer.Expressions;
+using DBLayer.Extensions;
+using DBLayer.Linq;
 using DBLayer.Common;
 
 namespace DBLayer;

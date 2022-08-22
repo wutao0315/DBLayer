@@ -2,9 +2,9 @@
 
 namespace DBLayer.Linq.Builder
 {
-	using Common;
+	using DBLayer.Common;
 	using DBLayer.Expressions;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	class WithTableExpressionBuilder : MethodCallBuilder
 	{

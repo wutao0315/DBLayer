@@ -1,13 +1,9 @@
-﻿using System;
+﻿using DBLayer.Data;
+using DBLayer.SchemaProvider;
 
-namespace DBLayer.DataProvider.SapHana
+namespace DBLayer.DataProvider.SapHana;
+public class GetHanaSchemaOptions: GetSchemaOptions
 {
-	using Data;
-	using SchemaProvider;
-
-	public class GetHanaSchemaOptions: GetSchemaOptions
-	{
-		public Func<ProcedureSchema, DataParameter[]?> GetStoredProcedureParameters = schema => null;
-		public bool ThrowExceptionIfCalculationViewsNotAuthorized;
-	}
+	public Func<ProcedureSchema, DataParameter[]?> GetStoredProcedureParameters = schema => null;
+	public bool ThrowExceptionIfCalculationViewsNotAuthorized;
 }

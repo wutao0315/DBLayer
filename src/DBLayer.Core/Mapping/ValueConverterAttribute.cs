@@ -3,8 +3,8 @@ using DBLayer.Common.Internal;
 
 namespace DBLayer.Mapping
 {
-	using Common;
-	using Reflection;
+	using DBLayer.Common;
+	using DBLayer.Reflection;
 
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = true)]
 	public class ValueConverterAttribute : MappingAttribute

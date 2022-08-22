@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DBLayer.Mapping
 {
-	using Common.Internal;
+	using DBLayer.Common.Internal;
 
 	/// <summary>
 	/// Locked mapping schema.

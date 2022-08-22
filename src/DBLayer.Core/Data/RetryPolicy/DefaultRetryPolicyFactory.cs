@@ -1,4 +1,4 @@
-﻿using DataProvider.SqlServer;
+﻿using DBLayer.DataProvider.SqlServer;
 using DBLayer.DataProvider.ClickHouse;
 
 namespace DBLayer.Data.RetryPolicy;

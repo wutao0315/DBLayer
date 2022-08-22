@@ -1,24 +1,23 @@
-﻿using System.Linq.Expressions;
-using DBLayer.Expressions;
+﻿using DBLayer.Expressions;
+using System.Linq.Expressions;
 
-namespace DBLayer.Linq.Builder
+namespace DBLayer.Linq.Builder;
+
+class AsValueInsertableBuilder : MethodCallBuilder
 {
-	class AsValueInsertableBuilder : MethodCallBuilder
+	protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
 	{
-		protected override bool CanBuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
-		{
-			return methodCall.IsQueryable("AsValueInsertable");
-		}
+		return methodCall.IsQueryable("AsValueInsertable");
+	}
 
-		protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
-		{
-			return builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0]));
-		}
+	protected override IBuildContext BuildMethodCall(ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo)
+	{
+		return builder.BuildSequence(new BuildInfo(buildInfo, methodCall.Arguments[0]));
+	}
 
-		protected override SequenceConvertInfo? Convert(
-			ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo, ParameterExpression? param)
-		{
-			return null;
-		}
+	protected override SequenceConvertInfo? Convert(
+		ExpressionBuilder builder, MethodCallExpression methodCall, BuildInfo buildInfo, ParameterExpression? param)
+	{
+		return null;
 	}
 }

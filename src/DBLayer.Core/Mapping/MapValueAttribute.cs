@@ -11,7 +11,7 @@ namespace DBLayer.Mapping
 	/// <para>
 	/// Mapping from database value to enumeration performed when you load data from database. Linq2db will search for
 	/// enumeration field with <see cref="MapValueAttribute"/> with required value. If attribute with such value is not
-	/// found, you will receive <see cref="LinqToDBException"/> error. If you cannot specify all possible values using
+	/// found, you will receive <see cref="DBLayerException"/> error. If you cannot specify all possible values using
 	/// <see cref="MapValueAttribute"/>, you can specify custom mapping using methods like
 	/// <see cref="MappingSchema.SetConvertExpression{TFrom, TTo}(System.Linq.Expressions.Expression{Func{TFrom, TTo}}, bool)"/>.
 	/// </para>

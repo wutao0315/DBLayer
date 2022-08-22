@@ -2,7 +2,7 @@
 
 namespace DBLayer.Mapping
 {
-	using Reflection;
+	using DBLayer.Reflection;
 
 	/// <summary>
 	/// Mapping entity descriptor change interface.

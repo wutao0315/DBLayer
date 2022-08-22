@@ -1,7 +1,9 @@
-﻿using DBLayer.Reflection;
+﻿using DBLayer.Common;
+using DBLayer.Reflection;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Data.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -11,7 +13,7 @@ namespace DBLayer.Extensions;
 
 public static class ReflectionExtensions
 {
-	#region Type extensions
+#region Type extensions
 	public static MemberInfo[] GetPublicInstanceMembersEx(this Type type)
 	{
 		return type.GetMembers(BindingFlags.Instance | BindingFlags.Public);
@@ -244,39 +246,34 @@ public static class ReflectionExtensions
 		return type.GetMember(name);
 	}
 
-#if NETSTANDARD2_0
-	private static Func<Type, Type, InterfaceMapping>? _getInterfaceMap;
-#endif
+	//private static Func<Type, Type, InterfaceMapping>? _getInterfaceMap;
 	public static InterfaceMapping GetInterfaceMapEx(this Type type, Type interfaceType)
 	{
 		// native UWP builds (corert) had no GetInterfaceMap() implementation
 		// (added here https://github.com/dotnet/corert/pull/8144)
-#if NETSTANDARD2_0
-		if (_getInterfaceMap == null)
-		{
-			_getInterfaceMap = (t, i) => t.GetInterfaceMap(i);
-			try
-			{
-				return _getInterfaceMap(type, interfaceType);
-			}
-			catch (PlatformNotSupportedException)
-			{
-				// porting of https://github.com/dotnet/corert/pull/8144 is not possible as it requires access
-				// to non-public runtime data and reflection doesn't work in corert
-				_getInterfaceMap = (t, i) => new InterfaceMapping()
-				{
-					TargetType       = t,
-					InterfaceType    = i,
-					TargetMethods    = Array.Empty<MethodInfo>(),
-					InterfaceMethods = Array.Empty<MethodInfo>()
-				};
-			}
-		}
+		//if (_getInterfaceMap == null)
+		//{
+		//	_getInterfaceMap = (t, i) => t.GetInterfaceMap(i);
+		//	try
+		//	{
+		//		return _getInterfaceMap(type, interfaceType);
+		//	}
+		//	catch (PlatformNotSupportedException)
+		//	{
+		//		// porting of https://github.com/dotnet/corert/pull/8144 is not possible as it requires access
+		//		// to non-public runtime data and reflection doesn't work in corert
+		//		_getInterfaceMap = (t, i) => new InterfaceMapping()
+		//		{
+		//			TargetType       = t,
+		//			InterfaceType    = i,
+		//			TargetMethods    = Array.Empty<MethodInfo>(),
+		//			InterfaceMethods = Array.Empty<MethodInfo>()
+		//		};
+		//	}
+		//}
 
-		return _getInterfaceMap(type, interfaceType);
-#else
+		//return _getInterfaceMap(type, interfaceType);
 		return type.GetInterfaceMap(interfaceType);
-#endif
 	}
 
 	static class CacheHelper<T>
@@ -540,7 +537,7 @@ public static class ReflectionExtensions
 	/// <returns>
 	/// true if the <paramref name="type"/> derives from <paramref name="check"/>; otherwise, false.
 	/// </returns>
-	[Pure]
+	
 	public static bool IsSubClassOf(this Type type, Type check)
 	{
 		if (type  == null) throw new ArgumentNullException(nameof(type));

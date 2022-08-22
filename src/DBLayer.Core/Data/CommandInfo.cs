@@ -12,20 +12,18 @@ using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
-
+using DBLayer.Async;
+using DBLayer.Common;
+using DBLayer.Common.Internal.Cache;
+using DBLayer.Expressions;
+using DBLayer.Extensions;
+using DBLayer.Linq;
+using DBLayer.Mapping;
+using DBLayer.Reflection;
 // type, readertype, configID, sql, additionalKey, isScalar
 using QueryKey = System.ValueTuple<System.Type, System.Type, int, string, string?, bool>;
 
 namespace DBLayer.Data;
-
-using Async;
-using Common;
-using Common.Internal.Cache;
-using Expressions;
-using Extensions;
-using Linq;
-using Mapping;
-using Reflection;
 
 /// <summary>
 /// Provides database connection command abstraction.
@@ -177,7 +175,7 @@ public class CommandInfo
 		InitCommand();
 
 		return ReadEnumerator(
-			await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext),
+			await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext),
 			objectReader,
 			DataConnection.DataProvider.ExecuteScope(DataConnection));
 	}
@@ -207,7 +205,7 @@ public class CommandInfo
 	public async Task<List<T>> QueryToListAsync<T>(Func<DbDataReader, T> objectReader, CancellationToken cancellationToken = default)
 	{
 		var list = new List<T>();
-		await QueryForEachAsync(objectReader, list.Add, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await QueryForEachAsync(objectReader, list.Add, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		return list;
 	}
 
@@ -221,7 +219,7 @@ public class CommandInfo
 	public async Task<T[]> QueryToArrayAsync<T>(Func<DbDataReader, T> objectReader, CancellationToken cancellationToken = default)
 	{
 		var list = new List<T>();
-		await QueryForEachAsync(objectReader, list.Add, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await QueryForEachAsync(objectReader, list.Add, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		return list.ToArray();
 	}
 
@@ -235,23 +233,16 @@ public class CommandInfo
 	/// <returns>Returns task.</returns>
 	public async Task QueryForEachAsync<T>(Func<DbDataReader, T> objectReader, Action<T> action, CancellationToken cancellationToken = default)
 	{
-		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 		InitCommand();
 
-#if !NATIVE_ASYNC
-		using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#else
 		await using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#endif
 		{
-#if NETSTANDARD2_1PLUS
-			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
-			await using (rd.ConfigureAwait(Configuration.ContinueOnCapturedContext))
-#else
-			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
-#endif
-				while (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
+			await using (rd.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
+
+				while (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 					action(objectReader(rd.DataReader!));
 	}
 	}
@@ -308,7 +299,7 @@ public class CommandInfo
 		InitCommand();
 
 		return ReadEnumerator<T>(
-			await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext),
+			await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext),
 			DataConnection.DataProvider.ExecuteScope(DataConnection));
 	}
 
@@ -394,7 +385,7 @@ public class CommandInfo
 	public async Task<List<T>> QueryToListAsync<T>(CancellationToken cancellationToken = default)
 	{
 		var list = new List<T>();
-		await QueryForEachAsync<T>(list.Add, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await QueryForEachAsync<T>(list.Add, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		return list;
 	}
 
@@ -407,7 +398,7 @@ public class CommandInfo
 	public async Task<T[]> QueryToArrayAsync<T>(CancellationToken cancellationToken = default)
 	{
 		var list = new List<T>();
-		await QueryForEachAsync<T>(list.Add, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await QueryForEachAsync<T>(list.Add, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		return list.ToArray();
 	}
 
@@ -420,7 +411,7 @@ public class CommandInfo
 	/// <returns>Returns task.</returns>
 	public async Task QueryForEachAsync<T>(Action<T> action, CancellationToken cancellationToken = default)
 	{
-		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 		InitCommand();
 
@@ -431,13 +422,13 @@ public class CommandInfo
 #endif
 		{
 #if NETSTANDARD2_1PLUS
-			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
-			await using (rd.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
+			await using (rd.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
-			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #endif
 		{
-				if (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+				if (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 			{
 					var additionalKey = GetCommandAdditionalKey(rd.DataReader!, typeof(T));
 					var reader        = ((IDataContext)DataConnection).UnwrapDataObjectInterceptor?.UnwrapDataReader(DataConnection, rd.DataReader!) ?? rd.DataReader!;
@@ -464,7 +455,7 @@ public class CommandInfo
 
 					action(result);
 
-					} while (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext));
+					} while (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext));
 			}
 		}
 	}
@@ -579,7 +570,7 @@ public class CommandInfo
 	public async Task<T> QueryMultipleAsync<T>(CancellationToken cancellationToken = default)
 		where T : class
 	{
-		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 		InitCommand();
 
 		T result;
@@ -591,13 +582,13 @@ public class CommandInfo
 #endif
 		{
 #if NETSTANDARD2_1PLUS
-			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
-			await using (rd.ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
+			await using (rd.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #else
-			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 #endif
 		{
-				result = await ReadMultipleResultSetsAsync<T>(rd.DataReader!, cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				result = await ReadMultipleResultSetsAsync<T>(rd.DataReader!, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 				SetRebindParameters(rd);
 		}
@@ -746,23 +737,15 @@ public class CommandInfo
 		{
 		}
 
-#if !NATIVE_ASYNC
-		public Task DisposeAsync() => TaskEx.CompletedTask;
-#else
+
 		public ValueTask DisposeAsync() => default;
-#endif
 
 		public T Current { get; private set; } = default!;
-
-#if !NATIVE_ASYNC
-		public async Task<bool> MoveNextAsync()
-#else
 		public async ValueTask<bool> MoveNextAsync()
-#endif
 		{
 			if (_isFinished)
 				return false;
-			if (!await _rd.ReadAsync(_cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+			if (!await _rd.ReadAsync(_cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 			{
 				_isFinished = true;
 				return false;
@@ -837,7 +820,7 @@ public class CommandInfo
 
 				var genericMethod = valueMethodInfo.MakeGenericMethod(elementType);
 				var task = (Task)genericMethod.Invoke(this, new object[] { rd, cancellationToken })!;
-				await task.ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				await task.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 				// Task<T>.Result
 				var value = ((dynamic)task).Result;
@@ -846,7 +829,7 @@ public class CommandInfo
 			}
 
 			resultIndex++;
-		} while (await rd.NextResultAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext));
+		} while (await rd.NextResultAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext));
 
 		return result;
 	}
@@ -951,14 +934,14 @@ public class CommandInfo
 	/// <returns>Task with number of records, affected by command execution.</returns>
 	public async Task<int> ExecuteAsync(CancellationToken cancellationToken = default)
 	{
-		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 		var startedOn     = DateTime.UtcNow;
 		var stopwatch     = Stopwatch.StartNew();
 
 		InitCommand();
 
-		var commandResult = await DataConnection.ExecuteNonQueryDataAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		var commandResult = await DataConnection.ExecuteNonQueryDataAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 		stopwatch.Stop();
 		if (DataConnection.TraceSwitchConnection.TraceInfo)
@@ -1076,7 +1059,7 @@ public class CommandInfo
 	/// <returns>Task with resulting value.</returns>
 	public async Task<T> ExecuteAsync<T>(CancellationToken cancellationToken = default)
 	{
-		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 		var startedOn = DateTime.UtcNow;
 		var stopwatch = Stopwatch.StartNew();
@@ -1084,20 +1067,13 @@ public class CommandInfo
 
 		T result = default!;
 
-#if !NATIVE_ASYNC
-		using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#else
 		await using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#endif
 		{
-#if NETSTANDARD2_1PLUS
-			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
-			await using (rd.ConfigureAwait(Configuration.ContinueOnCapturedContext))
-#else
-			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
-#endif
+			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
+			await using (rd.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
+
 		{
-				if (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+				if (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 			{
 					var additionalKey = GetCommandAdditionalKey(rd.DataReader!, typeof(T));
 				try
@@ -1233,11 +1209,11 @@ public class CommandInfo
 	/// <returns>Task with data reader object.</returns>
 	public async Task<DataReaderAsync> ExecuteReaderAsync(CancellationToken cancellationToken = default)
 	{
-		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 		var hasParameters = InitCommand();
 
-		var dataReader = new DataReaderAsync(this, await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext));
+		var dataReader = new DataReaderAsync(this, await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext));
 
 		if (hasParameters && dataReader.ReaderWrapper?.Command?.Parameters.Count > 0)
 			dataReader.ReaderWrapper.OnBeforeCommandDispose = RebindParameters;
@@ -1262,7 +1238,7 @@ public class CommandInfo
 
 	internal async Task ExecuteQueryAsync<T>(DbDataReader rd, string sql, Action<T> action, CancellationToken cancellationToken)
 	{
-		if (await rd.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+		if (await rd.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 		{
 			var additionalKey = GetCommandAdditionalKey(rd, typeof(T));
 			var objectReader  = GetObjectReader<T>(DataConnection, rd, sql, additionalKey);
@@ -1288,13 +1264,13 @@ public class CommandInfo
 
 				action(result);
 
-			} while (await rd.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext));
+			} while (await rd.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext));
 		}
 	}
 
 	internal async Task<T> ExecuteScalarAsync<T>(DbDataReader rd, string sql, CancellationToken cancellationToken)
 	{
-		if (await rd.ReadAsync(cancellationToken).ConfigureAwait(Configuration.ContinueOnCapturedContext))
+		if (await rd.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 		{
 			var additionalKey = GetCommandAdditionalKey(rd, typeof(T));
 			try
@@ -1327,15 +1303,9 @@ public class CommandInfo
 
 			if (parameter.Direction != null) p.Direction =       parameter.Direction.Value;
 			if (parameter.Size      != null) p.Size      =       parameter.Size     .Value;
-#if NET45
-#pragma warning disable RS0030 // API missing from DbParameter in NET 4.5
-			if (parameter.Precision != null) ((IDbDataParameter)p).Precision = (byte)parameter.Precision.Value;
-			if (parameter.Scale     != null) ((IDbDataParameter)p).Scale     = (byte)parameter.Scale    .Value;
-#pragma warning restore RS0030 // API missing from DbParameter in NET 4.5
-#else
+
 			if (parameter.Precision != null) p.Precision = (byte)parameter.Precision.Value;
 			if (parameter.Scale     != null) p.Scale     = (byte)parameter.Scale    .Value;
-#endif
 
 			dataConnection.DataProvider.SetParameter(dataConnection, p, parameter.Name!, dbDataType, value);
 			// some providers (e.g. managed sybase provider) could change parameter name
@@ -1414,7 +1384,7 @@ public class CommandInfo
 			static (o, dataConnection) =>
 		{
 				var type = o.Key.type;
-			o.SlidingExpiration = Configuration.Linq.CacheSlidingExpiration;
+			o.SlidingExpiration = DBLayer.Common.Configuration.Linq.CacheSlidingExpiration;
 
 			var td  = dataConnection.MappingSchema.GetEntityDescriptor(type);
 			var p   = Expression.Parameter(typeof(object), "p");
@@ -1561,7 +1531,7 @@ public class CommandInfo
 			(dataConnection, dataReader),
 			static (e, context) =>
 	{
-			e.SlidingExpiration = Configuration.Linq.CacheSlidingExpiration;
+			e.SlidingExpiration = DBLayer.Common.Configuration.Linq.CacheSlidingExpiration;
 
 				if (!e.Key.Item6 && IsDynamicType(typeof(T)))
 		{
@@ -1598,7 +1568,7 @@ public class CommandInfo
 		}
 
 		_objectReaders.Set(key, func,
-			new MemoryCacheEntryOptions<QueryKey>() {SlidingExpiration = Configuration.Linq.CacheSlidingExpiration});
+			new MemoryCacheEntryOptions<QueryKey>() {SlidingExpiration = DBLayer.Common.Configuration.Linq.CacheSlidingExpiration});
 
 		return (Func<DbDataReader, T>)func;
 	}
@@ -1622,7 +1592,7 @@ public class CommandInfo
 				dataConnection,
 				static (o, dataConnection) =>
 			{
-				o.SlidingExpiration = Configuration.Linq.CacheSlidingExpiration;
+				o.SlidingExpiration = DBLayer.Common.Configuration.Linq.CacheSlidingExpiration;
 
 					var expr = dataConnection.MappingSchema.GetConvertExpression(o.Key.readerType, typeof(DbDataReader), false, false);
 
@@ -1717,7 +1687,7 @@ public class CommandInfo
 			expr = expr.Replace(dataReaderExpr, dataReaderVar);
 			expr = Expression.Block(new[] { dataReaderVar }, assignment, expr);
 
-			if (Configuration.OptimizeForSequentialAccess)
+			if (DBLayer.Common.Configuration.OptimizeForSequentialAccess)
 				expr = SequentialAccessHelper.OptimizeMappingExpressionForSequentialAccess(expr, dataReader.FieldCount, reduce: false);
 		}
 
@@ -1746,7 +1716,7 @@ public class CommandInfo
 				dataConnection,
 				static (o, dataConnection) =>
 			{
-				o.SlidingExpiration = Configuration.Linq.CacheSlidingExpiration;
+				o.SlidingExpiration = DBLayer.Common.Configuration.Linq.CacheSlidingExpiration;
 
 					var expr = dataConnection.MappingSchema.GetConvertExpression(o.Key.readerType, typeof(DbDataReader), false, false);
 

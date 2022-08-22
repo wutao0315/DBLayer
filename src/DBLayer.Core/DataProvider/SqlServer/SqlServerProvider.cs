@@ -1,8 +1,7 @@
-﻿namespace DBLayer.DataProvider.SqlServer
+﻿namespace DBLayer.DataProvider.SqlServer;
+
+public enum SqlServerProvider
 {
-	public enum SqlServerProvider
-	{
-		SystemDataSqlClient,
-		MicrosoftDataSqlClient
-	}
+	SystemDataSqlClient,
+	MicrosoftDataSqlClient
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-using JetBrains.Annotations;
+
 
 namespace DBLayer.Mapping
 {
@@ -20,7 +20,7 @@ namespace DBLayer.Mapping
 	/// By default associations are used only for joins generation in LINQ queries and will have <c>null</c> value for loaded
 	/// records. To load data into association, you should explicitly specify it in your query using <see cref="LinqExtensions.LoadWith{TEntity,TProperty}(System.Linq.IQueryable{TEntity},Expression{Func{TEntity,TProperty}})"/> method.
 	/// </summary>
-	[PublicAPI]
+	
 	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false)]
 	public class AssociationAttribute : MappingAttribute
 	{

@@ -1,14 +1,13 @@
-﻿namespace DBLayer.DataProvider.Oracle
+﻿namespace DBLayer.DataProvider.Oracle;
+
+public enum OracleVersion
 {
-	public enum OracleVersion
-	{
-		/// <summary>
-		/// Oracle 11g dialect.
-		/// </summary>
-		v11 = 11,
-		/// <summary>
-		/// Oracle 12c+ dialect.
-		/// </summary>
-		v12 = 12,
-	}
+	/// <summary>
+	/// Oracle 11g dialect.
+	/// </summary>
+	v11 = 11,
+	/// <summary>
+	/// Oracle 12c+ dialect.
+	/// </summary>
+	v12 = 12,
 }

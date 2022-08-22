@@ -5,9 +5,9 @@ using System.Runtime.Serialization;
 
 namespace DBLayer.SqlProvider
 {
-	using Common;
-	using DataProvider;
-	using SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.DataProvider;
+	using DBLayer.SqlQuery;
 
 	[DataContract]
 	public sealed class SqlProviderFlags

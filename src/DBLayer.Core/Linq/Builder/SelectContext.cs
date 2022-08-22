@@ -8,10 +8,10 @@ using System.Reflection;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using Extensions;
-	using SqlQuery;
-	using Common;
-	using Mapping;
+	using DBLayer.Extensions;
+	using DBLayer.SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.Mapping;
 
 	// This class implements double functionality (scalar and member type selects)
 	// and could be implemented as two different classes.

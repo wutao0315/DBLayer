@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Linq
 {
-	using Common;
-	using SqlQuery;
-	using Mapping;
+	using DBLayer.Common;
+	using DBLayer.SqlQuery;
+	using DBLayer.Mapping;
 	using Common.Internal.Cache;
 
 	static partial class QueryRunner
@@ -151,7 +151,7 @@ namespace DBLayer.Linq
 							return CreateQuery(context.dataContext, context.entityDescriptor, context.obj, null, key.tableName, key.serverName, key.databaseName, key.schemaName, key.tableOptions, key.type);
 						});
 
-				var result = ei == null ? 0 : await ei.GetElementAsync(dataContext, Expression.Constant(obj), null, null, token).ConfigureAwait(Configuration.ContinueOnCapturedContext);
+				var result = ei == null ? 0 : await ei.GetElementAsync(dataContext, Expression.Constant(obj), null, null, token).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
 				return (int)result!;
 			}

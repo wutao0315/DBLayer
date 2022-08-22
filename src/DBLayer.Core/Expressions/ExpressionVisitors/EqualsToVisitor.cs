@@ -1,18 +1,14 @@
-﻿using System;
+﻿using DBLayer.Common;
+using DBLayer.Extensions;
+using DBLayer.Linq;
+using DBLayer.Reflection;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace DBLayer.Expressions
 {
-	using Common;
-	using DBLayer.Extensions;
-	using Linq;
-	using Reflection;
-
 	static class EqualsToVisitor
 	{
 		#region Cache

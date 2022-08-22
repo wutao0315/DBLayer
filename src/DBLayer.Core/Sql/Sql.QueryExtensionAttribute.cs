@@ -5,10 +5,10 @@ using System.Reflection;
 
 namespace DBLayer
 {
-	using Common;
-	using Linq.Builder;
-	using Mapping;
-	using SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.Linq.Builder;
+	using DBLayer.Mapping;
+	using DBLayer.SqlQuery;
 
 	public partial class Sql
 	{

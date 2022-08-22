@@ -1,11 +1,11 @@
-﻿namespace DBLayer.DataProvider.SqlServer
-{
-	using SqlProvider;
+﻿using DBLayer.SqlProvider;
 
-	class SqlServer2016SqlOptimizer : SqlServer2012SqlOptimizer
+namespace DBLayer.DataProvider.SqlServer;
+
+
+class SqlServer2016SqlOptimizer : SqlServer2012SqlOptimizer
+{
+	public SqlServer2016SqlOptimizer(SqlProviderFlags sqlProviderFlags) : base(sqlProviderFlags, SqlServerVersion.v2016)
 	{
-		public SqlServer2016SqlOptimizer(SqlProviderFlags sqlProviderFlags) : base(sqlProviderFlags, SqlServerVersion.v2016)
-		{
-		}
 	}
 }

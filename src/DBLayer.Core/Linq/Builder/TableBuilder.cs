@@ -6,8 +6,8 @@ using System.Reflection;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using Reflection;
-	using Extensions;
+	using DBLayer.Reflection;
+	using DBLayer.Extensions;
 
 	partial class TableBuilder : ISequenceBuilder
 	{

@@ -2,14 +2,14 @@
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+
 
 namespace DBLayer
 {
 	/// <summary>
 	/// Explicit data context <see cref="DataContext"/> transaction wrapper.
 	/// </summary>
-	[PublicAPI]
+	
 	public class DataContextTransaction : IDisposable
 	{
 		/// <summary>

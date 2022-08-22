@@ -23,7 +23,7 @@ namespace DBLayer.Mapping
 		public override void ResetID()
 		{
 			if (_isLocked)
-				throw new LinqToDBException($"MappingSchema '{_mappingSchema.GetType()}' is locked.");
+				throw new DBLayerException($"MappingSchema '{_mappingSchema.GetType()}' is locked.");
 			base.ResetID();
 		}
 	}

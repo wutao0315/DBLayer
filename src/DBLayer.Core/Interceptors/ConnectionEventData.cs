@@ -1,20 +1,19 @@
 ﻿using DBLayer.Data;
 
-namespace DBLayer.Interceptors
-{
-	/// <summary>
-	/// Event arguments for <see cref="IConnectionInterceptor"/> events.
-	/// </summary>
-	public readonly struct ConnectionEventData
-	{
-		internal ConnectionEventData(DataConnection dataConnection)
-		{
-			DataConnection = dataConnection;
-		}
+namespace DBLayer.Interceptors;
 
-		/// <summary>
-		/// Gets data connection associated with event.
-		/// </summary>
-		public DataConnection DataConnection { get; }
+/// <summary>
+/// Event arguments for <see cref="IConnectionInterceptor"/> events.
+/// </summary>
+public readonly struct ConnectionEventData
+{
+	internal ConnectionEventData(DataConnection dataConnection)
+	{
+		DataConnection = dataConnection;
 	}
+
+	/// <summary>
+	/// Gets data connection associated with event.
+	/// </summary>
+	public DataConnection DataConnection { get; }
 }

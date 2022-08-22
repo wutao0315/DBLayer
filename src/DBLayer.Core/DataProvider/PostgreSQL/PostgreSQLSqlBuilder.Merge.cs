@@ -7,27 +7,25 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
+using DBLayer.Common;
+using DBLayer.Extensions;
+using DBLayer.Mapping;
+using DBLayer.SqlProvider;
+using DBLayer.SqlQuery;
 
-namespace DBLayer.DataProvider.PostgreSQL
+namespace DBLayer.DataProvider.PostgreSQL;
+
+public partial class PostgreSQLSqlBuilder
 {
-	using Common;
-	using Extensions;
-	using Mapping;
-	using SqlProvider;
-	using SqlQuery;
+	// we enable MERGE in base pgsql builder class intentionally
+	// this will allow users to use older dialects with merge at the same time
+	// (e.g. to use non-merge insertorreplace implementation)
 
-	public partial class PostgreSQLSqlBuilder
+	protected override bool IsSqlValuesTableValueTypeRequired(SqlValuesTable source,
+		IReadOnlyList<ISqlExpression[]> rows, int row, int column)
 	{
-		// we enable MERGE in base pgsql builder class intentionally
-		// this will allow users to use older dialects with merge at the same time
-		// (e.g. to use non-merge insertorreplace implementation)
-
-		protected override bool IsSqlValuesTableValueTypeRequired(SqlValuesTable source,
-			IReadOnlyList<ISqlExpression[]> rows, int row, int column)
-		{
-			return row < 0
-				// if column contains NULL in all rows, pgsql will type is as "text"
-				|| (row == 0 && rows.All(r => r[column] is SqlValue value && value.Value == null));
-		}
+		return row < 0
+			// if column contains NULL in all rows, pgsql will type is as "text"
+			|| (row == 0 && rows.All(r => r[column] is SqlValue value && value.Value == null));
 	}
 }

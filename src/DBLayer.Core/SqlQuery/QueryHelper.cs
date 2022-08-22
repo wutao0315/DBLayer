@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace DBLayer.SqlQuery
 {
-	using SqlProvider;
-	using Common;
-	using Mapping;
+	using DBLayer.SqlProvider;
+	using DBLayer.Common;
+	using DBLayer.Mapping;
 
 	public static partial class QueryHelper
 	{

@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace DBLayer.Mapping
 {
-	using Common;
-	using Common.Internal;
-	using Expressions;
-	using Metadata;
-	using SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.Common.Internal;
+	using DBLayer.Expressions;
+	using DBLayer.Metadata;
+	using DBLayer.SqlQuery;
 
 	class MappingSchemaInfo
 	{

@@ -1,6 +1,6 @@
 ﻿namespace DBLayer.SchemaProvider;
 
-using Data;
+using DBLayer.Data;
 
 /// <summary>
 /// Database schema provider.

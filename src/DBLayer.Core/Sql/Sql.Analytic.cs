@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-using JetBrains.Annotations;
+
 
 namespace DBLayer
 {
-	using Linq;
-	using Expressions;
+	using DBLayer.Linq;
+	using DBLayer.Expressions;
 
 	using PN = ProviderName;
 
@@ -43,7 +43,7 @@ namespace DBLayer
 		}
 	}
 
-	[PublicAPI]
+	
 	public static class AnalyticFunctions
 	{
 		/// <summary>

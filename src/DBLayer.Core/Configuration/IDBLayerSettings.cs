@@ -1,0 +1,24 @@
+namespace DBLayer.Configuration;
+
+/// <summary>
+/// Settings provider interface.
+/// </summary>
+public interface IDBLayerSettings
+{
+	/// <summary>
+	/// Gets list of data provider settings.
+	/// </summary>
+	IEnumerable<IDataProviderSettings>     DataProviders        { get; }
+	/// <summary>
+	/// Gets name of default connection configuration.
+	/// </summary>
+	string?                                DefaultConfiguration { get; }
+	/// <summary>
+	/// Gets name of default data provider configuration.
+	/// </summary>
+	string?                                DefaultDataProvider  { get; }
+	/// <summary>
+	/// Gets list of connection configurations.
+	/// </summary>
+	IEnumerable<IConnectionStringSettings> ConnectionStrings    { get; }
+}

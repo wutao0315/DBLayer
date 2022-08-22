@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DBLayer.Expressions
+﻿namespace DBLayer.Expressions
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface | AttributeTargets.Enum | AttributeTargets.Delegate)]
 	public class WrapperAttribute : Attribute

@@ -1,11 +1,9 @@
 ﻿using System.Linq.Expressions;
-
 using DBLayer.SqlQuery;
 
-namespace DBLayer.Linq.Builder
+namespace DBLayer.Linq.Builder;
+
+public interface IToSqlConverter
 {
-	public interface IToSqlConverter
-	{
-		ISqlExpression ToSql(Expression expression);
-	}
+	ISqlExpression ToSql(Expression expression);
 }

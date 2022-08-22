@@ -4,13 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
+
 
 namespace DBLayer
 {
-	using Expressions;
-	using Mapping;
-	using SqlQuery;
+	using DBLayer.Expressions;
+	using DBLayer.Mapping;
+	using DBLayer.SqlQuery;
 
 	partial class Sql
 	{
@@ -18,7 +18,7 @@ namespace DBLayer
 		/// An Attribute that allows custom Expressions to be defined
 		/// for a Method used within a Linq Expression.
 		/// </summary>
-		[PublicAPI]
+		
 		[Serializable]
 		[AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
 		public class ExpressionAttribute : Attribute

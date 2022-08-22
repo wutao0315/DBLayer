@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-using JetBrains.Annotations;
+
 
 #region ReSharper disables
 // ReSharper disable RedundantTypeArgumentsOfMethod
@@ -20,14 +20,14 @@ using JetBrains.Annotations;
 
 namespace DBLayer.Linq
 {
-	using Common;
-	using Extensions;
+	using DBLayer.Common;
+	using DBLayer.Extensions;
 	using DBLayer.Common.Internal;
 	using DataProvider.Firebird;
 	using DBLayer.Expressions;
-	using Mapping;
+	using DBLayer.Mapping;
 
-	[PublicAPI]
+	
 	public static class Expressions
 	{
 		#region MapMember
@@ -260,10 +260,10 @@ namespace DBLayer.Linq
 		public static void SetGenericInfoProvider(Type type)
 		{
 			if (!type.IsGenericTypeDefinition)
-				throw new LinqToDBException($"'{type}' must be a generic type.");
+				throw new DBLayerException($"'{type}' must be a generic type.");
 
 			if (!typeof(IGenericInfoProvider).IsSameOrParentOf(type))
-				throw new LinqToDBException($"'{type}' must inherit from 'IGenericInfoProvider'.");
+				throw new DBLayerException($"'{type}' must inherit from 'IGenericInfoProvider'.");
 
 			if (!_genericConvertProviders.ContainsKey(type))
 				lock (_genericConvertProviders)
@@ -433,7 +433,7 @@ namespace DBLayer.Linq
 			//
 			switch (root)
 			{
-				case "LinqToDB" :
+				case "DBLayer" :
 				case "System"   :
 				case "Microsoft": return false;
 				default         : return true;

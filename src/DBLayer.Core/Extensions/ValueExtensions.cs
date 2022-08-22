@@ -1,11 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Reflection;
-using DBLayer.Common;
-using DBLayer.Mapping;
-using DBLayer.SqlQuery;
-
-namespace DBLayer.Extensions;
+﻿namespace DBLayer.Extensions;
 
 /// <summary>
 /// Contains data manipulation helpers (e.g. for use in query parameters).

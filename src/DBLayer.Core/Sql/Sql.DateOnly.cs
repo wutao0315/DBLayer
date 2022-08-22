@@ -3,8 +3,8 @@ using System.Globalization;
 
 namespace DBLayer
 {
-	using SqlQuery;
-	using Expressions;
+	using DBLayer.SqlQuery;
+	using DBLayer.Expressions;
 
 	using PN = ProviderName;
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace DBLayer.Linq
 {
 	using DBLayer.Expressions;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	static partial class QueryRunner
 	{

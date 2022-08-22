@@ -1,99 +1,94 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
-namespace DBLayer.Data
+namespace DBLayer.Data;
+
+public class DataReader : IDisposable
 {
-	public class DataReader : IDisposable
-	{
-		internal DataReaderWrapper?  ReaderWrapper { get; private set;  }
-		public   DbDataReader?       Reader        => ReaderWrapper?.DataReader;
-		public   CommandInfo?        CommandInfo   { get; }
-		internal int                 ReadNumber    { get; set; }
-		private  DateTime            StartedOn     { get; }      = DateTime.UtcNow;
-		private  Stopwatch           Stopwatch     { get; }      = Stopwatch.StartNew();
+    internal DataReaderWrapper? ReaderWrapper { get; private set; }
+    public DbDataReader? Reader => ReaderWrapper?.DataReader;
+    public CommandInfo? CommandInfo { get; }
+    internal int ReadNumber { get; set; }
+    private DateTime StartedOn { get; } = DateTime.UtcNow;
+    private Stopwatch Stopwatch { get; } = Stopwatch.StartNew();
 
-		public DataReader(CommandInfo commandInfo, DataReaderWrapper dataReader)
-		{
-			CommandInfo   = commandInfo;
-			ReaderWrapper = dataReader;
-		}
+    public DataReader(CommandInfo commandInfo, DataReaderWrapper dataReader)
+    {
+        CommandInfo = commandInfo;
+        ReaderWrapper = dataReader;
+    }
 
-		public void Dispose()
-		{
-			if (ReaderWrapper != null)
-			{
-				if (CommandInfo?.DataConnection.TraceSwitchConnection.TraceInfo == true)
-				{
-					CommandInfo.DataConnection.OnTraceConnection(new TraceInfo(CommandInfo.DataConnection, TraceInfoStep.Completed, TraceOperation.ExecuteReader, false)
-					{
-						TraceLevel      = TraceLevel.Info,
-						Command         = ReaderWrapper.Command,
-						StartTime       = StartedOn,
-						ExecutionTime   = Stopwatch.Elapsed,
-						RecordsAffected = ReadNumber,
-					});
-				}
+    public void Dispose()
+    {
+        if (ReaderWrapper != null)
+        {
+            if (CommandInfo?.DataConnection.TraceSwitchConnection.TraceInfo == true)
+            {
+                CommandInfo.DataConnection.OnTraceConnection(new TraceInfo(CommandInfo.DataConnection, TraceInfoStep.Completed, TraceOperation.ExecuteReader, false)
+                {
+                    TraceLevel = TraceLevel.Info,
+                    Command = ReaderWrapper.Command,
+                    StartTime = StartedOn,
+                    ExecutionTime = Stopwatch.Elapsed,
+                    RecordsAffected = ReadNumber,
+                });
+            }
 
-				ReaderWrapper.Dispose();
-				ReaderWrapper = null;
-			}
-		}
+            ReaderWrapper.Dispose();
+            ReaderWrapper = null;
+        }
+    }
 
-		#region Query with object reader
+    #region Query with object reader
 
-		public IEnumerable<T> Query<T>(Func<DbDataReader, T> objectReader)
-		{
-			while (Reader!.Read())
-				yield return objectReader(Reader);
-		}
+    public IEnumerable<T> Query<T>(Func<DbDataReader, T> objectReader)
+    {
+        while (Reader!.Read())
+            yield return objectReader(Reader);
+    }
 
-		#endregion
+    #endregion
 
-		#region Query
+    #region Query
 
-		public IEnumerable<T> Query<T>()
-		{
-			if (ReadNumber != 0)
-				if (!Reader!.NextResult())
-					return Enumerable.Empty<T>();
+    public IEnumerable<T> Query<T>()
+    {
+        if (ReadNumber != 0)
+            if (!Reader!.NextResult())
+                return Enumerable.Empty<T>();
 
-			ReadNumber++;
+        ReadNumber++;
 
-			return CommandInfo!.ExecuteQuery<T>(Reader!, CommandInfo.CommandText + "$$$" + ReadNumber);
-		}
+        return CommandInfo!.ExecuteQuery<T>(Reader!, CommandInfo.CommandText + "$$$" + ReadNumber);
+    }
 
-		#endregion
+    #endregion
 
-		#region Query with template
+    #region Query with template
 
-		public IEnumerable<T> Query<T>(T template)
-		{
-			return Query<T>();
-		}
+    public IEnumerable<T> Query<T>(T template)
+    {
+        return Query<T>();
+    }
 
-		#endregion
+    #endregion
 
-		#region Execute scalar
+    #region Execute scalar
 
-		[return: MaybeNull]
-		public T Execute<T>()
-		{
-			if (ReadNumber != 0)
-				if (!Reader!.NextResult())
-					return default(T);
+    [return: MaybeNull]
+    public T Execute<T>()
+    {
+        if (ReadNumber != 0)
+            if (!Reader!.NextResult())
+                return default(T);
 
-			ReadNumber++;
+        ReadNumber++;
 
-			var sql = CommandInfo!.CommandText + "$$$" + ReadNumber;
+        var sql = CommandInfo!.CommandText + "$$$" + ReadNumber;
 
-			return CommandInfo.ExecuteScalar<T>(Reader!, sql);
-		}
+        return CommandInfo.ExecuteScalar<T>(Reader!, sql);
+    }
 
-		#endregion
-	}
+    #endregion
 }

@@ -1,16 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using DBLayer.Configuration;
 
-namespace DBLayer.DataProvider.Informix
+namespace DBLayer.DataProvider.Informix;
+
+class InformixFactory : IDataProviderFactory
 {
-	using System.Collections.Generic;
-	using Configuration;
-
-	[UsedImplicitly]
-	class InformixFactory : IDataProviderFactory
+	IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
 	{
-		IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
-		{
-			return InformixTools.GetDataProvider();
-		}
+		return InformixTools.GetDataProvider();
 	}
 }

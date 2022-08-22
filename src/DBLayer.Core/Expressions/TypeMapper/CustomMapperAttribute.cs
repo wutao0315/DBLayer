@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DBLayer.Expressions
+﻿namespace DBLayer.Expressions
 {
 	[AttributeUsage(AttributeTargets.ReturnValue)]
 	public class CustomMapperAttribute : Attribute

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using DBLayer.Configuration;
+﻿using DBLayer.Configuration;
 
-namespace DBLayer.DataProvider
+namespace DBLayer.DataProvider;
+
+public interface IDataProviderFactory
 {
-
-	public interface IDataProviderFactory
-	{
-		IDataProvider GetDataProvider (IEnumerable<NamedValue> attributes);
-	}
+	IDataProvider GetDataProvider (IEnumerable<NamedValue> attributes);
 }

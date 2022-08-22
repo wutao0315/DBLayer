@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
+using DBLayer.SchemaProvider;
 
-namespace DBLayer.DataProvider.SapHana
+namespace DBLayer.DataProvider.SapHana;
+
+public class ViewWithParametersTableSchema : TableSchema
 {
-	using SchemaProvider;
-
-
-	public class ViewWithParametersTableSchema : TableSchema
+	public ViewWithParametersTableSchema()
 	{
-		public ViewWithParametersTableSchema()
-		{
-			IsProviderSpecific = true;
-		}
-
-		public List<ParameterSchema>? Parameters { get; set; }
+		IsProviderSpecific = true;
 	}
+
+	public List<ParameterSchema>? Parameters { get; set; }
 }

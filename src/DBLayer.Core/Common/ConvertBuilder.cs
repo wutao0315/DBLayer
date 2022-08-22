@@ -248,12 +248,12 @@ public static class ConvertBuilder
 
 	const FieldAttributes EnumField = FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal;
 
-	static object ThrowLinqToDBException(string text)
+	static object ThrowDBLayerException(string text)
 	{
 		throw new DBLayerConvertException(text);
 	}
 
-	static readonly MethodInfo _throwLinqToDBConvertException = MemberHelper.MethodOf(() => ThrowLinqToDBException(null!));
+	static readonly MethodInfo _throwDBLayerConvertException = MemberHelper.MethodOf(() => ThrowDBLayerException(null!));
 
 	static Expression? GetToEnum(Type from, Type to, Expression expression, MappingSchema mappingSchema)
 	{
@@ -300,7 +300,7 @@ public static class ConvertBuilder
 
 					return Expression.Convert(
 						Expression.Call(
-							_throwLinqToDBConvertException,
+							_throwDBLayerConvertException,
 							Expression.Constant(
 								$"Mapping ambiguity. MapValue({ambiguityMapping.Key}) attribute is defined for both '{to.FullName}.{enums[0].value}' and '{to.FullName}.{enums[1].value}'.")),
 							to);
@@ -329,7 +329,7 @@ public static class ConvertBuilder
 
 				return Expression.Convert(
 					Expression.Call(
-						_throwLinqToDBConvertException,
+						_throwDBLayerConvertException,
 						Expression.Constant(
 							$"Inconsistent mapping. '{to.FullName}.{field.OrigValue}' does not have MapValue(<{from.FullName}>) attribute.")),
 						to);
@@ -398,7 +398,7 @@ public static class ConvertBuilder
 
 					return Expression.Convert(
 						Expression.Call(
-							_throwLinqToDBConvertException,
+							_throwDBLayerConvertException,
 							Expression.Constant(
 								$"Inconsistent mapping. '{from.FullName}.{field.Field.Name}' does not have MapValue(<{to.FullName}>) attribute.")),
 							to);
@@ -456,7 +456,7 @@ public static class ConvertBuilder
 					{
 						return Expression.Convert(
 							Expression.Call(
-								_throwLinqToDBConvertException,
+								_throwDBLayerConvertException,
 								Expression.Constant(
 									string.Format("Mapping ambiguity. '{0}.{1}' can be mapped to either '{2}.{3}' or '{2}.{4}'.",
 										from.FullName, fromAttrs[0].Field.Name,

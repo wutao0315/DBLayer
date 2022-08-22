@@ -8,13 +8,13 @@ using System.Runtime.CompilerServices;
 
 namespace DBLayer.Linq.Builder
 {
-	using Extensions;
+	using DBLayer.Extensions;
 	using DBLayer.Expressions;
 	using Interceptors;
-	using Mapping;
-	using Reflection;
-	using SqlQuery;
-	using Common;
+	using DBLayer.Mapping;
+	using DBLayer.Reflection;
+	using DBLayer.SqlQuery;
+	using DBLayer.Common;
 
 	partial class TableBuilder
 	{

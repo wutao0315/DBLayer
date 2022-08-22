@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace DBLayer.SqlQuery
 {
-	using Common;
-	using SqlProvider;
+	using DBLayer.Common;
+	using DBLayer.SqlProvider;
 
 	class SelectQueryOptimizer
 	{
@@ -1367,7 +1367,7 @@ namespace DBLayer.SqlQuery
 				{
 					if (!(joinTable.JoinType == JoinType.CrossApply && searchCondition.Count == 0) // CROSS JOIN
 						&& sql.Select.HasModifier)
-						throw new LinqToDBException("Database do not support CROSS/OUTER APPLY join required by the query.");
+						throw new DBLayerException("Database do not support CROSS/OUTER APPLY join required by the query.");
 
 					// correct conditions
 					if (searchCondition.Count > 0 && sql.Select.Columns.Count > 0)
@@ -1565,9 +1565,9 @@ namespace DBLayer.SqlQuery
 				if (c.Expression.ElementType == QueryElementType.SqlRow)
 				{
 					if (_selectQuery.ParentSelect is null)
-						throw new LinqToDBException("SqlRow can not be returned from main SELECT");
+						throw new DBLayerException("SqlRow can not be returned from main SELECT");
 					if (columns.Count > 1)
-						throw new LinqToDBException("SqlRow expression must be the only result in a SELECT");
+						throw new DBLayerException("SqlRow expression must be the only result in a SELECT");
 
 					var row = (SqlRow)columns[0].Expression;
 					columns.Clear();

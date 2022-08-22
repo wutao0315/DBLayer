@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace DBLayer.Interceptors;
 
-namespace DBLayer.Interceptors
+public interface IInterceptable
 {
-	public interface IInterceptable
-	{
-	}
+}
 
-	public interface IInterceptable<T> : IInterceptable
-		where T : IInterceptor
-	{
-		T? Interceptor { get; set; }
-	}
+public interface IInterceptable<T> : IInterceptable
+	where T : IInterceptor
+{
+	T? Interceptor { get; set; }
 }

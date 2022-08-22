@@ -5,8 +5,8 @@ using System.Linq.Expressions;
 
 namespace DBLayer.Metadata
 {
-	using Common;
-	using Extensions;
+	using DBLayer.Common;
+	using DBLayer.Extensions;
 
 	class AttributeInfo
 	{

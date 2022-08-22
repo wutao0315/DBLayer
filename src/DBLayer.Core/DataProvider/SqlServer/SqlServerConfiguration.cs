@@ -1,7 +1,6 @@
-﻿namespace DBLayer.DataProvider.SqlServer
+﻿namespace DBLayer.DataProvider.SqlServer;
+
+public static class SqlServerConfiguration
 {
-	public static class SqlServerConfiguration
-	{
-		public static bool GenerateScopeIdentity = true;
-	}
+	public static bool GenerateScopeIdentity = true;
 }

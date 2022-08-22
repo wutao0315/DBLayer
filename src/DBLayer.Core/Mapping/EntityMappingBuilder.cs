@@ -4,20 +4,20 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using JetBrains.Annotations;
+
 
 namespace DBLayer.Mapping
 {
-	using Common;
-	using Expressions;
-	using Extensions;
-	using Reflection;
+	using DBLayer.Common;
+	using DBLayer.Expressions;
+	using DBLayer.Extensions;
+	using DBLayer.Reflection;
 
 	/// <summary>
 	/// Fluent mapping entity builder.
 	/// </summary>
 	/// <typeparam name="TEntity">Entity mapping type.</typeparam>
-	[PublicAPI]
+	
 	public class EntityMappingBuilder<TEntity>
 	{
 		#region Init

@@ -1,8 +1,5 @@
-﻿using System;
+﻿namespace DBLayer.Interceptors;
 
-namespace DBLayer.Interceptors
+public interface IInterceptor
 {
-	public interface IInterceptor
-	{
-	}
 }

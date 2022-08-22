@@ -1,6 +1,6 @@
 ﻿namespace DBLayer.Linq
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	public interface IQueryContext
 	{

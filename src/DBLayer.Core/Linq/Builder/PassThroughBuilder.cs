@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using Reflection;
+	using DBLayer.Reflection;
 
 	class PassThroughBuilder : MethodCallBuilder
 	{

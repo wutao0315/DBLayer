@@ -15,6 +15,12 @@
     <OutputType>Library</OutputType>
     <StartupObject />
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Compatibility\System\Threading\**" />
+    <EmbeddedResource Remove="Compatibility\System\Threading\**" />
+    <None Remove="Compatibility\System\Threading\**" />
+  </ItemGroup>
   
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
@@ -26,58 +32,22 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Update="DataProvider\MySql\MySqlHints.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MySqlHints.generated.cs</LastGenOutput>
-    </None>
-    <None Update="DataProvider\Oracle\OracleHints.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>OracleHints.generated.cs</LastGenOutput>
-    </None>
-    <None Update="DataProvider\PostgreSQL\PostgreSQLHints.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PostgreSQLHints.generated.cs</LastGenOutput>
-    </None>
-    <None Update="DataProvider\SqlCe\SqlCeHints.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SqlCeHints.generated.cs</LastGenOutput>
-    </None>
-    <None Update="DataProvider\SqlServer\SqlServerHints.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SqlServerHints.generated.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Update="DataProvider\MySql\MySqlHints.generated.cs">
+    <Compile Update="Common\Internal\MutableTuple.generated.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MySqlHints.tt</DependentUpon>
+      <DependentUpon>MutableTuple.tt</DependentUpon>
     </Compile>
-    <Compile Update="DataProvider\Oracle\OracleHints.generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>OracleHints.tt</DependentUpon>
-    </Compile>
-    <Compile Update="DataProvider\PostgreSQL\PostgreSQLHints.generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>PostgreSQLHints.tt</DependentUpon>
-    </Compile>
-    <Compile Update="DataProvider\SqlCe\SqlCeHints.generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SqlCeHints.tt</DependentUpon>
-    </Compile>
-    <Compile Update="DataProvider\SqlServer\SqlServerHints.generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SqlServerHints.tt</DependentUpon>
-    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Common\Internal\MutableTuple.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MutableTuple.generated.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

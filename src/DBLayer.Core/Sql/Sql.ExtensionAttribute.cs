@@ -9,15 +9,15 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
-using JetBrains.Annotations;
+
 
 namespace DBLayer
 {
-	using Common;
-	using Expressions;
-	using Extensions;
-	using Mapping;
-	using SqlQuery;
+	using DBLayer.Common;
+	using DBLayer.Expressions;
+	using DBLayer.Extensions;
+	using DBLayer.Mapping;
+	using DBLayer.SqlQuery;
 
 	[AttributeUsage(AttributeTargets.Parameter)]
 	[MeansImplicitUse]

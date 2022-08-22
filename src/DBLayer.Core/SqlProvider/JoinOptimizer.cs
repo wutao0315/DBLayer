@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DBLayer.SqlProvider
 {
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	class JoinOptimizer
 	{

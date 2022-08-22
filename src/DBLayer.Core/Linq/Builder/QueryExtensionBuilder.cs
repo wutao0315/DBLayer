@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace DBLayer.Linq.Builder
 {
 	using DBLayer.Expressions;
-	using SqlQuery;
+	using DBLayer.SqlQuery;
 
 	class QueryExtensionBuilder : MethodCallBuilder
 	{
