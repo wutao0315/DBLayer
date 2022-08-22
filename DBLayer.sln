@@ -30,13 +30,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{EA3C6278
 		build\version.props = build\version.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBLayer", "src\DBLayer.Core\DBLayer.csproj", "{EF97D0A4-93C0-4744-8CC9-50E0B224BFFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBLayer", "src\DBLayer\DBLayer.csproj", "{EF97D0A4-93C0-4744-8CC9-50E0B224BFFF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBLayer.Persistence", "src\DBLayer.Persistence\DBLayer.Persistence.csproj", "{937E96AB-6C68-4C03-A3E7-12E4C565FF20}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbLayer.CoreTest", "test\DbLayer.CoreTest\DbLayer.CoreTest.csproj", "{B0532586-EBF2-4FB5-9599-1A2F25B1FB45}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBLayer.Extensions", "src\DBLayer.Core.Extensions\DBLayer.Extensions.csproj", "{5CAA3919-0110-4449-9F8A-487CDCB6D1C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBLayer.Extensions", "src\DBLayer.Extensions\DBLayer.Extensions.csproj", "{5CAA3919-0110-4449-9F8A-487CDCB6D1C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
