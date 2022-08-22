@@ -1,9 +1,8 @@
-namespace DBLayer.SqlQuery
+namespace DBLayer.SqlQuery;
+
+public enum MultiInsertType
 {
-	public enum MultiInsertType
-	{
-		Unconditional,
-		All,
-		First,
-	}
+	Unconditional,
+	All,
+	First,
 }

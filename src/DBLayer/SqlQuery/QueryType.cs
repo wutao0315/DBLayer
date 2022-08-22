@@ -1,18 +1,15 @@
-﻿using System;
+﻿namespace DBLayer.SqlQuery;
 
-namespace DBLayer.SqlQuery
+public enum QueryType
 {
-	public enum QueryType
-	{
-		Select,
-		Delete,
-		Update,
-		Insert,
-		InsertOrUpdate,
-		CreateTable,
-		DropTable,
-		TruncateTable,
-		Merge,
-		MultiInsert,
-	}
+	Select,
+	Delete,
+	Update,
+	Insert,
+	InsertOrUpdate,
+	CreateTable,
+	DropTable,
+	TruncateTable,
+	Merge,
+	MultiInsert,
 }

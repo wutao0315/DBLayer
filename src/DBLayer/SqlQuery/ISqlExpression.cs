@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace DBLayer.SqlQuery;
 
-namespace DBLayer.SqlQuery
+public interface ISqlExpression : IQueryElement, IEquatable<ISqlExpression>, ISqlExpressionWalkable
 {
-	public interface ISqlExpression : IQueryElement, IEquatable<ISqlExpression>, ISqlExpressionWalkable
-	{
-		bool Equals   (ISqlExpression other, Func<ISqlExpression,ISqlExpression,bool> comparer);
+	bool Equals   (ISqlExpression other, Func<ISqlExpression,ISqlExpression,bool> comparer);
 
-		bool  CanBeNull  { get; }
-		int   Precedence { get; }
-		// TODO: v4 refactoring: replace with DbDataType and eradicate nullability. Should remove need for GetExpressionType method
-		Type? SystemType { get; }
-	}
+	bool  CanBeNull  { get; }
+	int   Precedence { get; }
+	// TODO: v4 refactoring: replace with DbDataType and eradicate nullability. Should remove need for GetExpressionType method
+	Type? SystemType { get; }
 }

@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace DBLayer.SqlQuery
+namespace DBLayer.SqlQuery;
+
+public interface IQueryElement
 {
-	public interface IQueryElement
-	{
-		QueryElementType ElementType { get; }
-		StringBuilder    ToString (StringBuilder sb, Dictionary<IQueryElement,IQueryElement> dic);
-	}
+	QueryElementType ElementType { get; }
+	StringBuilder    ToString (StringBuilder sb, Dictionary<IQueryElement,IQueryElement> dic);
 }

@@ -1,31 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace DBLayer.SqlQuery
+namespace DBLayer.SqlQuery;
+
+public class SqlComment : IQueryElement
 {
-	public class SqlComment : IQueryElement
+	public QueryElementType ElementType => QueryElementType.Comment;
+
+	public List<string> Lines { get; }
+
+	public SqlComment()
 	{
-		public QueryElementType ElementType => QueryElementType.Comment;
+		Lines = new List<string>();
+	}
 
-		public List<string> Lines { get; }
+	internal SqlComment(List<string> lines)
+	{
+		Lines = lines;
+	}
 
-		public SqlComment()
-		{
-			Lines = new List<string>();
-		}
-
-		internal SqlComment(List<string> lines)
-		{
-			Lines = lines;
-		}
-
-		public StringBuilder ToString(StringBuilder sb, Dictionary<IQueryElement, IQueryElement> dic)
-		{
-			foreach (var part in Lines)
-				sb
-					.Append("-- ")
-					.AppendLine(part);
-			return sb;
-		}
+	public StringBuilder ToString(StringBuilder sb, Dictionary<IQueryElement, IQueryElement> dic)
+	{
+		foreach (var part in Lines)
+			sb
+				.Append("-- ")
+				.AppendLine(part);
+		return sb;
 	}
 }

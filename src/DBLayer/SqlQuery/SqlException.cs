@@ -1,39 +1,37 @@
-using System;
 using System.Runtime.Serialization;
 
-namespace DBLayer.SqlQuery
+namespace DBLayer.SqlQuery;
+
+public class SqlException : Exception
 {
-	public class SqlException : Exception
+	public SqlException()
+		: base("A DBLayer Sql error has occurred.")
 	{
-		public SqlException()
-			: base("A DBLayer Sql error has occurred.")
-		{
-		}
+	}
 
-		public SqlException(string message)
-			: base(message)
-		{
-		}
+	public SqlException(string message)
+		: base(message)
+	{
+	}
 
-		public SqlException(string message, params object?[] args)
-			: base(string.Format(message, args))
-		{
-		}
+	public SqlException(string message, params object?[] args)
+		: base(string.Format(message, args))
+	{
+	}
 
-		public SqlException(string message, Exception innerException)
-			: base(message, innerException)
-		{
-		}
+	public SqlException(string message, Exception innerException)
+		: base(message, innerException)
+	{
+	}
 
-		public SqlException(Exception innerException)
-			: base(innerException.Message, innerException)
-		{
-		}
+	public SqlException(Exception innerException)
+		: base(innerException.Message, innerException)
+	{
+	}
 
-		protected SqlException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
-		}
+	protected SqlException(SerializationInfo info, StreamingContext context)
+		: base(info, context)
+	{
 	}
 }
 

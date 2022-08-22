@@ -19,7 +19,7 @@ public class AES
         }
         encryptKey = encryptKey.PadRight(keyLength, ' ');
 
-        RijndaelManaged rijndaelProvider = new RijndaelManaged();
+        Aes rijndaelProvider = Aes.Create();
         rijndaelProvider.Key = Encoding.UTF8.GetBytes(encryptKey.Substring(0, keyLength));
         rijndaelProvider.IV = keys;
         ICryptoTransform rijndaelEncrypt = rijndaelProvider.CreateEncryptor();
@@ -40,7 +40,7 @@ public class AES
             }
             decryptKey = decryptKey.PadRight(keyLength, ' ');
 
-            RijndaelManaged rijndaelProvider = new RijndaelManaged();
+            Aes rijndaelProvider = Aes.Create();
             rijndaelProvider.Key = Encoding.UTF8.GetBytes(decryptKey);
             rijndaelProvider.IV = keys;
             ICryptoTransform rijndaelDecrypt = rijndaelProvider.CreateDecryptor();
@@ -84,9 +84,9 @@ public class DES
         byte[] rgbKey = Encoding.UTF8.GetBytes(encryptKey.Substring(0, keyLength));
         byte[] rgbIV = keys;
         byte[] inputByteArray = Encoding.UTF8.GetBytes(encryptString);
-        DESCryptoServiceProvider dCSP = new DESCryptoServiceProvider();
-        MemoryStream mStream = new MemoryStream();
-        CryptoStream cStream = new CryptoStream(mStream, dCSP.CreateEncryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
+        var dCSP =System.Security.Cryptography.DES.Create();
+        var mStream = new MemoryStream();
+        var cStream = new CryptoStream(mStream, dCSP.CreateEncryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
         cStream.Write(inputByteArray, 0, inputByteArray.Length);
         cStream.FlushFinalBlock();
         return Convert.ToBase64String(mStream.ToArray());

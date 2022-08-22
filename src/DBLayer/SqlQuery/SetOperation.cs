@@ -1,12 +1,11 @@
-﻿namespace DBLayer.SqlQuery
+﻿namespace DBLayer.SqlQuery;
+
+public enum SetOperation
 {
-	public enum SetOperation
-	{
-		Union,
-		UnionAll,
-		Except,
-		ExceptAll,
-		Intersect,
-		IntersectAll,
-	}
+	Union,
+	UnionAll,
+	Except,
+	ExceptAll,
+	Intersect,
+	IntersectAll,
 }

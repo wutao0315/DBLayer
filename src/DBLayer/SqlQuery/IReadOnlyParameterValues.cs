@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace DBLayer.SqlQuery
+namespace DBLayer.SqlQuery;
+
+public interface IReadOnlyParameterValues
 {
-	public interface IReadOnlyParameterValues
-	{
-		bool TryGetValue(SqlParameter parameter, [NotNullWhen(true)] out SqlParameterValue? value);
-	}
+	bool TryGetValue(SqlParameter parameter, [NotNullWhen(true)] out SqlParameterValue? value);
 }

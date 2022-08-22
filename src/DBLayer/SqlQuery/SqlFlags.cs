@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace DBLayer.SqlQuery;
 
-namespace DBLayer.SqlQuery
+[Flags]
+public enum SqlFlags
 {
-	[Flags]
-	public enum SqlFlags
-	{
-		None             = 0,
-		IsAggregate      = 0x1,
-		IsPure           = 0x4,
-		IsPredicate      = 0x8,
-		IsWindowFunction = 0x10,
-	}
+	None             = 0,
+	IsAggregate      = 0x1,
+	IsPure           = 0x4,
+	IsPredicate      = 0x8,
+	IsWindowFunction = 0x10,
 }

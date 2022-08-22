@@ -1,8 +1,7 @@
-﻿namespace DBLayer.SqlQuery
+﻿namespace DBLayer.SqlQuery;
+
+public interface ISqlPredicate : IQueryElement, ISqlExpressionWalkable
 {
-	public interface ISqlPredicate : IQueryElement, ISqlExpressionWalkable
-	{
-		bool CanBeNull  { get; }
-		int  Precedence { get; }
-	}
+	bool CanBeNull  { get; }
+	int  Precedence { get; }
 }

@@ -1,9 +1,8 @@
-﻿namespace DBLayer.SqlQuery
+﻿namespace DBLayer.SqlQuery;
+
+public enum DefaultNullable
 {
-	public enum DefaultNullable
-	{
-		None,
-		Null,
-		NotNull
-	}
+	None,
+	Null,
+	NotNull
 }

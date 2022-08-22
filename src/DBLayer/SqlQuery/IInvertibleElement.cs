@@ -1,8 +1,7 @@
-﻿namespace DBLayer.SqlQuery
+﻿namespace DBLayer.SqlQuery;
+
+public interface IInvertibleElement
 {
-	public interface IInvertibleElement
-	{
-		bool CanInvert();
-		IQueryElement Invert();
-	}
+	bool CanInvert();
+	IQueryElement Invert();
 }

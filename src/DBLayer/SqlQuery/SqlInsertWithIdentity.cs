@@ -1,7 +1,6 @@
-﻿namespace DBLayer.SqlQuery
+﻿namespace DBLayer.SqlQuery;
+
+public class SqlInsertWithIdentity
 {
-	public class SqlInsertWithIdentity
-	{
-		
-	}
+	
 }
