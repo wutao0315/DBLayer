@@ -21,6 +21,13 @@
     <EmbeddedResource Remove="Compatibility\System\Threading\**" />
     <None Remove="Compatibility\System\Threading\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="SqlQuery\ReservedWords.txt" />
+    <None Remove="SqlQuery\ReservedWordsFirebird.txt" />
+    <None Remove="SqlQuery\ReservedWordsOracle.txt" />
+    <None Remove="SqlQuery\ReservedWordsPostgres.txt" />
+  </ItemGroup>
   
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
@@ -29,6 +36,13 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>DBLayer.Core.Extensions</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="SqlQuery\ReservedWords.txt" />
+    <EmbeddedResource Include="SqlQuery\ReservedWordsFirebird.txt" />
+    <EmbeddedResource Include="SqlQuery\ReservedWordsOracle.txt" />
+    <EmbeddedResource Include="SqlQuery\ReservedWordsPostgres.txt" />
   </ItemGroup>
   
   <ItemGroup>

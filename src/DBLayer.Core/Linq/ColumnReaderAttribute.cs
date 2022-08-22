@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DBLayer.Linq.Internal
+﻿namespace DBLayer.Linq.Internal
 {
 	/// <summary>
 	/// Internal API.
