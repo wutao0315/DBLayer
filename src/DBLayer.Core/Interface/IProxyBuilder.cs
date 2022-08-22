@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
 
-namespace DBLayer.Core.Interface;
+namespace DBLayer.Interface;
 
 public interface IProxyBuilder
 {

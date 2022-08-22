@@ -1,4 +1,4 @@
-﻿namespace DBLayer.Core.Condition;
+﻿namespace DBLayer.Condition;
 
 public class BasePageCondition : BaseCondition
 {

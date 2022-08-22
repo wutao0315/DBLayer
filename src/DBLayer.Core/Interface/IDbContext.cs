@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace DBLayer.Core.Interface;
+namespace DBLayer.Interface;
 
 public interface IDbContext
 {

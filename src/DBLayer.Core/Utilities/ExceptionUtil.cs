@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace DBLayer.Core.Utilities;
+namespace DBLayer.Utilities;
 
 internal static class ExceptionUtil
 {

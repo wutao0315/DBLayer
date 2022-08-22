@@ -1,9 +1,9 @@
-﻿using DBLayer.Core.Linq;
-using DBLayer.Core.Utilities;
+﻿using DBLayer.Linq;
+using DBLayer.Utilities;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DBLayer.Core;
+namespace DBLayer;
 
 public static class QueryableExtensions
 {

@@ -1,13 +1,13 @@
-using DBLayer.Core;
-using DBLayer.Core.Condition;
+using DBLayer;
+using DBLayer.Condition;
 using DBLayer.Persistence;
 using DBLayer.Persistence.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
-using DBLayer.Core.Extensions;
-using DBLayer.Core.Interface;
+using DBLayer.Extensions;
+using DBLayer.Interface;
 using DBLayer.Persistence.PagerGenerator;
 using DBLayer.Persistence.Generator;
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,7 @@ using MySqlX.XDevAPI.Common;
 using System.Threading;
 using System.Security.Claims;
 
-namespace DbLayer.CoreTest
+namespace DBLayerTest
 {
     [TestClass]
     public class UnitTest1
@@ -39,7 +39,7 @@ namespace DbLayer.CoreTest
             services.AddLogging();
 
 
-            services.AddDBLayerDefault("DbLayer.CoreTest");
+            services.AddDBLayerDefault("DBLayerTest");
 
             services.AddLogging((loggerBuilder) =>
             {
@@ -162,7 +162,7 @@ namespace DbLayer.CoreTest
             services.AddLogging();
 
 
-            services.AddDBLayerDefault("DbLayer.CoreTest");
+            services.AddDBLayerDefault("DBLayerTest");
 
             services.AddLogging((loggerBuilder) =>
             {
@@ -312,7 +312,7 @@ namespace DbLayer.CoreTest
             services.Configure<DBLayerOption>(config.GetSection("dblayer"));
             services.AddLogging();
 
-            services.AddDBLayerDefault("DbLayer.CoreTest");
+            services.AddDBLayerDefault("DBLayerTest");
 
             services.AddLogging((loggerBuilder) =>
             {
@@ -379,7 +379,7 @@ namespace DbLayer.CoreTest
             services.Configure<DBLayerOption>(config.GetSection("dblayer"));
             services.AddLogging();
 
-            services.AddDBLayerDefault("DbLayer.CoreTest");
+            services.AddDBLayerDefault("DBLayerTest");
 
             services.AddLogging((loggerBuilder) =>
             {

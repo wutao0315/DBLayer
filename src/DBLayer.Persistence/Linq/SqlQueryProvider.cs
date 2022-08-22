@@ -1,5 +1,5 @@
-﻿using DBLayer.Core.Interface;
-using DBLayer.Core.Linq;
+﻿using DBLayer.Interface;
+using DBLayer.Linq;
 using System.Linq.Expressions;
 
 namespace DBLayer.Persistence.Linq;

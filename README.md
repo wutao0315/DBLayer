@@ -11,11 +11,11 @@
 
 ### install
 
-nuget:Install-Package DBLayer.Core -Version
+nuget:Install-Package DBLayer -Version
 
 nuget:Install-Package DBLayer.Persistence -Version
 
-nuget:Install-Package DBLayer.Core.Extensions -Version
+nuget:Install-Package DBLayer.Extensions -Version
 
 ## ioc code
 ```C#

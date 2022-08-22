@@ -1,4 +1,4 @@
-﻿using DBLayer.Core.Interface;
+﻿using DBLayer.Interface;
 
 namespace DBLayer.Persistence.Generator;
 

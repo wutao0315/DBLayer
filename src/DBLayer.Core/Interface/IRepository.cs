@@ -1,11 +1,11 @@
-﻿using DBLayer.Core.Condition;
-using DBLayer.Core.Logging;
+﻿using DBLayer.Condition;
+using DBLayer.Logging;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
-namespace DBLayer.Core.Interface;
+namespace DBLayer.Interface;
 
 public interface IRepository
 {

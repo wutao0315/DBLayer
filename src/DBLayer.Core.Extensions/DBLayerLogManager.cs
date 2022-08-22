@@ -1,6 +1,6 @@
-﻿using DBLayer.Core.Logging;
+﻿using DBLayer.Logging;
 
-namespace DBLayer.Core.Extensions;
+namespace DBLayer.Extensions;
 
 public static class DBLayerLogManager
 {

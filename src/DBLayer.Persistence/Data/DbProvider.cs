@@ -1,4 +1,4 @@
-﻿using DBLayer.Core.Interface;
+﻿using DBLayer.Interface;
 using System.Data.Common;
 
 namespace DBLayer.Persistence.Data;

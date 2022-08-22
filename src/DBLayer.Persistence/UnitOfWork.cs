@@ -1,5 +1,5 @@
-﻿using DBLayer.Core.Interface;
-using DBLayer.Core.Logging;
+﻿using DBLayer.Interface;
+using DBLayer.Logging;
 
 namespace DBLayer.Persistence;
 

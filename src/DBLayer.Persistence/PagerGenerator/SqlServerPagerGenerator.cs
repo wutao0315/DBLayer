@@ -1,5 +1,5 @@
-﻿using DBLayer.Core;
-using DBLayer.Core.Interface;
+﻿using DBLayer;
+using DBLayer.Interface;
 using System.Data;
 using System.Data.Common;
 using System.Text;

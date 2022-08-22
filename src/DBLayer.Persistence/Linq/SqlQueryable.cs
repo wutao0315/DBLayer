@@ -1,4 +1,4 @@
-﻿using DBLayer.Core.Interface;
+﻿using DBLayer.Interface;
 using System.Collections;
 using System.Linq.Expressions;
 

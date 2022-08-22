@@ -1,8 +1,8 @@
-﻿using DBLayer.Core.Condition;
+﻿using DBLayer.Condition;
 using System.Data.Common;
 using System.Text;
 
-namespace DBLayer.Core;
+namespace DBLayer;
 
 public class BasePager<T> where T : BaseCondition, new()
 {

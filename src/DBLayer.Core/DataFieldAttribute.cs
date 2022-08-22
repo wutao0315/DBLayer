@@ -7,7 +7,7 @@
 * 修改人   修改日期    修改内容
 * 
 * ----------------------------------------------------------------------------*/
-namespace DBLayer.Core;
+namespace DBLayer;
 
 public enum KeyType
 {

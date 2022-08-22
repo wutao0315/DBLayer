@@ -1,5 +1,5 @@
-﻿using DBLayer.Core.Logging;
-using DBLayer.Core.Utilities;
+﻿using DBLayer.Logging;
+using DBLayer.Utilities;
 using System.Data;
 using System.Data.Common;
 

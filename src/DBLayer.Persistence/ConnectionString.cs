@@ -1,6 +1,6 @@
-﻿using DBLayer.Core;
-using DBLayer.Core.Interface;
-using DBLayer.Core.Utilities;
+﻿using DBLayer;
+using DBLayer.Interface;
+using DBLayer.Utilities;
 
 namespace DBLayer.Persistence;
 

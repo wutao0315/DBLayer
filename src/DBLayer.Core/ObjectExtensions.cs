@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DBLayer.Core;
+namespace DBLayer;
 
 public static class ObjectExtensions
 {

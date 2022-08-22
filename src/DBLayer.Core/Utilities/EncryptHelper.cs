@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace DBLayer.Core.Utilities;
+namespace DBLayer.Utilities;
 
 /// <summary> 
 /// 加密

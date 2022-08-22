@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
 
-namespace DBLayer.Core.Interface;
+namespace DBLayer.Interface;
 
 public interface IDataSource
 {

@@ -1,9 +1,9 @@
-﻿using DBLayer.Core.Condition;
+﻿using DBLayer.Condition;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
 
-namespace DBLayer.Core.Interface;
+namespace DBLayer.Interface;
 
 public interface IRepository<T, R> : IRepository where T : new()
 {

@@ -1,4 +1,4 @@
-﻿namespace DBLayer.Core.Interface;
+﻿namespace DBLayer.Interface;
 
 public interface IConnectionString
 {

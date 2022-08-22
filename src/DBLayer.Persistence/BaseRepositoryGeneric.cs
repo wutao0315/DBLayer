@@ -1,6 +1,6 @@
-﻿using DBLayer.Core;
-using DBLayer.Core.Condition;
-using DBLayer.Core.Interface;
+﻿using DBLayer;
+using DBLayer.Condition;
+using DBLayer.Interface;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;

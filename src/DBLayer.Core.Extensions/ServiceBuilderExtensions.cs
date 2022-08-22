@@ -1,4 +1,4 @@
-﻿using DBLayer.Core.Interface;
+﻿using DBLayer.Interface;
 using DBLayer.Persistence;
 using DBLayer.Persistence.Data;
 using DBLayer.Persistence.Generator;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
-namespace DBLayer.Core.Extensions;
+namespace DBLayer.Extensions;
 
 public class DBLayerOption
 {

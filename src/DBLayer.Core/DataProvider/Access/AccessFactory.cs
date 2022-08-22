@@ -1,0 +1,17 @@
+﻿using System.Collections.Generic;
+
+using JetBrains.Annotations;
+
+namespace DBLayer.DataProvider.Access
+{
+	using Configuration;
+
+	[UsedImplicitly]
+	class AccessFactory : IDataProviderFactory
+	{
+		IDataProvider IDataProviderFactory.GetDataProvider(IEnumerable<NamedValue> attributes)
+		{
+			return AccessTools.GetDataProvider();
+		}
+	}
+}

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace DBLayer.Core.Linq;
+namespace DBLayer.Linq;
 
 public interface IAsyncQueryProvider : IQueryProvider
 {

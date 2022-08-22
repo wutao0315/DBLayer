@@ -1,4 +1,4 @@
-﻿namespace DBLayer.Core;
+﻿namespace DBLayer;
 
 public abstract class BaseEntity<R>
 {

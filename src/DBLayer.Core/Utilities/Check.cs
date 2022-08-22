@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace DBLayer.Core.Utilities;
+namespace DBLayer.Utilities;
 
 [DebuggerStepThrough]
 internal static class Check

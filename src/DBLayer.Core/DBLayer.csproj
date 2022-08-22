@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>net6.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+    <PackageLicenseUrl>https://github.com/wutao0315/DBLayer/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>MIT</Copyright>
+    <PackageProjectUrl>https://github.com/wutao0315/DBLayer</PackageProjectUrl>
+    <PackageReleaseNotes />
+    <Description>DBLayer simple orm</Description>
+    <Authors>wutao0315</Authors>
+    <Version>1.5.0</Version>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>DBLayer.Persistence</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>DBLayer.Core.Extensions</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="DataProvider\MySql\MySqlHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MySqlHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\Oracle\OracleHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OracleHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\PostgreSQL\PostgreSQLHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PostgreSQLHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\SqlCe\SqlCeHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SqlCeHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\SqlServer\SqlServerHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SqlServerHints.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="DataProvider\MySql\MySqlHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MySqlHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\Oracle\OracleHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OracleHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\PostgreSQL\PostgreSQLHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PostgreSQLHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\SqlCe\SqlCeHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SqlCeHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\SqlServer\SqlServerHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SqlServerHints.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

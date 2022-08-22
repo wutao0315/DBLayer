@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DBLayer.Core\DBLayer.Core.csproj" />
+    <ProjectReference Include="..\DBLayer\DBLayer.csproj" />
   </ItemGroup>
 
 </Project>

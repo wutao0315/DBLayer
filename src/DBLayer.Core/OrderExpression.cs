@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace DBLayer.Core;
+namespace DBLayer;
 
 public class OrderExpression<T> where T : new()
 {

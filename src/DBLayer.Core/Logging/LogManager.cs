@@ -1,7 +1,7 @@
-﻿using DBLayer.Core.Utilities;
+﻿using DBLayer.Utilities;
 using System.Diagnostics;
 
-namespace DBLayer.Core.Logging;
+namespace DBLayer.Logging;
 
 public static class LogManager
 {

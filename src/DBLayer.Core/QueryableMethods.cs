@@ -1,8 +1,8 @@
-﻿using DBLayer.Core.Utilities;
+﻿using DBLayer.Utilities;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DBLayer.Core;
+namespace DBLayer;
 
 /// <summary>
 ///     A class that provides reflection metadata for translatable LINQ methods.

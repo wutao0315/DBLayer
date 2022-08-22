@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace DBLayer.Core.Interface;
+namespace DBLayer.Interface;
 
 public interface IDbFactory : IDisposable
 {

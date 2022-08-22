@@ -1,4 +1,4 @@
-﻿namespace DBLayer.Core.Logging;
+﻿namespace DBLayer.Logging;
 
 public enum LogLevel
 {

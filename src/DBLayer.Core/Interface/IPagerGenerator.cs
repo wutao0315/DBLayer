@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Text;
 
-namespace DBLayer.Core.Interface;
+namespace DBLayer.Interface;
 
 public interface IPagerGenerator
 {

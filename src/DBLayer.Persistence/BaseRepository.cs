@@ -1,8 +1,8 @@
-﻿using DBLayer.Core;
-using DBLayer.Core.Condition;
-using DBLayer.Core.Interface;
-using DBLayer.Core.Logging;
-using DBLayer.Core.Utilities;
+﻿using DBLayer;
+using DBLayer.Condition;
+using DBLayer.Interface;
+using DBLayer.Logging;
+using DBLayer.Utilities;
 using DBLayer.Persistence.Linq;
 using System.Data;
 using System.Data.Common;

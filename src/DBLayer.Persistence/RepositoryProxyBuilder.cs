@@ -1,4 +1,4 @@
-﻿using DBLayer.Core.Interface;
+﻿using DBLayer.Interface;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Reflection.Emit;

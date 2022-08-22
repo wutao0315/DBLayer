@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DBLayer.Core.Extensions\DBLayer.Core.Extensions.csproj" />
-    <ProjectReference Include="..\..\src\DBLayer.Core\DBLayer.Core.csproj" />
+    <ProjectReference Include="..\..\src\DBLayer.Extensions\DBLayer.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\DBLayer\DBLayer.csproj" />
     <ProjectReference Include="..\..\src\DBLayer.Persistence\DBLayer.Persistence.csproj" />
   </ItemGroup>
 

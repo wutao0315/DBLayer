@@ -1,7 +1,7 @@
-﻿using DBLayer.Core;
-using DBLayer.Core.Interface;
-using DBLayer.Core.Logging;
-using DBLayer.Core.Utilities;
+﻿using DBLayer;
+using DBLayer.Interface;
+using DBLayer.Logging;
+using DBLayer.Utilities;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Text;
