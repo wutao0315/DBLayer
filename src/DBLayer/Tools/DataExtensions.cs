@@ -99,7 +99,7 @@ public static class DataExtensions
 				TypeCode.Decimal => (decimal)maxValue + 1,
 				_                => throw new NotImplementedException(),
 			};
-			var value = Converter.ChangeType(maxValue, column.MemberType);
+			var value = DBLayer.Common.Converter.ChangeType(maxValue, column.MemberType);
 			column.MemberAccessor.SetValue(item!, value);
 		}
 	}
@@ -126,7 +126,7 @@ public static class DataExtensions
 				_                => throw new NotImplementedException(),
 			};
 
-			var value = Converter.ChangeType(nextValue, column.MemberType);
+			var value = DBLayer.Common.Converter.ChangeType(nextValue, column.MemberType);
 			column.MemberAccessor.SetValue(sourceList[i], value);
 		}
 	}
@@ -139,7 +139,7 @@ public static class DataExtensions
 		for (var i = 0; i < sourceList.Count; i++)
 		{
 			var item  = sourceList[i];
-			var value = Converter.ChangeType(sequences[i], column.MemberType);
+			var value = DBLayer.Common.Converter.ChangeType(sequences[i], column.MemberType);
 			column.MemberAccessor.SetValue(item!, value);
 		}
 	}

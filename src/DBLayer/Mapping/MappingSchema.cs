@@ -1420,7 +1420,7 @@ public class MappingSchema
 		{
 			type = type.ToNullableUnderlying();
 
-			if (type.IsEnum || type.IsPrimitive || (Configuration.IsStructIsScalarType && type.IsValueType))
+			if (type.IsEnum || type.IsPrimitive || (DBLayer.Common.Configuration.IsStructIsScalarType && type.IsValueType))
 				ret = true;
 		}
 
@@ -1743,7 +1743,7 @@ public class MappingSchema
 			this,
 			static (o, context) =>
 			{
-				o.SlidingExpiration = Configuration.Linq.CacheSlidingExpiration;
+				o.SlidingExpiration = DBLayer.Common.Configuration.Linq.CacheSlidingExpiration;
 				var edNew = new EntityDescriptor(context, o.Key.entityType);
 				context.EntityDescriptorCreatedCallback?.Invoke(context, edNew);
 				return edNew;

@@ -23,6 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="QueryableExtensions.cs" />
+    <Compile Remove="QueryableMethods.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="SqlQuery\ReservedWords.txt" />
     <None Remove="SqlQuery\ReservedWordsFirebird.txt" />
     <None Remove="SqlQuery\ReservedWordsOracle.txt" />

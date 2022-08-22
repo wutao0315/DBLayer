@@ -75,7 +75,7 @@ public class BasicSqlOptimizer : ISqlOptimizer
 
 
 //statement.EnsureFindTables();
-		if (Configuration.Linq.OptimizeJoins)
+		if (DBLayer.Common.Configuration.Linq.OptimizeJoins)
 		{
 			OptimizeJoins(statement);
 
@@ -1390,10 +1390,10 @@ public class BasicSqlOptimizer : ISqlOptimizer
 						if (cond.Predicate is SqlPredicate.ExprExpr ee)
 						{
 							if (ee.Operator == SqlPredicate.Operator.Equal)
-								return new SqlPredicate.ExprExpr(ee.Expr1, SqlPredicate.Operator.NotEqual, ee.Expr2, Configuration.Linq.CompareNullsAsValues ? true : null);
+								return new SqlPredicate.ExprExpr(ee.Expr1, SqlPredicate.Operator.NotEqual, ee.Expr2, DBLayer.Common.Configuration.Linq.CompareNullsAsValues ? true : null);
 
 							if (ee.Operator == SqlPredicate.Operator.NotEqual)
-								return new SqlPredicate.ExprExpr(ee.Expr1, SqlPredicate.Operator.Equal, ee.Expr2, Configuration.Linq.CompareNullsAsValues ? true : null);
+								return new SqlPredicate.ExprExpr(ee.Expr1, SqlPredicate.Operator.Equal, ee.Expr2, DBLayer.Common.Configuration.Linq.CompareNullsAsValues ? true : null);
 						}
 					}
 				}
@@ -2574,7 +2574,7 @@ public class BasicSqlOptimizer : ISqlOptimizer
 			sc.Conditions.Add(
 				new SqlCondition(false,
 					new SqlPredicate.ExprExpr(par, SqlPredicate.Operator.NotEqual, new SqlValue(0),
-						Configuration.Linq.CompareNullsAsValues ? false : null)));
+                        DBLayer.Common.Configuration.Linq.CompareNullsAsValues ? false : null)));
 
 			return new SqlFunction(func.SystemType, "CASE", false, true, sc, new SqlValue(true), new SqlValue(false))
 			{
@@ -2688,7 +2688,7 @@ public class BasicSqlOptimizer : ISqlOptimizer
 				{
 					sc2.Conditions.Add(new SqlCondition(
 						false,
-						new SqlPredicate.ExprExpr(copyKeys[i], SqlPredicate.Operator.Equal, tableKeys[i], Configuration.Linq.CompareNullsAsValues ? true : null)));
+						new SqlPredicate.ExprExpr(copyKeys[i], SqlPredicate.Operator.Equal, tableKeys[i], DBLayer.Common.Configuration.Linq.CompareNullsAsValues ? true : null)));
 				}
 
 				deleteStatement.SelectQuery.Where.SearchCondition.Conditions.Clear();
@@ -3599,7 +3599,7 @@ public class BasicSqlOptimizer : ISqlOptimizer
 					var takeValue = takeExpr.EvaluateExpression(optimizationContext.Context)!;
 					var takeParameter = new SqlParameter(new DbDataType(takeValue.GetType()), "take", takeValue)
 					{
-						IsQueryParameter = !QueryHelper.NeedParameterInlining(takeExpr) && Configuration.Linq.ParameterizeTakeSkip
+						IsQueryParameter = !QueryHelper.NeedParameterInlining(takeExpr) && DBLayer.Common.Configuration.Linq.ParameterizeTakeSkip
 					};
 					takeExpr = takeParameter;
 				}
@@ -3620,7 +3620,7 @@ public class BasicSqlOptimizer : ISqlOptimizer
 					var skipValue = skipExpr.EvaluateExpression(optimizationContext.Context)!;
 					var skipParameter = new SqlParameter(new DbDataType(skipValue.GetType()), "skip", skipValue)
 					{
-						IsQueryParameter = !QueryHelper.NeedParameterInlining(skipExpr) && Configuration.Linq.ParameterizeTakeSkip
+						IsQueryParameter = !QueryHelper.NeedParameterInlining(skipExpr) && DBLayer.Common.Configuration.Linq.ParameterizeTakeSkip
 					};
 					skipExpr = skipParameter;
 				}

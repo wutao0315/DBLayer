@@ -4,7 +4,7 @@ using DBLayer.SqlQuery;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.Text;
-using ConverterType = Action<StringBuilder, SqlQuery.SqlDataType, object>;
+using ConverterType = System.Action<System.Text.StringBuilder, DBLayer.SqlQuery.SqlDataType, object>;
 
 namespace DBLayer.SqlProvider;
 

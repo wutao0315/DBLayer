@@ -318,7 +318,7 @@ class RecordReaderBuilder
 
         var lambda = Expression.Lambda<Func<DbDataReader, T>>(BuildBlock(expr), DataReaderParam);
 
-        if (Configuration.OptimizeForSequentialAccess)
+        if (DBLayer.Common.Configuration.OptimizeForSequentialAccess)
             lambda = (Expression<Func<DbDataReader, T>>)SequentialAccessHelper.OptimizeMappingExpressionForSequentialAccess(lambda, Reader.FieldCount, reduce: true);
 
         return lambda.CompileExpression();

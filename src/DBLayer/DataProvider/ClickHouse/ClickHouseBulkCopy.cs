@@ -335,7 +335,6 @@ sealed class ClickHouseBulkCopy : BasicBulkCopy
 		}
 	}
 
-#if NATIVE_ASYNC
 	private async Task<BulkCopyRowsCopied> ProviderSpecificOctonicaBulkCopyAsync<T>(
 		ProviderConnections providerConnections,
 		ITable<T> table,
@@ -445,7 +444,6 @@ sealed class ClickHouseBulkCopy : BasicBulkCopy
 			return rc;
 		}
 	}
-#endif
 
 	#endregion
 

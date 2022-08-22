@@ -91,7 +91,7 @@ class OrderByBuilder : MethodCallBuilder
 		}
 
 
-		if (!isContinuousOrder && !Configuration.Linq.DoNotClearOrderBys)
+		if (!isContinuousOrder && !DBLayer.Common.Configuration.Linq.DoNotClearOrderBys)
 			sequence.SelectQuery.OrderBy.Items.Clear();
 
 		foreach (var expr in sql)

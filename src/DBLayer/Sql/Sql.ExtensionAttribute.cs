@@ -14,7 +14,6 @@ using System.Text;
 namespace DBLayer;
 
 [AttributeUsage(AttributeTargets.Parameter)]
-[MeansImplicitUse]
 public class ExprParameterAttribute : Attribute
 {
 	public string? Name { get; set; }

@@ -228,11 +228,11 @@ public abstract class RetryPolicyBase : IRetryPolicy
 		if (currentRetryCount < MaxRetryCount)
 		{
 			var delta =
-				(Math.Pow(Configuration.RetryPolicy.DefaultExponentialBase, currentRetryCount) - 1.0) *
-				(1.0 + Random.NextDouble() * (Configuration.RetryPolicy.DefaultRandomFactor - 1.0));
+				(Math.Pow(DBLayer.Common.Configuration.RetryPolicy.DefaultExponentialBase, currentRetryCount) - 1.0) *
+				(1.0 + Random.NextDouble() * (DBLayer.Common.Configuration.RetryPolicy.DefaultRandomFactor - 1.0));
 
 			var delay = Math.Min(
-				Configuration.RetryPolicy.DefaultCoefficient.TotalMilliseconds * delta,
+                DBLayer.Common.Configuration.RetryPolicy.DefaultCoefficient.TotalMilliseconds * delta,
 				MaxRetryDelay.TotalMilliseconds);
 
 			return TimeSpan.FromMilliseconds(delay);

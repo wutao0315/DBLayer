@@ -1,8 +1,6 @@
-﻿using DBLayer.Common;
-using DBLayer.Configuration;
+﻿using DBLayer.Configuration;
 using DBLayer.Data;
 using System.Data.Common;
-using System.Reflection;
 
 namespace DBLayer.DataProvider.Oracle;
 

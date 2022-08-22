@@ -5,6 +5,8 @@ using DBLayer.SqlQuery;
 using DBLayer.Expressions;
 using System.Data;
 using System.Data.Common;
+using DBLayer.Extensions;
+using DBLayer.Linq;
 
 namespace DBLayer.Reflection;
 

@@ -125,8 +125,8 @@ public class AssociationDescriptor
 		if (!string.IsNullOrEmpty(AliasName))
 			return AliasName!;
 
-		if (!string.IsNullOrEmpty(Configuration.Sql.AssociationAlias))
-			return string.Format(Configuration.Sql.AssociationAlias, MemberInfo.Name);
+		if (!string.IsNullOrEmpty(DBLayer.Common.Configuration.Sql.AssociationAlias))
+			return string.Format(DBLayer.Common.Configuration.Sql.AssociationAlias, MemberInfo.Name);
 
 		return string.Empty;
 	}

@@ -5,6 +5,7 @@ using DBLayer.Common.Internal;
 using DBLayer.Expressions;
 using DBLayer.Mapping;
 using System.Diagnostics.CodeAnalysis;
+using DBLayer.Extensions;
 
 namespace DBLayer.Reflection;
 
