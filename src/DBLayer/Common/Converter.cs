@@ -62,24 +62,24 @@ public static class Converter
 
 	static bool ToBoolean(char ch)
 	{
-		switch (ch)
-		{
-			case '\x0' : // Allow int <=> Char <=> Boolean
-			case   '0' :
-			case   'n' :
-			case   'N' :
-			case   'f' :
-			case   'F' : return false;
+        switch (ch)
+        {
+            case '\x0': // Allow int <=> Char <=> Boolean
+            case '0':
+            case 'n':
+            case 'N':
+            case 'f':
+            case 'F': return false;
 
-			case '\x1' : // Allow int <=> Char <=> Boolean
-			case   '1' :
-			case   'y' :
-			case   'Y' :
-			case   't' :
-			case   'T' : return true;
-		}
+            case '\x1': // Allow int <=> Char <=> Boolean
+            case '1':
+            case 'y':
+            case 'Y':
+            case 't':
+            case 'T': return true;
+        }
 
-		throw new InvalidCastException("Invalid cast from System.String to System.Bool");
+        throw new InvalidCastException("Invalid cast from System.String to System.Bool");
 	}
 
 	/// <summary>

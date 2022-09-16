@@ -155,17 +155,17 @@ public class DataParameter
 	public static DataParameter VarBinary     (string? name, Binary?        value) { return new DataParameter { DataType = DataType.VarBinary,      Name = name, Value = value, }; }
 	public static DataParameter Image         (string? name, byte[]?        value) { return new DataParameter { DataType = DataType.Image,          Name = name, Value = value, }; }
 	public static DataParameter Boolean       (string? name, bool           value) { return new DataParameter { DataType = DataType.Boolean,        Name = name, Value = value, }; }
-	[CLSCompliant(false)]
+	
 	public static DataParameter SByte         (string? name, sbyte          value) { return new DataParameter { DataType = DataType.SByte,          Name = name, Value = value, }; }
 	public static DataParameter Int16         (string? name, short          value) { return new DataParameter { DataType = DataType.Int16,          Name = name, Value = value, }; }
 	public static DataParameter Int32         (string? name, int            value) { return new DataParameter { DataType = DataType.Int32,          Name = name, Value = value, }; }
 	public static DataParameter Int64         (string? name, long           value) { return new DataParameter { DataType = DataType.Int64,          Name = name, Value = value, }; }
 	public static DataParameter Byte          (string? name, byte           value) { return new DataParameter { DataType = DataType.Byte,           Name = name, Value = value, }; }
-	[CLSCompliant(false)]
+	
 	public static DataParameter UInt16        (string? name, ushort         value) { return new DataParameter { DataType = DataType.UInt16,         Name = name, Value = value, }; }
-	[CLSCompliant(false)]
+	
 	public static DataParameter UInt32        (string? name, uint           value) { return new DataParameter { DataType = DataType.UInt32,         Name = name, Value = value, }; }
-	[CLSCompliant(false)]
+	
 	public static DataParameter UInt64        (string? name, ulong          value) { return new DataParameter { DataType = DataType.UInt64,         Name = name, Value = value, }; }
 	public static DataParameter Single        (string? name, float          value) { return new DataParameter { DataType = DataType.Single,         Name = name, Value = value, }; }
 	public static DataParameter Double        (string? name, double         value) { return new DataParameter { DataType = DataType.Double,         Name = name, Value = value, }; }
@@ -194,17 +194,13 @@ public class DataParameter
 	public static DataParameter Create        (string? name, byte[]?        value) { return new DataParameter { DataType = DataType.VarBinary,      Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, Binary?        value) { return new DataParameter { DataType = DataType.VarBinary,      Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, bool           value) { return new DataParameter { DataType = DataType.Boolean,        Name = name, Value = value, }; }
-	[CLSCompliant(false)]
 	public static DataParameter Create        (string? name, sbyte          value) { return new DataParameter { DataType = DataType.SByte,          Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, short          value) { return new DataParameter { DataType = DataType.Int16,          Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, int            value) { return new DataParameter { DataType = DataType.Int32,          Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, long           value) { return new DataParameter { DataType = DataType.Int64,          Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, byte           value) { return new DataParameter { DataType = DataType.Byte,           Name = name, Value = value, }; }
-	[CLSCompliant(false)]
 	public static DataParameter Create        (string? name, ushort         value) { return new DataParameter { DataType = DataType.UInt16,         Name = name, Value = value, }; }
-	[CLSCompliant(false)]
 	public static DataParameter Create        (string? name, uint           value) { return new DataParameter { DataType = DataType.UInt32,         Name = name, Value = value, }; }
-	[CLSCompliant(false)]
 	public static DataParameter Create        (string? name, ulong          value) { return new DataParameter { DataType = DataType.UInt64,         Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, float          value) { return new DataParameter { DataType = DataType.Single,         Name = name, Value = value, }; }
 	public static DataParameter Create        (string? name, double         value) { return new DataParameter { DataType = DataType.Double,         Name = name, Value = value, }; }

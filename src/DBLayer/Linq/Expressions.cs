@@ -591,10 +591,9 @@ public static class Expressions
             { M(() => "".Replace    (' ',' ') ), N(() => L<string?,char,char,string?>      ((string? obj,char   p0,char   p1)         => Sql.Replace  (obj, p0, p1))) },
             { M(() => "".Trim       ()        ), N(() => L<string?,string?>                ((string? obj)                             => Sql.Trim     (obj))) },
 
-#if NETSTANDARD2_1PLUS
 			{ M(() => "".TrimEnd    ()        ), N(() => L<string,string?>                 ((string obj)                              =>     TrimRight(obj))) },
 			{ M(() => "".TrimStart  ()        ), N(() => L<string,string?>                 ((string obj)                              =>     TrimLeft (obj))) },
-#endif
+
 			{ M(() => "".TrimEnd    ((char[])null!)), N(() => L<string,char[],string?>     ((string obj,char[] ch)                    => TrimRight(obj, ch))) },
             { M(() => "".TrimStart  ((char[])null!)), N(() => L<string,char[],string?>     ((string obj,char[] ch)                    => TrimLeft (obj, ch))) },
             { M(() => "".ToLower    ()        ), N(() => L<string?,string?>                ((string? obj)                             => Sql.Lower(obj))) },
@@ -1640,7 +1639,7 @@ public static class Expressions
     #region Sql specific
 
     // TODO: why chars ignored for SQL?
-    [CLSCompliant(false)]
+    
     [Sql.Expression(ProviderName.Firebird, "TRIM(TRAILING FROM {0})", IsNullable = Sql.IsNullableType.SameAsFirstParameter)]
     [Sql.Function("RTrim", 0, IsNullable = Sql.IsNullableType.SameAsFirstParameter)]
     public static string? TrimRight(string? str, params char[] trimChars)
@@ -1649,7 +1648,7 @@ public static class Expressions
     }
 
     // TODO: why chars ignored for SQL?
-    [CLSCompliant(false)]
+    
     [Sql.Expression(ProviderName.Firebird, "TRIM(LEADING FROM {0})", IsNullable = Sql.IsNullableType.SameAsFirstParameter)]
     [Sql.Function("LTrim", 0, IsNullable = Sql.IsNullableType.SameAsFirstParameter)]
     public static string? TrimLeft(string? str, params char[] trimChars)
@@ -1693,7 +1692,7 @@ public static class Expressions
 
     // DB2, PostgreSQL, Access, MS SQL, SqlCe
     //
-    [CLSCompliant(false)]
+    
     [Sql.Function(IsNullable = Sql.IsNullableType.IfAnyParameterNullable)]
     [Sql.Function(ProviderName.DB2, "Repeat", IsNullable = Sql.IsNullableType.IfAnyParameterNullable)]
     [Sql.Function(ProviderName.PostgreSQL, "Repeat", IsNullable = Sql.IsNullableType.IfAnyParameterNullable)]
@@ -1711,7 +1710,7 @@ public static class Expressions
         return sb.ToString();
     }
 
-    [CLSCompliant(false)]
+    
     [Sql.Function(IsNullable = Sql.IsNullableType.IfAnyParameterNullable)]
     [Sql.Function(ProviderName.DB2, "Repeat", IsNullable = Sql.IsNullableType.IfAnyParameterNullable)]
     [Sql.Function(ProviderName.PostgreSQL, "Repeat", IsNullable = Sql.IsNullableType.IfAnyParameterNullable)]
@@ -1771,7 +1770,7 @@ public static class Expressions
 
     // Access
     //
-    [CLSCompliant(false)]
+    
     [Sql.Function("Int", 0)]
     public static T AccessInt<T>(T value)
     {
@@ -1780,7 +1779,7 @@ public static class Expressions
 
     // Access
     //
-    [CLSCompliant(false)]
+    
     [Sql.Function("Round", 0, 1)]
     public static T AccessRound<T>(T value, int? precision) { return value; }
 

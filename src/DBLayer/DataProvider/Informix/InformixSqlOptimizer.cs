@@ -152,12 +152,10 @@ class InformixSqlOptimizer : BasicSqlOptimizer
 								{
 									return new SqlFunction(func.SystemType, "To_Char", func.Parameters[1], new SqlValue("%Y-%m-%d %H:%M:%S.%F"));
 								}
-#if NET6_0_OR_GREATER
 								else if (stype == typeof(DateOnly))
 								{
 									return new SqlFunction(func.SystemType, "To_Char", func.Parameters[1], new SqlValue("%Y-%m-%d"));
 								}
-#endif
 								return new SqlFunction(func.SystemType, "To_Char", func.Parameters[1]);
 							}
 

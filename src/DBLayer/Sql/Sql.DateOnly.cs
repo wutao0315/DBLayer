@@ -97,7 +97,7 @@ public partial class Sql
 	#endregion
 
 	#region DateDiff
-	[CLSCompliant(false)]
+	
 	[Extension(               "DateDiff",      BuilderType = typeof(DateDiffBuilder))]
 	[Extension(PN.MySql,      "TIMESTAMPDIFF", BuilderType = typeof(DateDiffBuilder))]
 	[Extension(PN.DB2,        "",              BuilderType = typeof(DateDiffBuilderDB2))]

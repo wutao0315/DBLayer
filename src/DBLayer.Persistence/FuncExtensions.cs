@@ -132,35 +132,35 @@ internal static class FuncExtensions
         }
         else if (exp is MethodCallExpression mce)
         {
-            if (mce.Method.Name == nameof(Core.ConditionExtensions.Like))
+            if (mce.Method.Name == nameof(ConditionExtensions.Like))
             {
                 sb.AppendFormat("({0} LIKE {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.NotLike))
+            else if (mce.Method.Name == nameof(ConditionExtensions.NotLike))
             {
                 sb.AppendFormat("({0} NOT LIKE {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.Less))
+            else if (mce.Method.Name == nameof(ConditionExtensions.Less))
             {
                 sb.AppendFormat("({0} < {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.LessEqual))
+            else if (mce.Method.Name == nameof(ConditionExtensions.LessEqual))
             {
                 sb.AppendFormat("({0} <= {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.Greater))
+            else if (mce.Method.Name == nameof(ConditionExtensions.Greater))
             {
                 sb.AppendFormat("({0} > {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.GreaterEqual))
+            else if (mce.Method.Name == nameof(ConditionExtensions.GreaterEqual))
             {
                 sb.AppendFormat("({0} >= {1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.In))
+            else if (mce.Method.Name == nameof(ConditionExtensions.In))
             {
                 sb.AppendFormat("{0} IN ({1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.NotIn))
+            else if (mce.Method.Name == nameof(ConditionExtensions.NotIn))
             {
                 sb.AppendFormat("{0} NOT IN ({1})", ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList), ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList));
             }
@@ -172,7 +172,7 @@ internal static class FuncExtensions
             //    }
             //    return In(mce, value);
             //}
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.InFunc))
+            else if (mce.Method.Name == nameof(ConditionExtensions.InFunc))
             {
                 var leftString = ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList);
                 var rightString = ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList, true);
@@ -187,7 +187,7 @@ internal static class FuncExtensions
 
                 sb.Append(infunc);
             }
-            else if (mce.Method.Name == nameof(Core.ConditionExtensions.NotInFunc))
+            else if (mce.Method.Name == nameof(ConditionExtensions.NotInFunc))
             {
                 var leftString = ExpressionRouter(dataSource, mce.Arguments[0], DirAway.Left, ref index, ref paramerList);
                 var rightString = ExpressionRouter(dataSource, mce.Arguments[1], DirAway.Right, ref index, ref paramerList, true);

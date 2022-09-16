@@ -555,7 +555,6 @@ sealed class ClickHouseMappingSchema : LockedMappingSchema
         }
     }
 
-#if NET6_0_OR_GREATER
     private static void ConvertDateOnly(StringBuilder sb, SqlDataType dt, DateOnly value)
     {
         switch (dt.Type.DataType)
@@ -567,7 +566,6 @@ sealed class ClickHouseMappingSchema : LockedMappingSchema
                 throw new DBLayerConvertException($"Unsupported DateOnly type mapping: {dt.Type.DataType}");
         }
     }
-#endif
 
     private static void ConvertFloat(StringBuilder sb, SqlDataType dt, float value)
     {

@@ -106,12 +106,10 @@ public abstract class DB2DataProvider : DynamicDataProviderBase<DB2ProviderAdapt
 			value    = (short)b;
 			dataType = dataType.WithDataType(DataType.Int16);
 		}
-#if NET6_0_OR_GREATER
 		else if (value is DateOnly d)
 		{
 			value    = d.ToDateTime(TimeOnly.MinValue);
 		}
-#endif
 
 		switch (dataType.DataType)
 		{

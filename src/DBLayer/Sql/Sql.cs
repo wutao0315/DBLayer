@@ -36,14 +36,14 @@ public static partial class Sql
 	/// <typeparam name="T"></typeparam>
 	/// <param name="obj">Expression to generate SQL.</param>
 	/// <returns>Returns 'obj'.</returns>
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, ServerSideOnly = true, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static T AsSql<T>(T obj)
 	{
 		return obj;
 	}
 
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, ServerSideOnly = true, InlineParameters = true, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static T ToSql<T>(T obj)
 	{
@@ -56,28 +56,28 @@ public static partial class Sql
 		throw new InvalidOperationException();
 	}
 
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, CanBeNull = true)]
 	public static T AsNullable<T>(T value)
 	{
 		return value;
 	}
 
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, CanBeNull = false)]
 	public static T AsNotNull<T>(T value)
 	{
 		return value;
 	}
 
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, CanBeNull = false)]
 	public static T AsNotNullable<T>(T value)
 	{
 		return value;
 	}
 
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static T? ToNullable<T>(T value)
 		where T : struct
@@ -85,7 +85,7 @@ public static partial class Sql
 		return value;
 	}
 
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static T ToNotNull<T>(T? value)
 		where T : struct
@@ -93,7 +93,7 @@ public static partial class Sql
 		return value ?? default;
 	}
 
-	[CLSCompliant(false)]
+	
 	[Expression("{0}", 0, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static T ToNotNullable<T>(T? value)
 		where T : struct
@@ -258,7 +258,7 @@ public static partial class Sql
 
 	#region Convert Functions
 
-	[CLSCompliant(false)]
+	
 	[Function("Convert", 0, 1, ServerSideOnly = true, IsPure = true, IsNullable = IsNullableType.SameAsSecondParameter)]
 	[Function(PseudoFunctions.CONVERT, 2, 3, 1, ServerSideOnly = true, IsPure = true, IsNullable = IsNullableType.SameAsSecondParameter, Configuration = PN.ClickHouse)]
 	public static TTo Convert<TTo,TFrom>(TTo to, TFrom from)
@@ -266,7 +266,7 @@ public static partial class Sql
 		return Common.ConvertTo<TTo>.From(from);
 	}
 
-	[CLSCompliant(false)]
+	
 	[Function("Convert", 0, 1, 2, ServerSideOnly = true, IsNullable = IsNullableType.SameAsSecondParameter)]
 	public static TTo Convert<TTo, TFrom>(TTo to, TFrom from, int format)
 	{
@@ -274,7 +274,7 @@ public static partial class Sql
 	}
 
 	// TODO: v5 remove. bltoolkit legacy which duplicates Convert function above (without ServerSideOnly, but it shouldn't matter)
-	[CLSCompliant(false)]
+	
 	[Function("Convert", 0, 1, IsPure = true, IsNullable = IsNullableType.SameAsSecondParameter)]
 	[Function(PseudoFunctions.CONVERT, 2, 3, 1, ServerSideOnly = true, IsPure = true, IsNullable = IsNullableType.SameAsSecondParameter, Configuration = PN.ClickHouse)]
 	public static TTo Convert2<TTo,TFrom>(TTo to, TFrom from)
@@ -282,7 +282,7 @@ public static partial class Sql
 		return Common.ConvertTo<TTo>.From(from);
 	}
 
-	[CLSCompliant(false)]
+	
 	[Function(PseudoFunctions.CONVERT, 1, 2, 0, IsPure = true)]
 	public static TTo Convert<TTo,TFrom>(TFrom obj)
 	{
@@ -291,7 +291,7 @@ public static partial class Sql
 
 	public static class ConvertTo<TTo>
 	{
-		[CLSCompliant(false)]
+		
 		[Function(PseudoFunctions.CONVERT, 1, 2, 0, IsPure = true)]
 		public static TTo From<TFrom>(TFrom obj)
 		{
@@ -318,7 +318,7 @@ public static partial class Sql
 	/// <param name="value">Value to convert.</param>
 	/// <param name="_">Unused. Added to support method overloads.</param>
 	/// <returns>Value, converted to target type or <c>null</c> if conversion failed.</returns>
-	[CLSCompliant(false)]
+	
 	[Function(PseudoFunctions.TRY_CONVERT, 3, 2, 0, ServerSideOnly = true, IsPure = true, IsNullable = IsNullableType.Nullable)]
 	public static TTo? TryConvert<TFrom, TTo>(TFrom value, TTo? _) where TTo : struct => throw new LinqException($"'{nameof(TryConvert)}' is only server-side method.");
 
@@ -335,7 +335,7 @@ public static partial class Sql
 	/// <param name="value">Value to convert.</param>
 	/// <param name="_">Unused. Added to support method overloads.</param>
 	/// <returns>Value, converted to target type or <c>null</c> if conversion failed.</returns>
-	[CLSCompliant(false)]
+	
 	[Function(PseudoFunctions.TRY_CONVERT, 3, 2, 0, ServerSideOnly = true, IsPure = true, IsNullable = IsNullableType.Nullable)]
 	public static TTo? TryConvert<TFrom, TTo>(TFrom value, TTo? _) where TTo : class => throw new LinqException($"'{nameof(TryConvert)}' is only server-side method.");
 
@@ -351,7 +351,6 @@ public static partial class Sql
 	/// <param name="value">Value to convert.</param>
 	/// <param name="defaultValue">Value, returned when conversion failed.</param>
 	/// <returns>Value, converted to target type or <paramref name="defaultValue"/> if conversion failed.</returns>
-	[CLSCompliant(false)]
 	[Function(PseudoFunctions.TRY_CONVERT_OR_DEFAULT, 3, 2, 0, 1, ServerSideOnly = true, IsPure = true, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static TTo? TryConvertOrDefault<TFrom, TTo>(TFrom value, TTo? defaultValue) where TTo : struct => throw new LinqException($"'{nameof(TryConvertOrDefault)}' is only server-side method.");
 
@@ -367,7 +366,6 @@ public static partial class Sql
 	/// <param name="value">Value to convert.</param>
 	/// <param name="defaultValue">Value, returned when conversion failed.</param>
 	/// <returns>Value, converted to target type or <paramref name="defaultValue"/> if conversion failed.</returns>
-	[CLSCompliant(false)]
 	[Function(PseudoFunctions.TRY_CONVERT_OR_DEFAULT, 3, 2, 0, 1, ServerSideOnly = true, IsPure = true, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static TTo? TryConvertOrDefault<TFrom, TTo>(TFrom value, TTo? defaultValue) where TTo : class => throw new LinqException($"'{nameof(TryConvertOrDefault)}' is only server-side method.");
 	#endregion
@@ -421,7 +419,7 @@ public static partial class Sql
 		throw new InvalidOperationException();
 	}
 
-	[CLSCompliant(false)]
+	
 	[Function(                                     IsNullable = IsNullableType.IfAnyParameterNullable)]
 	[Function(PN.DB2,        "Locate",             IsNullable = IsNullableType.IfAnyParameterNullable)]
 	[Function(PN.MySql,      "Locate",             IsNullable = IsNullableType.IfAnyParameterNullable)]
@@ -1126,7 +1124,6 @@ public static partial class Sql
 	[Property(PN.ClickHouse, "1", CanBeNull = false)]
 	public static int DateFirst => 7;
 
-#if NET6_0_OR_GREATER
 	[Function]
 	public static DateOnly? MakeDateOnly(int? year, int? month, int? day)
 	{
@@ -1134,7 +1131,6 @@ public static partial class Sql
 			null :
 			new DateOnly(year.Value, month.Value, day.Value);
 	}
-#endif
 
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)]
 	public static DateTime? MakeDateTime(int? year, int? month, int? day)
@@ -1161,7 +1157,7 @@ public static partial class Sql
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static short?   Abs    (short?   value) => value == null ? null : Math.Abs (value.Value);
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static int?     Abs    (int?     value) => value == null ? null : Math.Abs (value.Value);
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static long?    Abs    (long?    value) => value == null ? null : Math.Abs (value.Value);
-	[CLSCompliant(false)]
+	
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static sbyte?   Abs    (sbyte?   value) => value == null ? null : Math.Abs (value.Value);
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static float?   Abs    (float?   value) => value == null ? null : Math.Abs (value.Value);
 
@@ -1171,7 +1167,7 @@ public static partial class Sql
 	[Function(PN.Access, "Atn", IsNullable = IsNullableType.IfAnyParameterNullable)]
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static double?  Atan   (double?  value) => value == null ? null : Math.Atan(value.Value);
 
-	[CLSCompliant(false)]
+	
 	[Function(PN.SqlServer, "Atn2",        IsNullable = IsNullableType.IfAnyParameterNullable)]
 	[Function(PN.DB2,       "Atan2", 1, 0, IsNullable = IsNullableType.IfAnyParameterNullable)]
 	[Function(PN.SqlCe,     "Atn2",        IsNullable = IsNullableType.IfAnyParameterNullable)]
@@ -1201,7 +1197,7 @@ public static partial class Sql
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static short?   Degrees(short?   value) { return value == null ? null : (short?)  (value.Value * 180 / Math.PI); }
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static int?     Degrees(int?     value) { return value == null ? null : (int?)    (value.Value * 180 / Math.PI); }
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static long?    Degrees(long?    value) { return value == null ? null : (long?)   (value.Value * 180 / Math.PI); }
-	[CLSCompliant(false)]
+	
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static sbyte?   Degrees(sbyte?   value) { return value == null ? null : (sbyte?)  (value.Value * 180 / Math.PI); }
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static float?   Degrees(float?   value) { return value == null ? null : (float?)  (value.Value * 180 / Math.PI); }
 
@@ -1305,7 +1301,7 @@ public static partial class Sql
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static int? Sign(int?     value) => value == null ? null : Math.Sign(value.Value);
 	[Function(PN.Access, "Sgn", IsNullable = IsNullableType.IfAnyParameterNullable)]
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static int? Sign(long?    value) => value == null ? null : Math.Sign(value.Value);
-	[CLSCompliant(false)]
+	
 	[Function(PN.Access, "Sgn", IsNullable = IsNullableType.IfAnyParameterNullable)]
 	[Function(IsNullable = IsNullableType.IfAnyParameterNullable)] public static int? Sign(sbyte?   value) => value == null ? null : Math.Sign(value.Value);
 	[Function(PN.Access, "Sgn", IsNullable = IsNullableType.IfAnyParameterNullable)]

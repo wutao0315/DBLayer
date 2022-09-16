@@ -9,7 +9,6 @@ namespace DBLayer.Expressions
 	/// </summary>
 	public class TypeWrapper
 	{
-		// ReSharper disable InconsistentNaming
 		// Names mangled to do not create collision with Wrapped class
 		/// <summary>
 		/// Gets underlying provider-specific object, used by wrapper.
@@ -55,8 +54,8 @@ namespace DBLayer.Expressions
 		/// </summary>
 		protected static Expression<Action<TI, TP>> PropertySetter<TI, TP>(Expression<Func<TI, TP>> getter)
 		{
-			if (!(getter.Body is MemberExpression me)
-				|| !(me.Member is PropertyInfo pi))
+			if (getter.Body is not MemberExpression me
+				|| me.Member is not PropertyInfo pi)
 				throw new DBLayerException($"Expected property accessor expression");
 
 			var pThis  = Expression.Parameter(typeof(TI));

@@ -67,7 +67,6 @@ class SybaseBulkCopy : BasicBulkCopy
 		return MultipleRowsCopyAsync(table, options, source, cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	protected override Task<BulkCopyRowsCopied> ProviderSpecificCopyAsync<T>(
 		ITable<T>           table,
 		BulkCopyOptions     options,
@@ -87,7 +86,6 @@ class SybaseBulkCopy : BasicBulkCopy
 
 		return MultipleRowsCopyAsync(table, options, source, cancellationToken);
 	}
-#endif
 
 	private ProviderConnections? GetProviderConnection<T>(ITable<T> table)
 		where T : notnull
@@ -204,11 +202,9 @@ class SybaseBulkCopy : BasicBulkCopy
 		return MultipleRowsCopy2Async(table, options, source, "", cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	protected override Task<BulkCopyRowsCopied> MultipleRowsCopyAsync<T>(
 		ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
 		return MultipleRowsCopy2Async(table, options, source, "", cancellationToken);
 	}
-#endif
 }

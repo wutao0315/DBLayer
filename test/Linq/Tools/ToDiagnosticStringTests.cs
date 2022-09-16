@@ -1,6 +1,6 @@
 ﻿using System;
 
-using LinqToDB.Tools;
+using DBLayer.Tools;
 
 using NUnit.Framework;
 

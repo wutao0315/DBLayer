@@ -25,7 +25,7 @@ public class BasePager<T> where T : BaseCondition, new()
     public string Field { get; set; }
     public string Group { get; set; }
     public string Order { get; set; }
-    public Action<StringBuilder, IList<DbParameter>> WhereAction { get; set; }
+    public Action<StringBuilder, IList<DbParameter>>? WhereAction { get; set; }
     public IList<DbParameter> Parameters { get; set; }
 
     public void Execute()
@@ -38,6 +38,6 @@ public class Pager<T> : BasePager<T> where T : BasePageCondition, new()
     public void SetTotalCount(int totalCount)
     {
         Condition.TotalCount = totalCount;
-        Condition.PageCount = (int)Math.Ceiling(Condition.TotalCount / (double)Condition.PageSize);
+        Condition.PageCount = (int)Math.Ceiling(Condition.TotalCount / (double)(Condition.PageSize??10));
     }
 }

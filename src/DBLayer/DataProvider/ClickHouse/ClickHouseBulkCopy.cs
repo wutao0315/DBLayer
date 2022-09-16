@@ -1,4 +1,5 @@
-﻿using DBLayer.Common;
+﻿using DBLayer.Async;
+using DBLayer.Common;
 using DBLayer.Data;
 using DBLayer.Extensions;
 using DBLayer.SqlProvider;
@@ -27,13 +28,11 @@ sealed class ClickHouseBulkCopy : BasicBulkCopy
 		return MultipleRowsCopy1Async(table, options, source, cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	protected override Task<BulkCopyRowsCopied> MultipleRowsCopyAsync<T>(
 		ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
 		return MultipleRowsCopy1Async(table, options, source, cancellationToken);
 	}
-#endif
 
 	protected override BulkCopyRowsCopied ProviderSpecificCopy<T>(
 		ITable<T> table,
@@ -46,13 +45,11 @@ sealed class ClickHouseBulkCopy : BasicBulkCopy
 		{
 			if (_provider.Adapter.OctonicaCreateWriter != null)
 				return ProviderSpecificOctonicaBulkCopy(connections.Value, table, options, source);
-#if NATIVE_ASYNC
 			if (_provider.Adapter.OctonicaCreateWriterAsync != null)
 				return SafeAwaiter.Run(() => ProviderSpecificOctonicaBulkCopyAsync(connections.Value, table, options, source, default));
 
 			if (_provider.Adapter.ClientBulkCopyCreator != null)
 				return SafeAwaiter.Run(() => ProviderSpecificClientBulkCopyAsync(connections.Value, table, options, columns => new BulkCopyReader<T>(connections.Value.DataConnection, columns, source), default));
-#endif
 		}
 
 		return MultipleRowsCopy(table, options, source);
@@ -513,11 +510,7 @@ sealed class ClickHouseBulkCopy : BasicBulkCopy
 			// actually currently DisposeAsync is not implemented in Client provider and we can call Dispose with same effect
 			if (disposeConnection)
 			{
-#if NETSTANDARD2_1PLUS
 				await connection.DisposeAsync().ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
-#else
-				connection.Dispose();
-#endif
 			}
 		}
 

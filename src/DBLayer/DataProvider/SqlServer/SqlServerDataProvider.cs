@@ -227,7 +227,6 @@ public abstract class SqlServerDataProvider : DynamicDataProviderBase<SqlServerP
 				value = dto.LocalDateTime.Date;
 				break;
 
-#if NET6_0_OR_GREATER
 			case DataType.Date when value is DateOnly d:
 				value = d.ToDateTime(TimeOnly.MinValue);
 				break;
@@ -237,7 +236,6 @@ public abstract class SqlServerDataProvider : DynamicDataProviderBase<SqlServerP
 					when value is DateOnly d:
 				value = d.ToString("yyyy-MM-dd");
 				break;
-#endif
 
 			case DataType.DateTime2 when value is DateTime dt:
 				value = dt.WithPrecision(dataType.Precision ?? 7);
@@ -477,7 +475,6 @@ public abstract class SqlServerDataProvider : DynamicDataProviderBase<SqlServerP
 			cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	public override Task<BulkCopyRowsCopied> BulkCopyAsync<T>(ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
 		_bulkCopy ??= new SqlServerBulkCopy(this);
@@ -489,7 +486,6 @@ public abstract class SqlServerDataProvider : DynamicDataProviderBase<SqlServerP
 			source,
 			cancellationToken);
 	}
-#endif
 
 	#endregion
 }

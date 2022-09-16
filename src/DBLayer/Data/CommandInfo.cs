@@ -402,76 +402,69 @@ public class CommandInfo
 		return list.ToArray();
 	}
 
-	/// <summary>
-	/// Executes command asynchronously and apply provided action to each record.
-	/// </summary>
-	/// <typeparam name="T">Result record type.</typeparam>
-	/// <param name="action">Action, applied to each result record.</param>
-	/// <param name="cancellationToken">Asynchronous operation cancellation token.</param>
-	/// <returns>Returns task.</returns>
-	public async Task QueryForEachAsync<T>(Action<T> action, CancellationToken cancellationToken = default)
-	{
-		await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
+    /// <summary>
+    /// Executes command asynchronously and apply provided action to each record.
+    /// </summary>
+    /// <typeparam name="T">Result record type.</typeparam>
+    /// <param name="action">Action, applied to each result record.</param>
+    /// <param name="cancellationToken">Asynchronous operation cancellation token.</param>
+    /// <returns>Returns task.</returns>
+    public async Task QueryForEachAsync<T>(Action<T> action, CancellationToken cancellationToken = default)
+    {
+        await DataConnection.EnsureConnectionAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
-		InitCommand();
+        InitCommand();
 
-#if !NATIVE_ASYNC
-		using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#else
-		await using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#endif
-		{
-#if NETSTANDARD2_1PLUS
-			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
-			await using (rd.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
-#else
-			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
-#endif
-		{
-				if (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
-			{
-					var additionalKey = GetCommandAdditionalKey(rd.DataReader!, typeof(T));
-					var reader        = ((IDataContext)DataConnection).UnwrapDataObjectInterceptor?.UnwrapDataReader(DataConnection, rd.DataReader!) ?? rd.DataReader!;
-					var objectReader  = GetObjectReader<T>(DataConnection, reader, CommandText, additionalKey);
-				var isFaulted     = false;
 
-				do
-				{
-					T result;
+        await using (DataConnection.DataProvider.ExecuteScope(DataConnection))
+        {
+            var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
+            await using (rd.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
+            {
+                if (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
+                {
+                    var additionalKey = GetCommandAdditionalKey(rd.DataReader!, typeof(T));
+                    var reader = ((IDataContext)DataConnection).UnwrapDataObjectInterceptor?.UnwrapDataReader(DataConnection, rd.DataReader!) ?? rd.DataReader!;
+                    var objectReader = GetObjectReader<T>(DataConnection, reader, CommandText, additionalKey);
+                    var isFaulted = false;
 
-					try
-					{
-							result = objectReader(reader);
-					}
-					catch (InvalidCastException)
-					{
-						if (isFaulted)
-							throw;
+                    do
+                    {
+                        T result;
 
-						isFaulted    = true;
-							objectReader = GetObjectReader2<T>(DataConnection, reader, CommandText, additionalKey);
-							result       = objectReader(reader);
-					}
+                        try
+                        {
+                            result = objectReader(reader);
+                        }
+                        catch (InvalidCastException)
+                        {
+                            if (isFaulted)
+                                throw;
 
-					action(result);
+                            isFaulted = true;
+                            objectReader = GetObjectReader2<T>(DataConnection, reader, CommandText, additionalKey);
+                            result = objectReader(reader);
+                        }
 
-					} while (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext));
-			}
-		}
-	}
-	}
+                        action(result);
 
-	#endregion
+                    } while (await rd.DataReader!.ReadAsync(cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext));
+                }
+            }
+        }
+    }
 
-	#region Query with template
+    #endregion
 
-	/// <summary>
-	/// Executes command and returns results as collection of values of specified type.
-	/// </summary>
-	/// <typeparam name="T">Result record type.</typeparam>
-	/// <param name="template">This value used only for <typeparamref name="T"/> parameter type inference, which makes this method usable with anonymous types.</param>
-	/// <returns>Returns collection of query result records.</returns>
-	public IEnumerable<T> Query<T>(T template)
+    #region Query with template
+
+    /// <summary>
+    /// Executes command and returns results as collection of values of specified type.
+    /// </summary>
+    /// <typeparam name="T">Result record type.</typeparam>
+    /// <param name="template">This value used only for <typeparamref name="T"/> parameter type inference, which makes this method usable with anonymous types.</param>
+    /// <returns>Returns collection of query result records.</returns>
+    public IEnumerable<T> Query<T>(T template)
 	{
 		return Query<T>();
 	}
@@ -575,23 +568,14 @@ public class CommandInfo
 
 		T result;
 
-#if !NATIVE_ASYNC
-		using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#else
 		await using (DataConnection.DataProvider.ExecuteScope(DataConnection))
-#endif
 		{
-#if NETSTANDARD2_1PLUS
 			var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 			await using (rd.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
-#else
-			using (var rd = await DataConnection.ExecuteDataReaderAsync(GetCommandBehavior(), cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
-#endif
-		{
+			{
 				result = await ReadMultipleResultSetsAsync<T>(rd.DataReader!, cancellationToken).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
-
 				SetRebindParameters(rd);
-		}
+			}
 		}
 
 		return result;

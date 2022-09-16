@@ -144,13 +144,10 @@ public abstract class SybaseDataProvider : DynamicDataProviderBase<SybaseProvide
 					if (value is char)
 						value = value.ToString();
 				break;
-
-#if NET6_0_OR_GREATER
 			case DataType.Date       :
 				if (value is DateOnly d)
 					value = d.ToDateTime(TimeOnly.MinValue);
 				break;
-#endif
 		}
 
 		base.SetParameter(dataConnection, parameter, name, dataType, value);
@@ -235,7 +232,6 @@ public abstract class SybaseDataProvider : DynamicDataProviderBase<SybaseProvide
 			cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	public override Task<BulkCopyRowsCopied> BulkCopyAsync<T>(
 		ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
@@ -248,7 +244,6 @@ public abstract class SybaseDataProvider : DynamicDataProviderBase<SybaseProvide
 			source,
 			cancellationToken);
 	}
-#endif
 
 	#endregion
 }

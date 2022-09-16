@@ -1,4 +1,5 @@
-﻿using DBLayer.Data;
+﻿using DBLayer.Common;
+using DBLayer.Data;
 using DBLayer.SqlProvider;
 using System.Data.Common;
 
@@ -85,7 +86,6 @@ class InformixBulkCopy : BasicBulkCopy
 		return MultipleRowsCopyAsync(table, options, source, cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	protected override async Task<BulkCopyRowsCopied> ProviderSpecificCopyAsync<T>(
 		ITable<T>           table,
 		BulkCopyOptions     options,
@@ -128,7 +128,6 @@ class InformixBulkCopy : BasicBulkCopy
 		return await MultipleRowsCopyAsync(table, options, source, cancellationToken)
 			.ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 	}
-#endif
 
 	protected BulkCopyRowsCopied IDSProviderSpecificCopy<T>(
 		ITable<T>                               table,

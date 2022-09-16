@@ -1,0 +1,11 @@
+﻿<#@ template language="C#" debug="True" hostSpecific="True" compilerOptions="/langversion:6"  #>
+<#@ output extension=".generated.cs"                                                          #>
+<#@ include file="..\..\..\Source\DBLayer.Templates\DBLayer.Informix.ttinclude" once="true" #>
+<#@ include file="..\Shared.ttinclude"                                            once="true" #>
+<#
+	NamespaceName   = "Default.Informix";
+	DataContextName = "TestDataDB";
+
+	LoadInformixMetadata(GetConnectionString("Informix"));
+	GenerateModel();
+#>

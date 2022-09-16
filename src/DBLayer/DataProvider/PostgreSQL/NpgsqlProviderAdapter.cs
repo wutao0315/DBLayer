@@ -477,23 +477,10 @@ public class NpgsqlProviderAdapter : IDynamicProviderAdapter
 		Tid                            = 53,
 		Time                           = 20,
 		Timestamp                      = 21,
-		/// <summary>
-		/// Added as alias to <see cref="TimestampTZ"/> in npgsql 4.0.0.
-		/// Don't use it, as it will not work with 3.x.
-		/// </summary>
-		[Obsolete("Marked obsolete to avoid unintentional use")]
-		TimestampTz                    = 26,
 		// members with same name but different case
-		[CLSCompliant(false)]
 		TimestampTZ                    = 26,
-		/// <summary>
-		/// Added as alias to <see cref="TimeTZ"/> in npgsql 4.0.0.
-		/// Don't use it, as it will not work with 3.x.
-		/// </summary>
-		[Obsolete("Marked obsolete to avoid unintentional use")]
-		TimeTz                         = 31,
+
 		// members with same name but different case
-		[CLSCompliant(false)]
 		TimeTZ                         = 31,
 		TsQuery                        = 46,
 		TsVector                       = 45,
@@ -613,7 +600,7 @@ public class NpgsqlProviderAdapter : IDynamicProviderAdapter
 		/// </summary>
 		public void Cancel()   => ((Action<NpgsqlBinaryImporter>)CompiledWrappers[0])(this);
 		public void Complete() => ((Action<NpgsqlBinaryImporter>)CompiledWrappers[1])(this);
-		[CLSCompliant(false)]
+		
 		[TypeWrapperName("Complete")]
 		public ulong Complete5() => ((Func<NpgsqlBinaryImporter, ulong>)CompiledWrappers[2])(this);
 		public void Dispose()  => ((Action<NpgsqlBinaryImporter>)CompiledWrappers[3])(this);

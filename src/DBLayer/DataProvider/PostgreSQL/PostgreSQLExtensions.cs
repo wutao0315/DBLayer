@@ -147,7 +147,7 @@ public static class PostgreSQLExtensions
 		throw new LinqException($"'{nameof(ConcatArrays)}' is server-side method.");
 	}
 
-	[CLSCompliant(false)]
+	
 	[Sql.Extension("{array1} || {array2}", ServerSideOnly = true, CanBeNull = true, Precedence = Precedence.Additive)]
 	public static T[] ConcatArrays<T>(this IPostgreSQLExtensions? ext, [ExprParameter] T[][] array1, [ExprParameter] T[] array2)
 	{

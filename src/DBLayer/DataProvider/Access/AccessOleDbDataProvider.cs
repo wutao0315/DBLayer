@@ -53,7 +53,6 @@ public class AccessOleDbDataProvider : DynamicDataProviderBase<OleDbProviderAdap
 		return new AccessOleDbSchemaProvider(this);
 	}
 
-#if NET6_0_OR_GREATER
 	public override void SetParameter(DataConnection dataConnection, DbParameter parameter, string name, DbDataType dataType, object? value)
 	{
 		if (value is DateOnly d)
@@ -61,7 +60,6 @@ public class AccessOleDbDataProvider : DynamicDataProviderBase<OleDbProviderAdap
 
 		base.SetParameter(dataConnection, parameter, name, dataType, value);
 	}
-#endif
 
 	protected override void SetParameterType(DataConnection dataConnection, DbParameter parameter, DbDataType dataType)
 	{
@@ -127,7 +125,6 @@ public class AccessOleDbDataProvider : DynamicDataProviderBase<OleDbProviderAdap
 			cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	public override Task<BulkCopyRowsCopied> BulkCopyAsync<T>(
 		ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
@@ -139,7 +136,6 @@ public class AccessOleDbDataProvider : DynamicDataProviderBase<OleDbProviderAdap
 			source,
 			cancellationToken);
 	}
-#endif
 
 	#endregion
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Attribute for skipping specific values on insert.
 /// </summary>
-[CLSCompliant(false)]
+
 public class SkipValuesOnInsertAttribute : SkipValuesByListAttribute
 {
 	/// <summary>

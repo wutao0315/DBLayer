@@ -67,9 +67,7 @@ public abstract class ClickHouseDataProvider : DynamicDataProviderBase<ClickHous
 		if (Adapter.GetIPAddressReaderMethod      != null) SetProviderField(typeof(IPAddress     ), Adapter.GetIPAddressReaderMethod,      Adapter.DataReaderType);
 		if (Adapter.GetDateTimeOffsetReaderMethod != null) SetProviderField(typeof(DateTimeOffset), Adapter.GetDateTimeOffsetReaderMethod, Adapter.DataReaderType);
 
-#if NET6_0_OR_GREATER
 		if (Adapter.GetDateOnlyReaderMethod != null) SetProviderField(typeof(DateOnly), Adapter.GetDateOnlyReaderMethod, Adapter.DataReaderType);
-#endif
 
 		if (Provider == ClickHouseProvider.Octonica)
 		{
@@ -173,12 +171,8 @@ public abstract class ClickHouseDataProvider : DynamicDataProviderBase<ClickHous
 				(ClickHouseProvider.Octonica, DataType.DateTime or DataType.DateTime64/* or DataType.DateTime2*/, DateTime val)                                       => new DateTimeOffset(val.Ticks, default),
 				(ClickHouseProvider.Octonica, DataType.VarChar or DataType.NVarChar, Guid val)                                                                        => val.ToString("D"),
 				(ClickHouseProvider.Octonica, DataType.Char or DataType.NChar, Guid val)                                                                              => Encoding.UTF8.GetBytes(val.ToString("D")),
-#if NET6_0_OR_GREATER
 				(ClickHouseProvider.Octonica, DataType.Date32 or DataType.Date, DateTime val)                                                                         => DateOnly.FromDateTime(val),
 				(ClickHouseProvider.Octonica, DataType.Date32 or DataType.Date, DateTimeOffset val)                                                                   => DateOnly.FromDateTime(val.Date),
-#else
-				(ClickHouseProvider.Octonica, DataType.Date32 or DataType.Date, DateTimeOffset val)                                                                   => val.Date,
-#endif
 				// https://github.com/Octonica/ClickHouseClient/issues/28
 				(ClickHouseProvider.Octonica, DataType.Decimal or DataType.Decimal32 or DataType.Decimal64 or DataType.Decimal128 or DataType.Decimal256, string val) => decimal.Parse(val, CultureInfo.InvariantCulture),
 				(ClickHouseProvider.Octonica, DataType.IPv4, uint val)                                                                                                => new IPAddress(new byte[] { (byte)((val >> 24) & 0xFF), (byte)((val >> 16) & 0xFF), (byte)((val >> 8) & 0xFF), (byte)(val & 0xFF) }),
@@ -186,9 +180,7 @@ public abstract class ClickHouseDataProvider : DynamicDataProviderBase<ClickHous
 				(ClickHouseProvider.Octonica, DataType.IPv6, byte[] val)                                                                                              => new IPAddress(val),
 
 				// CLIENT provider
-#if NET6_0_OR_GREATER
 				(ClickHouseProvider.ClickHouseClient, DataType.Date or  DataType.Date32, DateOnly val)      => val.ToDateTime(default),
-#endif
 				(ClickHouseProvider.ClickHouseClient, DataType.Date or DataType.Date32, DateTimeOffset val) => val.Date,
 				// https://github.com/DarkWanderer/ClickHouse.Client/issues/138
 				(ClickHouseProvider.ClickHouseClient, DataType.VarBinary or DataType.Binary, byte[] val)    => Encoding.UTF8.GetString(val),

@@ -1,0 +1,15 @@
+﻿<#@ template language="C#" debug="True" hostSpecific="True" compilerOptions="/langversion:6" #>
+<#@ output extension=".generated.cs"                                                         #>
+<#@ include file="..\Shared.ttinclude"                                         once="true"   #>
+<#@ include file="..\..\..\Source\DBLayer.Templates\DBLayer.SqlCe.ttinclude" once="true"   #>
+<#@ include file="..\..\..\Source\DBLayer.Templates\Humanizer.ttinclude"      once="true"   #>
+<#
+	NamespaceName = "SqlCeDataContext";
+
+	GenerateAssociationExtensions = true;
+	GenerateDBLayerConnectionOptionsConstructors = false;
+
+	var solutionsPath = Host.ResolveAssemblyReference("$(SolutionDir)");
+	LoadSqlCeMetadata(solutionsPath + @"\Data\", "TestData.sdf");
+	GenerateModel();
+#>

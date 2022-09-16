@@ -938,18 +938,7 @@ public class MappingSchema
 			_metadataReaders = Array<IMetadataReader>.Empty;
 	}
 
-#if NETFRAMEWORK
-	/// <summary>
-	/// Gets or sets metadata attributes provider for current schema.
-	/// Metadata providers, shipped with LINQ to DB:
-	/// - <see cref="Metadata.MetadataReader"/> - aggregation metadata provider over collection of other providers;
-	/// - <see cref="AttributeReader"/> - .NET attributes provider;
-	/// - <see cref="FluentMetadataReader"/> - fluent mappings metadata provider;
-	/// - <see cref="SystemDataLinqAttributeReader"/> - metadata provider that converts <see cref="System.Data.Linq.Mapping"/> attributes to LINQ to DB mapping attributes;
-	/// - <see cref="SystemDataSqlServerAttributeReader"/> - metadata provider that converts <see cref="Microsoft.SqlServer.Server"/> attributes to LINQ to DB mapping attributes;
-	/// - <see cref="XmlAttributeReader"/> - XML-based mappings metadata provider.
-	/// </summary>
-#else
+
 	/// <summary>
 	/// Gets or sets metadata attributes provider for current schema.
 	/// Metadata providers, shipped with LINQ to DB:
@@ -959,7 +948,6 @@ public class MappingSchema
 	/// - <see cref="SystemDataSqlServerAttributeReader"/> - metadata provider that converts Microsoft.SqlServer.Server attributes to LINQ to DB mapping attributes;
 	/// - <see cref="XmlAttributeReader"/> - XML-based mappings metadata provider.
 	/// </summary>
-#endif
 	public IMetadataReader? MetadataReader
 	{
 		get => Schemas[0].MetadataReader;
@@ -1337,9 +1325,7 @@ public class MappingSchema
 			AddScalarType(typeof(DateTime),        DataType.DateTime2);
 			AddScalarType(typeof(DateTimeOffset),  DataType.DateTimeOffset);
 			AddScalarType(typeof(TimeSpan),        DataType.Time);
-#if NET6_0_OR_GREATER
 			AddScalarType(typeof(DateOnly),        DataType.Date);
-#endif
 			AddScalarType(typeof(byte[]),          DataType.VarBinary);
 			AddScalarType(typeof(Binary),          DataType.VarBinary);
 			AddScalarType(typeof(Guid),            DataType.Guid);
@@ -1364,9 +1350,7 @@ public class MappingSchema
 
 			// explicitly specify old ToString client-side conversions for some types after we added support for ToString(InvariantCulture) to conversion generators
 			SetConverter<DateTime, string>(static v => v.ToString("yyyy-MM-dd hh:mm:ss"));
-#if NET6_0_OR_GREATER
 			SetConverter<DateOnly, string>(static v => v.ToString("yyyy-MM-dd"));
-#endif
 
 			ValueToSqlConverter.SetDefaults();
 		}

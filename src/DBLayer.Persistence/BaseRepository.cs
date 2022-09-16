@@ -3,7 +3,6 @@ using DBLayer.Condition;
 using DBLayer.Interface;
 using DBLayer.Logging;
 using DBLayer.Utilities;
-using DBLayer.Persistence.Linq;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
@@ -38,10 +37,10 @@ public abstract class BaseRepository : IRepository
         _user = dbContext.User;
     }
     public IDataSource DataSource => _dataSource;
-    public IQueryable<T> Queryable<T>()
-    {
-        return new SqlQueryable<T>(this);
-    }
+    //public IQueryable<T> Queryable<T>()
+    //{
+    //    return new SqlQueryable<T>(this);
+    //}
     #region public method
     protected readonly IGenerator _generator;
     protected readonly IPagerGenerator _pagerGenerator;

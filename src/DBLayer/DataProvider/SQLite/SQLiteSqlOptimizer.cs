@@ -143,9 +143,7 @@ class SQLiteSqlOptimizer : BasicSqlOptimizer
 					}
 
 					if (ftype == typeof(DateTime) || ftype == typeof(DateTimeOffset)
-#if NET6_0_OR_GREATER
 						|| ftype == typeof(DateOnly)
-#endif
 						)
 					{
 						if (IsDateDataType(func.Parameters[0], "Date"))

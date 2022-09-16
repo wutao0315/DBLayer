@@ -27,9 +27,7 @@ public class SQLiteMappingSchema : LockedMappingSchema
 		SetValueToSqlConverter(typeof(byte[]),   (sb,dt,v) => ConvertBinaryToSql  (sb, (byte[])v));
 		SetValueToSqlConverter(typeof(Binary),   (sb,dt,v) => ConvertBinaryToSql  (sb, ((Binary)v).ToArray()));
 
-#if NET6_0_OR_GREATER
 		SetValueToSqlConverter(typeof(DateOnly), (sb,dt,v) => ConvertDateOnlyToSql(sb, (DateOnly)v));
-#endif
 
 		SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, typeof(string), 255));
 	}
@@ -84,12 +82,10 @@ public class SQLiteMappingSchema : LockedMappingSchema
 		stringBuilder.AppendFormat(CultureInfo.InvariantCulture, format, value);
 	}
 
-#if NET6_0_OR_GREATER
 	static void ConvertDateOnlyToSql(StringBuilder stringBuilder, DateOnly value)
 	{
 		stringBuilder.AppendFormat(CultureInfo.InvariantCulture, DATE_FORMAT, value);
 	}
-#endif
 
 	static readonly Action<StringBuilder, int> AppendConversionAction = AppendConversion;
 	static void AppendConversion(StringBuilder stringBuilder, int value)

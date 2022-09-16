@@ -65,9 +65,7 @@ namespace DBLayer.Metadata
 				methodAttr1,
 				methodAttr2,
 				methodAttr3,
-#if NETFRAMEWORK
-				typeof(Microsoft.SqlServer.Server.SqlMethodAttribute),
-#endif
+
 			}.Where(t => t != null).Distinct().ToArray()!;
 
 			_sqlUserDefinedTypeAttributes = new[]
@@ -75,9 +73,7 @@ namespace DBLayer.Metadata
 				typeAttr1,
 				typeAttr2,
 				typeAttr3,
-#if NETFRAMEWORK
-				typeof(Microsoft.SqlServer.Server.SqlUserDefinedTypeAttribute),
-#endif
+
 			}.Where(t => t != null).Distinct().ToArray()!;
 		}
 

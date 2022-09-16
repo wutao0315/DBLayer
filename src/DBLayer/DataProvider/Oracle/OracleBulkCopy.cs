@@ -131,7 +131,6 @@ class OracleBulkCopy : BasicBulkCopy
 		return Task.FromResult(ProviderSpecificCopy(table, options, source));
 	}
 
-#if NATIVE_ASYNC
 	protected override async Task<BulkCopyRowsCopied> ProviderSpecificCopyAsync<T>(
 		ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
@@ -142,7 +141,6 @@ class OracleBulkCopy : BasicBulkCopy
 			return ProviderSpecificCopy(table, options, EnumerableHelper.AsyncToSyncEnumerable(enumerator));
 		}
 	}
-#endif
 
 	protected override BulkCopyRowsCopied MultipleRowsCopy<T>(
 		ITable<T> table, BulkCopyOptions options, IEnumerable<T> source)
@@ -166,7 +164,6 @@ class OracleBulkCopy : BasicBulkCopy
 		}
 	}
 
-#if NATIVE_ASYNC
 	protected override Task<BulkCopyRowsCopied> MultipleRowsCopyAsync<T>(
 		ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
@@ -177,7 +174,6 @@ class OracleBulkCopy : BasicBulkCopy
 			default                            : return OracleMultipleRowsCopy1Async(new MultipleRowsHelper<T>(table, options), source, cancellationToken);
 		}
 	}
-#endif
 
 	static void OracleMultipleRowsCopy1Prep(MultipleRowsHelper helper)
 	{
@@ -216,10 +212,8 @@ class OracleBulkCopy : BasicBulkCopy
 	static Task<BulkCopyRowsCopied> OracleMultipleRowsCopy1Async(MultipleRowsHelper helper, IEnumerable source, CancellationToken cancellationToken)
 		=> MultipleRowsCopyHelperAsync(helper, source, null, OracleMultipleRowsCopy1Prep, OracleMultipleRowsCopy1Add, OracleMultipleRowsCopy1Finish, cancellationToken, _maxParameters,_maxSqlLength);
 
-#if NATIVE_ASYNC
 	static Task<BulkCopyRowsCopied> OracleMultipleRowsCopy1Async<T>(MultipleRowsHelper helper, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 		=> MultipleRowsCopyHelperAsync(helper, source, null, OracleMultipleRowsCopy1Prep, OracleMultipleRowsCopy1Add, OracleMultipleRowsCopy1Finish, cancellationToken, _maxParameters,_maxSqlLength);
-#endif
 
 	static List<object> OracleMultipleRowsCopy2Prep(MultipleRowsHelper helper)
 	{
@@ -300,7 +294,6 @@ class OracleBulkCopy : BasicBulkCopy
 		return helper.RowsCopied;
 	}
 
-#if NATIVE_ASYNC
 	async Task<BulkCopyRowsCopied> OracleMultipleRowsCopy2Async<T>(MultipleRowsHelper helper, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 	{
 		var list = OracleMultipleRowsCopy2Prep(helper);
@@ -328,7 +321,6 @@ class OracleBulkCopy : BasicBulkCopy
 
 		return helper.RowsCopied;
 	}
-#endif
 
 	bool Execute(MultipleRowsHelper helper, List<object> list)
 	{

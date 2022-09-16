@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using LinqToDB.Common;
-using LinqToDB.Mapping;
-using LinqToDB.Tools.Mapper;
+using DBLayer.Common;
+using DBLayer.Mapping;
+using DBLayer.Tools.Mapper;
 
 using NUnit.Framework;
 

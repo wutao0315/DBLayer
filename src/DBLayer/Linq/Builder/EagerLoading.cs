@@ -1504,21 +1504,12 @@ internal class EagerLoading
 				var enumerable = query.GetIAsyncEnumerable(dc, expr, ps, preambles)!;
 
 				var eagerLoadingContext = new EagerLoadingContext<TD, TKey>();
-#if NATIVE_ASYNC
 
 				await foreach (var d in enumerable.WithCancellation(ct).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext))
 				{
 					eagerLoadingContext.Add(d.Key, d.Detail);
 				}
-#else
-				var details = await enumerable.ToListAsync(ct).ConfigureAwait(DBLayer.Common.Configuration.ContinueOnCapturedContext);
 
-				foreach (var d in details)
-				{
-					eagerLoadingContext.Add(d.Key, d.Detail);
-				}
-#endif
-				
 				return eagerLoadingContext;
 			}
 		);

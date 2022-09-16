@@ -5,8 +5,8 @@ using System.Reflection;
 
 using JetBrains.Annotations;
 
-using LinqToDB.Reflection;
-using LinqToDB.Tools.Comparers;
+using DBLayer.Reflection;
+using DBLayer.Tools.Comparers;
 
 using NUnit.Framework;
 

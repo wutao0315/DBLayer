@@ -104,53 +104,49 @@ public static partial class SqlServerTools
 					{
 						var cs = string.IsNullOrWhiteSpace(connectionString) ? css.ConnectionString : connectionString;
 
-						using (var conn = SqlServerProviderAdapter.GetInstance(provider).CreateConnection(cs))
+						using var conn = SqlServerProviderAdapter.GetInstance(provider).CreateConnection(cs);
+						conn.Open();
+
+						if (int.TryParse(conn.ServerVersion.Split('.')[0], out var version))
 						{
-							conn.Open();
+							if (version <= 8)
+								// sql server <= 2000
+								return null;
 
-							if (int.TryParse(conn.ServerVersion.Split('.')[0], out var version))
+							using var cmd = conn.CreateCommand();
+							cmd.CommandText = "SELECT compatibility_level FROM sys.databases WHERE name = db_name()";
+							var level = Converter.ChangeTypeTo<int>(cmd.ExecuteScalar());
+
+							if (level >= 150)
+								return GetDataProvider(SqlServerVersion.v2019, provider);
+							if (level >= 140)
+								return GetDataProvider(SqlServerVersion.v2017, provider);
+							if (level >= 130)
+								return GetDataProvider(SqlServerVersion.v2016, provider);
+							if (level >= 120)
+								return GetDataProvider(SqlServerVersion.v2014, provider);
+							if (level >= 110)
+								return GetDataProvider(SqlServerVersion.v2012, provider);
+							if (level >= 100)
+								return GetDataProvider(SqlServerVersion.v2008, provider);
+							if (level >= 90)
+								return GetDataProvider(SqlServerVersion.v2005, provider);
+							if (level < 90)
+								// sql server <= 2000
+								return null;
+
+							return version switch
 							{
-								if (version <= 8)
-									// sql server <= 2000
-									return null;
-
-								using (var cmd = conn.CreateCommand())
-								{
-									cmd.CommandText = "SELECT compatibility_level FROM sys.databases WHERE name = db_name()";
-									var level = Converter.ChangeTypeTo<int>(cmd.ExecuteScalar());
-
-									if (level >= 150)
-										return GetDataProvider(SqlServerVersion.v2019, provider);
-									if (level >= 140)
-										return GetDataProvider(SqlServerVersion.v2017, provider);
-									if (level >= 130)
-										return GetDataProvider(SqlServerVersion.v2016, provider);
-									if (level >= 120)
-										return GetDataProvider(SqlServerVersion.v2014, provider);
-									if (level >= 110)
-										return GetDataProvider(SqlServerVersion.v2012, provider);
-									if (level >= 100)
-										return GetDataProvider(SqlServerVersion.v2008, provider);
-									if (level >= 90)
-										return GetDataProvider(SqlServerVersion.v2005, provider);
-									if (level < 90)
-										// sql server <= 2000
-										return null;
-
-									switch (version)
-									{
-										// versions below 9 handled above already
-										case  9 : return GetDataProvider(SqlServerVersion.v2005, provider);
-										case 10 : return GetDataProvider(SqlServerVersion.v2008, provider);
-										case 11 : return GetDataProvider(SqlServerVersion.v2012, provider);
-										case 12 : return GetDataProvider(SqlServerVersion.v2014, provider);
-										case 13 : return GetDataProvider(SqlServerVersion.v2016, provider);
-										case 14 : return GetDataProvider(SqlServerVersion.v2017, provider);
-										//case 15 : // v2019 : no own dialect yet
-										default : return GetDataProvider(SqlServerVersion.v2019, provider);
-									}
-								}
-							}
+								// versions below 9 handled above already
+								9 => GetDataProvider(SqlServerVersion.v2005, provider),
+								10 => GetDataProvider(SqlServerVersion.v2008, provider),
+								11 => GetDataProvider(SqlServerVersion.v2012, provider),
+								12 => GetDataProvider(SqlServerVersion.v2014, provider),
+								13 => GetDataProvider(SqlServerVersion.v2016, provider),
+								14 => GetDataProvider(SqlServerVersion.v2017, provider),
+								//case 15 : // v2019 : no own dialect yet
+								_ => GetDataProvider(SqlServerVersion.v2019, provider),
+							};
 						}
 					}
 					catch

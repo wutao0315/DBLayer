@@ -221,13 +221,10 @@ public abstract class OracleDataProvider : DynamicDataProviderBase<OracleProvide
 					value = dt.WithPrecision(dataType.Precision ?? 6);
 				break;
 			}
-
-#if NET6_0_OR_GREATER
 			case DataType.Date     :
 				if (value is DateOnly d)
 					value = d.ToDateTime(TimeOnly.MinValue);
 				break;
-#endif
 		}
 
 		if (dataType.DataType == DataType.Undefined && value is string @string && @string.Length >= 4000)
@@ -324,7 +321,6 @@ public abstract class OracleDataProvider : DynamicDataProviderBase<OracleProvide
 #region BulkCopy
 
 	OracleBulkCopy? _bulkCopy;
-
 	public override BulkCopyRowsCopied BulkCopy<T>(ITable<T> table, BulkCopyOptions options, IEnumerable<T> source)
 	{
 		_bulkCopy ??= new OracleBulkCopy(this);

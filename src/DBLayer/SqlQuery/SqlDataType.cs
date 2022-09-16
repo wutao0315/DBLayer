@@ -1,14 +1,13 @@
-﻿using System.Collections;
+﻿using DBLayer.Common;
+using DBLayer.Common.Internal;
+using DBLayer.Extensions;
+using DBLayer.Mapping;
+using System.Collections;
 using System.Data.SqlTypes;
 using System.Numerics;
 using System.Text;
 
 namespace DBLayer.SqlQuery;
-
-using DBLayer.Common;
-using DBLayer.Common.Internal;
-using DBLayer.Extensions;
-using DBLayer.Mapping;
 
 public class SqlDataType : ISqlExpression, IEquatable<SqlDataType>
 {
@@ -33,7 +32,7 @@ public class SqlDataType : ISqlExpression, IEquatable<SqlDataType>
 	{
 		if (type == null) throw new ArgumentNullException(nameof(type));
 
-		Type = GetDataType(type).Type.WithSystemType(type);
+        Type = GetDataType(type).Type.WithSystemType(type);
 	}
 
 	public SqlDataType(DataType dataType, Type type)
@@ -212,54 +211,52 @@ public class SqlDataType : ISqlExpression, IEquatable<SqlDataType>
 
 		switch (underlyingType.GetTypeCodeEx())
 		{
-			case TypeCode.Boolean  : return Boolean;
-			case TypeCode.Char     : return DbNChar;
-			case TypeCode.SByte    : return SByte;
-			case TypeCode.Byte     : return Byte;
-			case TypeCode.Int16    : return Int16;
-			case TypeCode.UInt16   : return UInt16;
-			case TypeCode.Int32    : return Int32;
-			case TypeCode.UInt32   : return UInt32;
-			case TypeCode.Int64    : return DbInt64;
-			case TypeCode.UInt64   : return UInt64;
-			case TypeCode.Single   : return Single;
-			case TypeCode.Double   : return Double;
-			case TypeCode.Decimal  : return Decimal;
-			case TypeCode.DateTime : return DateTime;
-			case TypeCode.String   : return String;
-			case TypeCode.Object   :
-				if (underlyingType == typeof(Guid))           return Guid;
-				if (underlyingType == typeof(byte[]))         return ByteArray;
+			case TypeCode.Boolean: return Boolean;
+			case TypeCode.Char: return DbNChar;
+			case TypeCode.SByte: return SByte;
+			case TypeCode.Byte: return Byte;
+			case TypeCode.Int16: return Int16;
+			case TypeCode.UInt16: return UInt16;
+			case TypeCode.Int32: return Int32;
+			case TypeCode.UInt32: return UInt32;
+			case TypeCode.Int64: return DbInt64;
+			case TypeCode.UInt64: return UInt64;
+			case TypeCode.Single: return Single;
+			case TypeCode.Double: return Double;
+			case TypeCode.Decimal: return Decimal;
+			case TypeCode.DateTime: return DateTime;
+			case TypeCode.String: return String;
+			case TypeCode.Object:
+				if (underlyingType == typeof(Guid)) return Guid;
+				if (underlyingType == typeof(byte[])) return ByteArray;
 				if (underlyingType == typeof(System.Data.Linq.Binary)) return LinqBinary;
-				if (underlyingType == typeof(char[]))         return CharArray;
+				if (underlyingType == typeof(char[])) return CharArray;
 				if (underlyingType == typeof(DateTimeOffset)) return DateTimeOffset;
-				if (underlyingType == typeof(TimeSpan))       return TimeSpan;
-#if NET6_0_OR_GREATER
-				if (underlyingType == typeof(DateOnly))       return DbDate;
-#endif
+				if (underlyingType == typeof(TimeSpan)) return TimeSpan;
+				if (underlyingType == typeof(DateOnly)) return DbDate;
 				break;
 
-			case TypeCode.DBNull   :
-			case TypeCode.Empty    :
-			default                : break;
+			case TypeCode.DBNull:
+			case TypeCode.Empty:
+			default: break;
 		}
 
-		if (underlyingType == typeof(SqlByte))     return SqlByte;
-		if (underlyingType == typeof(SqlInt16))    return SqlInt16;
-		if (underlyingType == typeof(SqlInt32))    return SqlInt32;
-		if (underlyingType == typeof(SqlInt64))    return SqlInt64;
-		if (underlyingType == typeof(SqlSingle))   return SqlSingle;
-		if (underlyingType == typeof(SqlBoolean))  return SqlBoolean;
-		if (underlyingType == typeof(SqlDouble))   return SqlDouble;
+		if (underlyingType == typeof(SqlByte)) return SqlByte;
+		if (underlyingType == typeof(SqlInt16)) return SqlInt16;
+		if (underlyingType == typeof(SqlInt32)) return SqlInt32;
+		if (underlyingType == typeof(SqlInt64)) return SqlInt64;
+		if (underlyingType == typeof(SqlSingle)) return SqlSingle;
+		if (underlyingType == typeof(SqlBoolean)) return SqlBoolean;
+		if (underlyingType == typeof(SqlDouble)) return SqlDouble;
 		if (underlyingType == typeof(SqlDateTime)) return SqlDateTime;
-		if (underlyingType == typeof(SqlDecimal))  return SqlDecimal;
-		if (underlyingType == typeof(SqlMoney))    return SqlMoney;
-		if (underlyingType == typeof(SqlString))   return SqlString;
-		if (underlyingType == typeof(SqlBinary))   return SqlBinary;
-		if (underlyingType == typeof(SqlGuid))     return SqlGuid;
-		if (underlyingType == typeof(SqlBytes))    return SqlBytes;
-		if (underlyingType == typeof(SqlChars))    return SqlChars;
-		if (underlyingType == typeof(SqlXml))      return SqlXml;
+		if (underlyingType == typeof(SqlDecimal)) return SqlDecimal;
+		if (underlyingType == typeof(SqlMoney)) return SqlMoney;
+		if (underlyingType == typeof(SqlString)) return SqlString;
+		if (underlyingType == typeof(SqlBinary)) return SqlBinary;
+		if (underlyingType == typeof(SqlGuid)) return SqlGuid;
+		if (underlyingType == typeof(SqlBytes)) return SqlBytes;
+		if (underlyingType == typeof(SqlChars)) return SqlChars;
+		if (underlyingType == typeof(SqlXml)) return SqlXml;
 
 		return DbVariant;
 	}

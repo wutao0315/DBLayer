@@ -68,9 +68,7 @@ public class ValueToSqlConverter
 		SetConverter(typeof(SqlChars),   (sb,dt,v) => BuildString  (sb, ((SqlChars)v).ToSqlString().ToString()));
 		SetConverter(typeof(SqlGuid),    (sb,dt,v) => sb.Append('\'').Append(v).Append('\''));
 
-#if NET6_0_OR_GREATER
 		SetConverter(typeof(DateOnly),   (sb,dt,v) => BuildDateOnly(sb, (DateOnly)v));
-#endif
 	}
 
 	internal readonly ValueToSqlConverter[] BaseConverters;
@@ -154,14 +152,12 @@ public class ValueToSqlConverter
 		stringBuilder.AppendFormat(format, value);
 	}
 
-#if NET6_0_OR_GREATER
 	static void BuildDateOnly(StringBuilder stringBuilder, DateOnly value)
 	{
 		var format = "'{0:yyyy-MM-dd}'";
 
 		stringBuilder.AppendFormat(format, value);
 	}
-#endif
 
 	public bool TryConvert(StringBuilder stringBuilder, object? value)
 	{

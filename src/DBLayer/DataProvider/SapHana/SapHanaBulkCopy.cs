@@ -49,7 +49,6 @@ class SapHanaBulkCopy : BasicBulkCopy
 		return MultipleRowsCopyAsync(table, options, source, cancellationToken);
 	}
 
-#if NATIVE_ASYNC
 	protected override Task<BulkCopyRowsCopied> ProviderSpecificCopyAsync<T>(
 		ITable<T> table,
 		BulkCopyOptions options,
@@ -69,7 +68,6 @@ class SapHanaBulkCopy : BasicBulkCopy
 
 		return MultipleRowsCopyAsync(table, options, source, cancellationToken);
 	}
-#endif
 
 	private ProviderConnections? TryGetProviderConnections<T>(ITable<T> table)
 		where T : notnull

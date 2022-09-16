@@ -4,9 +4,9 @@ using NUnit.Framework;
 
 namespace Tests.Tools.EntityServices
 {
-	using LinqToDB.Common;
-	using LinqToDB.Data;
-	using LinqToDB.Tools.EntityServices;
+	using DBLayer.Common;
+	using DBLayer.Data;
+	using DBLayer.Tools.EntityServices;
 	using Model;
 
 	[TestFixture]
@@ -90,7 +90,7 @@ namespace Tests.Tools.EntityServices
 			using (var db = new DataConnection())
 			using (var map = new IdentityMap(db))
 			{
-				Assert.Throws<LinqToDBConvertException>(() => map.GetEntity<Person>(new { ID1 = 1 }));
+				Assert.Throws<DBLayerConvertException>(() => map.GetEntity<Person>(new { ID1 = 1 }));
 			}
 		}
 	}

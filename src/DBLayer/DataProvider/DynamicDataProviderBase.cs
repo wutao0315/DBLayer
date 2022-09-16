@@ -7,19 +7,19 @@ using System.Linq.Expressions;
 
 namespace DBLayer.DataProvider;
 
-public abstract class DynamicDataProviderBase<TProviderMappings> : DataProviderBase
-	where TProviderMappings : IDynamicProviderAdapter
+public abstract class DynamicDataProviderBase<TProviderAdapter> : DataProviderBase
+	where TProviderAdapter : IDynamicProviderAdapter
 {
 	// DbDataReader method
 	protected const string GetProviderSpecificValueReaderMethod = "GetProviderSpecificValue";
 
-	protected DynamicDataProviderBase(string name, MappingSchema mappingSchema, TProviderMappings providerMappings)
+	protected DynamicDataProviderBase(string name, MappingSchema mappingSchema, TProviderAdapter providerMappings)
 		: base(name, mappingSchema)
 	{
 		Adapter = providerMappings;
 	}
 
-	public TProviderMappings Adapter { get; }
+	public TProviderAdapter Adapter { get; }
 
 	public override string? ConnectionNamespace   => Adapter.ConnectionType.Namespace;
 	public override Type    DataReaderType        => Adapter.DataReaderType;

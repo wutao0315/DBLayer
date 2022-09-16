@@ -15,7 +15,7 @@ public interface IRepository
     }
     IDataSource DataSource { get; }
     IUnitOfWork Uow { get; }
-    IQueryable<T> Queryable<T>();
+    //IQueryable<T> Queryable<T>();
 
     #region insert
     /// <summary>

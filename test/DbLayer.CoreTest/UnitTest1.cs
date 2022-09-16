@@ -393,13 +393,13 @@ namespace DBLayerTest
             using var bsp = services.BuildServiceProvider();
             var service = bsp.GetService<IUcDynamicRepository>();
 
-            var wkgJobRecord = service.Queryable<WkgJobRecord>();
+            //var wkgJobRecord = service.Queryable<WkgJobRecord>();
            
 
             var id = 261772383541661696L;
             //var record = await service.GetEntityAsync<WkgJobRecord>(w => w.WjrId == id && w.WjrStatus > 1);
-            var record = wkgJobRecord.FirstOrDefault(w => w.WjrId == id || w.WjrId > 1);
-            var records = wkgJobRecord.Where(w => w.WjrId == id && w.WjrStatus > 1).OrderBy(w => w.WjrId).ToList();
+            //var record = wkgJobRecord.FirstOrDefault(w => w.WjrId == id || w.WjrId > 1);
+            //var records = wkgJobRecord.Where(w => w.WjrId == id && w.WjrStatus > 1).OrderBy(w => w.WjrId).ToList();
             
 
         }

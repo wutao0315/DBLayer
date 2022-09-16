@@ -66,7 +66,6 @@ public static class SqlFn
 	/// </summary>
 	/// <returns>tinyint</returns>
 	/// <exception cref="InvalidOperationException" />
-	[CLSCompliant(false)]
 	[Sql.Expression(ProviderName.SqlServer, "@@MAX_PRECISION", ServerSideOnly=true)]
 	public static byte MaxPrecision => throw new InvalidOperationException($"'{nameof(MaxPrecision)}' is a server side only function.");
 
@@ -77,7 +76,6 @@ public static class SqlFn
 	/// <returns>int</returns>
 	/// <exception cref="InvalidOperationException" />
 	[Sql.Expression(ProviderName.SqlServer, "@@NESTLEVEL", ServerSideOnly=true)]
-	[CLSCompliant(false)]
 	public static int NestLevel => throw new InvalidOperationException($"'{nameof(NestLevel)}' is a server side only function.");
 
 	/// <summary>
@@ -653,7 +651,6 @@ public static class SqlFn
 	/// <returns><b>bigint</b> if expression has an <b>nvarchar(max)</b>, <b>varbinary(max)</b>, or <b>varchar(max)</b> data type; otherwise <b>int</b>.</returns>
 	/// <exception cref="InvalidOperationException" />
 	[Sql.Function(ProviderName.SqlServer, "DATALENGTH", 0, ServerSideOnly=true)]
-	[CLSCompliant(false)]
 	[return: NotNullIfNotNull("expression")]
 	public static int? DataLength<T>(T expression)
 	{
@@ -688,7 +685,6 @@ public static class SqlFn
 	/// <returns><b>bigint</b> if expression has an <b>nvarchar(max)</b>, <b>varbinary(max)</b>, or <b>varchar(max)</b> data type; otherwise <b>int</b>.</returns>
 	/// <exception cref="InvalidOperationException" />
 	[Sql.Function(ProviderName.SqlServer, "DATALENGTH", 0, ServerSideOnly=true)]
-	[CLSCompliant(false)]
 	[return: NotNullIfNotNull("expression")]
 	public static long? DataLengthBig<T>(T expression)
 	{
@@ -1718,7 +1714,6 @@ public static class SqlFn
 		throw new InvalidOperationException($"'{nameof(OpenJson)}' is a server side only function.");
 	}
 
-#if !NET45
 	/// <summary>
 	/// <para><b><see href="https://docs.microsoft.com/en-us/sql/t-sql/functions/OPENJSON-transact-sql">OPENJSON (Transact-SQL)</see></b></para>
 	/// <para>A table-valued function that parses JSON text and returns objects and properties from the JSON input as rows and columns.</para>
@@ -1759,7 +1754,6 @@ public static class SqlFn
 	{
 		return (dc, json, path) => dc.FromSql<JsonData>($"OPENJSON({json}, {path})");
 	}
-#endif
 
 	#endregion
 

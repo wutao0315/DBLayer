@@ -317,21 +317,6 @@ public static class DBLayerConnectionOptionsBuilderExtensions
 		return builder.UseConnectionString(ProviderName.Informix, connectionString);
 	}
 
-#if NETFRAMEWORK
-	/// <summary>
-	/// Configure connection to use specific Informix provider and connection string.
-	/// </summary>
-	/// <param name="builder">Instance of <see cref="DBLayerConnectionOptionsBuilder"/>.</param>
-	/// <param name="connectionString">Informix connection string.</param>
-	/// <param name="useDB2Provider">if <c>true</c>, <c>IBM.Data.DB2</c> provider will be used; othwerwise <c>IBM.Data.Informix</c>.</param>
-	/// <returns>The builder instance so calls can be chained.</returns>
-	public static DBLayerConnectionOptionsBuilder UseInformix(this DBLayerConnectionOptionsBuilder builder, string connectionString, bool useDB2Provider)
-	{
-		return builder.UseConnectionString(
-			InformixTools.GetDataProvider(useDB2Provider ? ProviderName.InformixDB2 : ProviderName.Informix),
-			connectionString);
-	}
-#endif
 	#endregion
 
 	#region UseSapHana
@@ -411,21 +396,6 @@ public static class DBLayerConnectionOptionsBuilderExtensions
 		return builder.UseConnectionString(ProviderName.Sybase, connectionString);
 	}
 
-#if NETFRAMEWORK
-	/// <summary>
-	/// Configure connection to use specific SAP/Sybase ASE provider and connection string.
-	/// </summary>
-	/// <param name="builder">Instance of <see cref="DBLayerConnectionOptionsBuilder"/>.</param>
-	/// <param name="connectionString">SAP/Sybase ASE connection string.</param>
-	/// <param name="useNativeProvider">if <c>true</c>, <c>Sybase.AdoNet45.AseClient</c> provider will be used; othwerwise managed <c>AdoNetCore.AseClient</c>.</param>
-	/// <returns>The builder instance so calls can be chained.</returns>
-	public static DBLayerConnectionOptionsBuilder UseAse(this DBLayerConnectionOptionsBuilder builder, string connectionString, bool useNativeProvider)
-	{
-		return builder.UseConnectionString(
-			SybaseTools.GetDataProvider(useNativeProvider ? ProviderName.Sybase : ProviderName.SybaseManaged),
-			connectionString);
-	}
-#endif
 	#endregion
 
 	#region UseClickHouse

@@ -396,7 +396,6 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static long GetFractionalSecondFromTicks(long ticks, int precision) => (ticks % ValueExtensions.TICKS_DIVIDERS[0]) / ValueExtensions.TICKS_DIVIDERS[precision];
 
-#if NET6_0_OR_GREATER
 	static void ConvertDateToSql(StringBuilder stringBuilder, SqlDataType sqlDataType, DateOnly value, bool v2008plus, bool supportsFromParts)
 	{
 		switch (sqlDataType.Type.DataType, v2008plus, supportsFromParts)
@@ -424,7 +423,6 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 			}
 		}
 	}
-#endif
 
 	static void ConvertDateTimeOffsetToSql(StringBuilder stringBuilder, SqlDataType sqlDataType, DateTimeOffset value, bool v2008plus, bool supportsFromParts)
 	{
@@ -499,9 +497,7 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 			SetValueToSqlConverter(typeof(SqlDateTime)   , (sb, dt, v) => ConvertDateTimeToSql      (sb, dt, (DateTime)(SqlDateTime)v, false, false));
 			SetValueToSqlConverter(typeof(DateTime)      , (sb, dt, v) => ConvertDateTimeToSql      (sb, dt, (DateTime)v             , false, false));
 			SetValueToSqlConverter(typeof(DateTimeOffset), (sb, dt, v) => ConvertDateTimeOffsetToSql(sb, dt, (DateTimeOffset)v       , false, false));
-#if NET6_0_OR_GREATER
 			SetValueToSqlConverter(typeof(DateOnly)      , (sb, dt, v) => ConvertDateToSql          (sb, dt, (DateOnly)v             , false, false));
-#endif
 		}
 
 		public override LambdaExpression? TryGetConvertExpression(Type from, Type to)
@@ -521,9 +517,7 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 			SetValueToSqlConverter(typeof(DateTime)      , (sb, dt, v) => ConvertDateTimeToSql      (sb, dt, (DateTime)v             , true, false));
 			SetValueToSqlConverter(typeof(DateTimeOffset), (sb, dt, v) => ConvertDateTimeOffsetToSql(sb, dt, (DateTimeOffset)v       , true, false));
 
-#if NET6_0_OR_GREATER
 			SetValueToSqlConverter(typeof(DateOnly)      , (sb, dt, v) => ConvertDateToSql          (sb, dt, (DateOnly)v             , true, false));
-#endif
 		}
 
 		public override LambdaExpression? TryGetConvertExpression(Type from, Type to)
@@ -543,9 +537,7 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 			SetValueToSqlConverter(typeof(DateTime)      , (sb, dt, v) => ConvertDateTimeToSql      (sb, dt, (DateTime)v             , true, true));
 			SetValueToSqlConverter(typeof(DateTimeOffset), (sb, dt, v) => ConvertDateTimeOffsetToSql(sb, dt, (DateTimeOffset)v       , true, true));
 
-#if NET6_0_OR_GREATER
 			SetValueToSqlConverter(typeof(DateOnly)      , (sb, dt, v) => ConvertDateToSql          (sb, dt, (DateOnly)v             , true, true));
-#endif
 		}
 
 		public override LambdaExpression? TryGetConvertExpression(Type @from, Type to)
@@ -565,9 +557,7 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 			SetValueToSqlConverter(typeof(DateTime)      , (sb, dt, v) => ConvertDateTimeToSql      (sb, dt, (DateTime)v             , true, true));
 			SetValueToSqlConverter(typeof(DateTimeOffset), (sb, dt, v) => ConvertDateTimeOffsetToSql(sb, dt, (DateTimeOffset)v       , true, true));
 
-#if NET6_0_OR_GREATER
 			SetValueToSqlConverter(typeof(DateOnly)      , (sb, dt, v) => ConvertDateToSql          (sb, dt, (DateOnly)v             , true, true));
-#endif
 		}
 
 		public override LambdaExpression? TryGetConvertExpression(Type @from, Type to)
@@ -587,9 +577,7 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 			SetValueToSqlConverter(typeof(DateTime)      , (sb, dt, v) => ConvertDateTimeToSql      (sb, dt, (DateTime)v             , true, true));
 			SetValueToSqlConverter(typeof(DateTimeOffset), (sb, dt, v) => ConvertDateTimeOffsetToSql(sb, dt, (DateTimeOffset)v       , true, true));
 
-#if NET6_0_OR_GREATER
 			SetValueToSqlConverter(typeof(DateOnly)      , (sb, dt, v) => ConvertDateToSql          (sb, dt, (DateOnly)v             , true, true));
-#endif
 		}
 
 		public override LambdaExpression? TryGetConvertExpression(Type @from, Type to)
@@ -609,9 +597,7 @@ sealed class SqlServerMappingSchema : LockedMappingSchema
 			SetValueToSqlConverter(typeof(DateTime)      , (sb, dt, v) => ConvertDateTimeToSql      (sb, dt, (DateTime)v             , true, true));
 			SetValueToSqlConverter(typeof(DateTimeOffset), (sb, dt, v) => ConvertDateTimeOffsetToSql(sb, dt, (DateTimeOffset)v       , true, true));
 
-#if NET6_0_OR_GREATER
 			SetValueToSqlConverter(typeof(DateOnly)      , (sb, dt, v) => ConvertDateToSql          (sb, dt, (DateOnly)v             , true, true));
-#endif
 		}
 
 		public override LambdaExpression? TryGetConvertExpression(Type @from, Type to)

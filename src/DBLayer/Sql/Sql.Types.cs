@@ -101,12 +101,10 @@ public partial class Sql
 		[Property(PN.SqlCe,         "Datetime",       ServerSideOnly=true, CanBeNull = false)]
 		[Property(                  "Date",           ServerSideOnly=true, CanBeNull = false)]
 		public static DateTime       Date => DateTime.Now;
-#if NET6_0_OR_GREATER
 		[Property(PN.SqlServer2005, "Datetime",       ServerSideOnly=true, CanBeNull = false)]
 		[Property(PN.SqlCe,         "Datetime",       ServerSideOnly=true, CanBeNull = false)]
 		[Property(                  "Date",           ServerSideOnly=true, CanBeNull = false)]
 		public static DateOnly       DateOnly => DateOnly.FromDateTime(DateTime.Now);
-#endif
 
 		[Property(                  "Time",           ServerSideOnly=true, CanBeNull = false)]
 		public static DateTime       Time => DateTime.Now;

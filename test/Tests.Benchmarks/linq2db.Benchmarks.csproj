@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\linq2db.Providers.props" />
+
+	<PropertyGroup>
+		<AssemblyName>linq2db.Benchmarks</AssemblyName>
+		<RootNamespace>DBLayer.Benchmarks</RootNamespace>
+		<TargetFrameworks>net6.0</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<!--<DefineConstants>JETBRAINS;$(DefineConstants)</DefineConstants>-->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BenchmarkDotNet" />
+		<PackageReference Condition="$(DefineConstants.Contains('JETBRAINS'))" Include="JetBrains.Profiler.Api" />
+	</ItemGroup>
+
+</Project>

@@ -105,7 +105,6 @@ sealed class DB2MappingSchema : LockedMappingSchema
 		};
 	}
 
-#if NET6_0_OR_GREATER
 	static void ConvertDateOnlyToSql(StringBuilder stringBuilder, SqlDataType dt, DateOnly value)
 	{
 		stringBuilder.Append('\'');
@@ -129,7 +128,6 @@ sealed class DB2MappingSchema : LockedMappingSchema
 			CultureInfo.InvariantCulture,
 			DateTimeStyles.None);
 	}
-#endif
 
 	static void ConvertDateTimeToSql(StringBuilder stringBuilder, SqlDataType type, DateTime value)
 	{

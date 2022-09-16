@@ -500,25 +500,19 @@ public partial class Sql
 			var part   = builder.GetValue<DateParts>("part");
 			var date   = builder.GetExpression("date");
 			var number = builder.GetExpression("number", true);
-
-			string expStr;
-			switch (part)
+			string expStr = part switch
 			{
-				case DateParts.Year        : expStr = "{0} * INTERVAL '1' YEAR"      ; break;
-				case DateParts.Quarter     : expStr = "{0} * INTERVAL '3' MONTH"     ; break;
-				case DateParts.Month       : expStr = "{0} * INTERVAL '1' MONTH"     ; break;
-				case DateParts.DayOfYear   :
-				case DateParts.WeekDay     :
-				case DateParts.Day         : expStr = "{0} * INTERVAL '1' DAY"       ; break;
-				case DateParts.Week        : expStr = "{0} * INTERVAL '7' DAY"       ; break;
-				case DateParts.Hour        : expStr = "{0} * INTERVAL '1' HOUR"      ; break;
-				case DateParts.Minute      : expStr = "{0} * INTERVAL '1' MINUTE"    ; break;
-				case DateParts.Second      : expStr = "{0} * INTERVAL '1' SECOND"    ; break;
-				case DateParts.Millisecond : expStr = "{0} * INTERVAL '0.001' SECOND"; break;
-				default:
-					throw new InvalidOperationException($"Unexpected datepart: {part}");
-			}
-
+				DateParts.Year => "{0} * INTERVAL '1' YEAR",
+				DateParts.Quarter => "{0} * INTERVAL '3' MONTH",
+				DateParts.Month => "{0} * INTERVAL '1' MONTH",
+				DateParts.DayOfYear or DateParts.WeekDay or DateParts.Day => "{0} * INTERVAL '1' DAY",
+				DateParts.Week => "{0} * INTERVAL '7' DAY",
+				DateParts.Hour => "{0} * INTERVAL '1' HOUR",
+				DateParts.Minute => "{0} * INTERVAL '1' MINUTE",
+				DateParts.Second => "{0} * INTERVAL '1' SECOND",
+				DateParts.Millisecond => "{0} * INTERVAL '0.001' SECOND",
+				_ => throw new InvalidOperationException($"Unexpected datepart: {part}"),
+			};
 			builder.ResultExpression = builder.Add(
 				date,
 				new SqlExpression(typeof(TimeSpan?), expStr, Precedence.Multiplicative, number),
@@ -533,26 +527,19 @@ public partial class Sql
 			var part   = builder.GetValue<DateParts>("part");
 			var date   = builder.GetExpression("date");
 			var number = builder.GetExpression("number", true);
-
-			string expStr;
-
-			switch (part)
+			string expStr = part switch
 			{
-				case DateParts.Year        : expStr = "{0} Year";                 break;
-				case DateParts.Quarter     : expStr = "({0} * 3) Month";          break;
-				case DateParts.Month       : expStr = "{0} Month";                break;
-				case DateParts.DayOfYear   :
-				case DateParts.WeekDay     :
-				case DateParts.Day         : expStr = "{0} Day";                  break;
-				case DateParts.Week        : expStr = "({0} * 7) Day";            break;
-				case DateParts.Hour        : expStr = "{0} Hour";                 break;
-				case DateParts.Minute      : expStr = "{0} Minute";               break;
-				case DateParts.Second      : expStr = "{0} Second";               break;
-				case DateParts.Millisecond : expStr = "({0} / 1000.0) Second";    break;
-				default:
-					throw new InvalidOperationException($"Unexpected datepart: {part}");
-			}
-
+				DateParts.Year => "{0} Year",
+				DateParts.Quarter => "({0} * 3) Month",
+				DateParts.Month => "{0} Month",
+				DateParts.DayOfYear or DateParts.WeekDay or DateParts.Day => "{0} Day",
+				DateParts.Week => "({0} * 7) Day",
+				DateParts.Hour => "{0} Hour",
+				DateParts.Minute => "{0} Minute",
+				DateParts.Second => "{0} Second",
+				DateParts.Millisecond => "({0} / 1000.0) Second",
+				_ => throw new InvalidOperationException($"Unexpected datepart: {part}"),
+			};
 			builder.ResultExpression = builder.Add(
 				date,
 				new SqlExpression(typeof(TimeSpan?), expStr, Precedence.Primary, number),
@@ -567,25 +554,19 @@ public partial class Sql
 			var part   = builder.GetValue<DateParts>("part");
 			var date   = builder.GetExpression("date");
 			var number = builder.GetExpression("number", true);
-
-			string expStr;
-			switch (part)
+			string expStr = part switch
 			{
-				case DateParts.Year        : expStr = "{0} + Interval({1}) Year to Year";       break;
-				case DateParts.Quarter     : expStr = "{0} + Interval({1}) Month to Month * 3"; break;
-				case DateParts.Month       : expStr = "{0} + Interval({1}) Month to Month";     break;
-				case DateParts.DayOfYear   :
-				case DateParts.WeekDay     :
-				case DateParts.Day         : expStr = "{0} + Interval({1}) Day to Day";         break;
-				case DateParts.Week        : expStr = "{0} + Interval({1}) Day to Day * 7";     break;
-				case DateParts.Hour        : expStr = "{0} + Interval({1}) Hour to Hour";       break;
-				case DateParts.Minute      : expStr = "{0} + Interval({1}) Minute to Minute";   break;
-				case DateParts.Second      : expStr = "{0} + Interval({1}) Second to Second";   break;
-				case DateParts.Millisecond : expStr = "{0} + Interval({1}) Second to Fraction * 1000";  break;
-				default:
-					throw new InvalidOperationException($"Unexpected datepart: {part}");
-			}
-
+				DateParts.Year => "{0} + Interval({1}) Year to Year",
+				DateParts.Quarter => "{0} + Interval({1}) Month to Month * 3",
+				DateParts.Month => "{0} + Interval({1}) Month to Month",
+				DateParts.DayOfYear or DateParts.WeekDay or DateParts.Day => "{0} + Interval({1}) Day to Day",
+				DateParts.Week => "{0} + Interval({1}) Day to Day * 7",
+				DateParts.Hour => "{0} + Interval({1}) Hour to Hour",
+				DateParts.Minute => "{0} + Interval({1}) Minute to Minute",
+				DateParts.Second => "{0} + Interval({1}) Second to Second",
+				DateParts.Millisecond => "{0} + Interval({1}) Second to Fraction * 1000",
+				_ => throw new InvalidOperationException($"Unexpected datepart: {part}"),
+			};
 			builder.ResultExpression = new SqlExpression(typeof(DateTime?), expStr, Precedence.Additive, date, number);
 		}
 	}
@@ -597,25 +578,19 @@ public partial class Sql
 			var part   = builder.GetValue<DateParts>("part");
 			var date   = builder.GetExpression("date");
 			var number = builder.GetExpression("number", true);
-
-			string expStr;
-			switch (part)
+			string expStr = part switch
 			{
-				case DateParts.Year        : expStr = "{0} * Interval '1 Year'";         break;
-				case DateParts.Quarter     : expStr = "{0} * Interval '1 Month' * 3";    break;
-				case DateParts.Month       : expStr = "{0} * Interval '1 Month'";        break;
-				case DateParts.DayOfYear   :
-				case DateParts.WeekDay     :
-				case DateParts.Day         : expStr = "{0} * Interval '1 Day'";          break;
-				case DateParts.Week        : expStr = "{0} * Interval '1 Day' * 7";      break;
-				case DateParts.Hour        : expStr = "{0} * Interval '1 Hour'";         break;
-				case DateParts.Minute      : expStr = "{0} * Interval '1 Minute'";       break;
-				case DateParts.Second      : expStr = "{0} * Interval '1 Second'";       break;
-				case DateParts.Millisecond : expStr = "{0} * Interval '1 Millisecond'";  break;
-				default:
-					throw new InvalidOperationException($"Unexpected datepart: {part}");
-			}
-
+				DateParts.Year => "{0} * Interval '1 Year'",
+				DateParts.Quarter => "{0} * Interval '1 Month' * 3",
+				DateParts.Month => "{0} * Interval '1 Month'",
+				DateParts.DayOfYear or DateParts.WeekDay or DateParts.Day => "{0} * Interval '1 Day'",
+				DateParts.Week => "{0} * Interval '1 Day' * 7",
+				DateParts.Hour => "{0} * Interval '1 Hour'",
+				DateParts.Minute => "{0} * Interval '1 Minute'",
+				DateParts.Second => "{0} * Interval '1 Second'",
+				DateParts.Millisecond => "{0} * Interval '1 Millisecond'",
+				_ => throw new InvalidOperationException($"Unexpected datepart: {part}"),
+			};
 			builder.ResultExpression = builder.Add(
 				date,
 				new SqlExpression(typeof(TimeSpan?), expStr, Precedence.Multiplicative, number),
@@ -630,25 +605,19 @@ public partial class Sql
 			var part   = builder.GetValue<DateParts>("part");
 			var date   = builder.GetExpression("date");
 			var number = builder.GetExpression("number", true);
-
-			string expStr;
-			switch (part)
+			string expStr = part switch
 			{
-				case DateParts.Year        : expStr = "Interval {0} Year"; break;
-				case DateParts.Quarter     : expStr = "Interval {0} Quarter"; break;
-				case DateParts.Month       : expStr = "Interval {0} Month"; break;
-				case DateParts.DayOfYear   :
-				case DateParts.WeekDay     :
-				case DateParts.Day         : expStr = "Interval {0} Day";          break;
-				case DateParts.Week        : expStr = "Interval {0} Week"; break;
-				case DateParts.Hour        : expStr = "Interval {0} Hour"; break;
-				case DateParts.Minute      : expStr = "Interval {0} Minute"; break;
-				case DateParts.Second      : expStr = "Interval {0} Second"; break;
-				case DateParts.Millisecond : expStr = "Interval {0} Millisecond"; break;
-				default:
-					throw new InvalidOperationException($"Unexpected datepart: {part}");
-			}
-
+				DateParts.Year => "Interval {0} Year",
+				DateParts.Quarter => "Interval {0} Quarter",
+				DateParts.Month => "Interval {0} Month",
+				DateParts.DayOfYear or DateParts.WeekDay or DateParts.Day => "Interval {0} Day",
+				DateParts.Week => "Interval {0} Week",
+				DateParts.Hour => "Interval {0} Hour",
+				DateParts.Minute => "Interval {0} Minute",
+				DateParts.Second => "Interval {0} Second",
+				DateParts.Millisecond => "Interval {0} Millisecond",
+				_ => throw new InvalidOperationException($"Unexpected datepart: {part}"),
+			};
 			builder.ResultExpression = new SqlFunction(typeof(DateTime?), "Date_Add", date,
 				new SqlExpression(expStr, Precedence.Primary, number));
 		}
@@ -663,23 +632,19 @@ public partial class Sql
 			var number = builder.GetExpression("number", true);
 
 			string expStr = "strftime('%Y-%m-%d %H:%M:%f', {0},";
-			switch (part)
+			expStr += part switch
 			{
-				case DateParts.Year        : expStr +=            "{1} || ' Year')"; break;
-				case DateParts.Quarter     : expStr +=       "({1}*3) || ' Month')"; break;
-				case DateParts.Month       : expStr +=           "{1} || ' Month')"; break;
-				case DateParts.DayOfYear   :
-				case DateParts.WeekDay     :
-				case DateParts.Day         : expStr +=             "{1} || ' Day')"; break;
-				case DateParts.Week        : expStr +=         "({1}*7) || ' Day')"; break;
-				case DateParts.Hour        : expStr +=            "{1} || ' Hour')"; break;
-				case DateParts.Minute      : expStr +=          "{1} || ' Minute')"; break;
-				case DateParts.Second      : expStr +=          "{1} || ' Second')"; break;
-				case DateParts.Millisecond : expStr += "({1}/1000.0) || ' Second')"; break;
-				default:
-					throw new InvalidOperationException($"Unexpected datepart: {part}");
-			}
-
+				DateParts.Year => "{1} || ' Year')",
+				DateParts.Quarter => "({1}*3) || ' Month')",
+				DateParts.Month => "{1} || ' Month')",
+				DateParts.DayOfYear or DateParts.WeekDay or DateParts.Day => "{1} || ' Day')",
+				DateParts.Week => "({1}*7) || ' Day')",
+				DateParts.Hour => "{1} || ' Hour')",
+				DateParts.Minute => "{1} || ' Minute')",
+				DateParts.Second => "{1} || ' Second')",
+				DateParts.Millisecond => "({1}/1000.0) || ' Second')",
+				_ => throw new InvalidOperationException($"Unexpected datepart: {part}"),
+			};
 			builder.ResultExpression = new SqlExpression(typeof(DateTime?), expStr, Precedence.Concatenate, date, number);
 		}
 	}
@@ -692,21 +657,21 @@ public partial class Sql
 			var date   = builder.GetExpression("date");
 			var number = builder.GetExpression("number", true);
 
-			var partStr = part switch
-			{
-				DateParts.Year      => "yyyy",
-				DateParts.Quarter   => "q",
-				DateParts.Month     => "m",
-				DateParts.DayOfYear => "y",
-				DateParts.Day       => "d",
-				DateParts.Week      => "ww",
-				DateParts.WeekDay   => "w",
-				DateParts.Hour      => "h",
-				DateParts.Minute    => "n",
-				DateParts.Second    => "s",
-				_                       => throw new InvalidOperationException($"Unexpected datepart: {part}"),
-			};
-			builder.ResultExpression = new SqlFunction(typeof(DateTime?), "DateAdd",
+            var partStr = part switch
+            {
+                DateParts.Year => "yyyy",
+                DateParts.Quarter => "q",
+                DateParts.Month => "m",
+                DateParts.DayOfYear => "y",
+                DateParts.Day => "d",
+                DateParts.Week => "ww",
+                DateParts.WeekDay => "w",
+                DateParts.Hour => "h",
+                DateParts.Minute => "n",
+                DateParts.Second => "s",
+                _ => throw new InvalidOperationException($"Unexpected datepart: {part}"),
+            };
+            builder.ResultExpression = new SqlFunction(typeof(DateTime?), "DateAdd",
 				new SqlValue(partStr), number, date);
 		}
 	}
@@ -1091,7 +1056,7 @@ public partial class Sql
 		}
 	}
 
-	[CLSCompliant(false)]
+	
 	[Extension(               "DateDiff",      BuilderType = typeof(DateDiffBuilder))]
 	[Extension(PN.MySql,      "TIMESTAMPDIFF", BuilderType = typeof(DateDiffBuilder))]
 	[Extension(PN.DB2,        "",              BuilderType = typeof(DateDiffBuilderDB2))]

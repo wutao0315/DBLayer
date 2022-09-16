@@ -5,7 +5,7 @@ namespace DBLayer.DataProvider;
 
 public class OdbcProviderAdapter : IDynamicProviderAdapter
 {
-	private static readonly object _syncRoot = new object();
+	private static readonly object _syncRoot = new ();
 	private static OdbcProviderAdapter? _instance;
 
 	public const string AssemblyName    = "System.Data.Odbc";
@@ -45,14 +45,9 @@ public class OdbcProviderAdapter : IDynamicProviderAdapter
 			lock (_syncRoot)
 				if (_instance == null)
 				{
-#if NETFRAMEWORK
-					var assembly = typeof(System.Data.Odbc.OdbcConnection).Assembly;
-#else
 					var assembly = Common.Tools.TryLoadAssembly(AssemblyName, null);
 					if (assembly == null)
 						throw new InvalidOperationException($"Cannot load assembly {AssemblyName}");
-#endif
-
 					var connectionType  = assembly.GetType($"{ClientNamespace}.OdbcConnection" , true)!;
 					var dataReaderType  = assembly.GetType($"{ClientNamespace}.OdbcDataReader" , true)!;
 					var parameterType   = assembly.GetType($"{ClientNamespace}.OdbcParameter"  , true)!;

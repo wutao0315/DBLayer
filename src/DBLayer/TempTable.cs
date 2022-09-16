@@ -283,11 +283,8 @@ public class TempTable<T> : ITable<T>, ITableMutable<T>, IDisposable, IAsyncDisp
 		{
 			try
 			{
-#if !NATIVE_ASYNC
-				table.Dispose();
-#else
+
 				await table.DisposeAsync().ConfigureAwait(Common.Configuration.ContinueOnCapturedContext);
-#endif
 			}
 			catch
 			{
@@ -341,11 +338,7 @@ public class TempTable<T> : ITable<T>, ITableMutable<T>, IDisposable, IAsyncDisp
 		{
 			try
 			{
-#if !NATIVE_ASYNC
-				table.Dispose();
-#else
 				await table.DisposeAsync().ConfigureAwait(Common.Configuration.ContinueOnCapturedContext);
-#endif
 			}
 			catch
 			{

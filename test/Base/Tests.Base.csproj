@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>DBLayer.Tests.Base</AssemblyName>
+		<RootNamespace>Tests</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Remove="C:\Users\tom.wu\Desktop\Test\DBLayer\/Build/BannedSymbols.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Model\Tests.Model.csproj" />
+
+		<PackageReference Include="NUnit" />
+		<PackageReference Include="MiniProfiler.Shared" />
+	</ItemGroup>
+
+	<!--<ItemGroup Condition="'$(TargetFramework)' == 'net472' ">
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System.ServiceModel" />
+		
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+		--><!--netcoreapp31 needed due to very old transient depndency from oracle 2.19 provider--><!--
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>-->
+	
+	<!--<ItemGroup Condition=" '$(TargetFramework)' != 'net472' ">
+		<PackageReference Include="protobuf-net.Grpc.AspNetCore" />
+	</ItemGroup>-->
+	<ItemGroup>
+		<PackageReference Include="protobuf-net.Grpc.AspNetCore" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Update="TestProviders\TestNoopProvider.cs">
+	    <SubType>Source</SubType>
+	  </Compile>
+	</ItemGroup>
+
+</Project>

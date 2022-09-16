@@ -111,10 +111,10 @@ public class DES
             byte[] rgbKey = Encoding.UTF8.GetBytes(decryptKey);
             byte[] rgbIV = keys;
             byte[] inputByteArray = Convert.FromBase64String(decryptString);
-            DESCryptoServiceProvider DCSP = new DESCryptoServiceProvider();
+            var DCSP = System.Security.Cryptography.DES.Create();
 
-            MemoryStream mStream = new MemoryStream();
-            CryptoStream cStream = new CryptoStream(mStream, DCSP.CreateDecryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
+            var mStream = new MemoryStream();
+            var cStream = new CryptoStream(mStream, DCSP.CreateDecryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
             cStream.Write(inputByteArray, 0, inputByteArray.Length);
             cStream.FlushFinalBlock();
             return Encoding.UTF8.GetString(mStream.ToArray());

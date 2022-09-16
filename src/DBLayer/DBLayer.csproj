@@ -8,9 +8,9 @@
     <Copyright>MIT</Copyright>
     <PackageProjectUrl>https://github.com/wutao0315/DBLayer</PackageProjectUrl>
     <PackageReleaseNotes />
-    <Description>DBLayer simple orm</Description>
+    <Description>DBLayer orm</Description>
     <Authors>wutao0315</Authors>
-    <Version>1.5.0</Version>
+    <Version>1.0.0</Version>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
@@ -18,20 +18,33 @@
 
   <ItemGroup>
     <Compile Remove="Compatibility\System\Threading\**" />
+    <Compile Remove="Condition\**" />
+    <Compile Remove="Interface\**" />
+    <Compile Remove="Logging\**" />
+    <Compile Remove="Utilities\**" />
     <EmbeddedResource Remove="Compatibility\System\Threading\**" />
+    <EmbeddedResource Remove="Condition\**" />
+    <EmbeddedResource Remove="Interface\**" />
+    <EmbeddedResource Remove="Logging\**" />
+    <EmbeddedResource Remove="Utilities\**" />
     <None Remove="Compatibility\System\Threading\**" />
+    <None Remove="Condition\**" />
+    <None Remove="Interface\**" />
+    <None Remove="Logging\**" />
+    <None Remove="Utilities\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="BaseEntity.cs" />
+    <Compile Remove="ConditionExtensions.cs" />
+    <Compile Remove="DataFieldAttribute.cs" />
+    <Compile Remove="DataFieldExtensions.cs" />
+    <Compile Remove="ObjectExtensions.cs" />
+    <Compile Remove="OrderExpression.cs" />
+    <Compile Remove="Pager.cs" />
+    <Compile Remove="PropertyConstants.cs" />
     <Compile Remove="QueryableExtensions.cs" />
     <Compile Remove="QueryableMethods.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="SqlQuery\ReservedWords.txt" />
-    <None Remove="SqlQuery\ReservedWordsFirebird.txt" />
-    <None Remove="SqlQuery\ReservedWordsOracle.txt" />
-    <None Remove="SqlQuery\ReservedWordsPostgres.txt" />
   </ItemGroup>
   
   <ItemGroup>
@@ -39,7 +52,7 @@
       <_Parameter1>DBLayer.Persistence</_Parameter1>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>DBLayer.Core.Extensions</_Parameter1>
+      <_Parameter1>DBLayer.Extensions</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
   
@@ -50,22 +63,76 @@
     <EmbeddedResource Include="SqlQuery\ReservedWordsPostgres.txt" />
   </ItemGroup>
   
-  <ItemGroup>
+  <!--<ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
+  </ItemGroup>-->
   
   <ItemGroup>
+    <Compile Update="AsyncExtensions.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncExtensions.tt</DependentUpon>
+    </Compile>
     <Compile Update="Common\Internal\MutableTuple.generated.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MutableTuple.tt</DependentUpon>
     </Compile>
+    <Compile Update="DataProvider\MySql\MySqlHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MySqlHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\Oracle\OracleHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OracleHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\PostgreSQL\PostgreSQLHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PostgreSQLHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\SqlCe\SqlCeHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SqlCeHints.tt</DependentUpon>
+    </Compile>
+    <Compile Update="DataProvider\SqlServer\SqlServerHints.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SqlServerHints.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   
   <ItemGroup>
+    <None Update="AsyncExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AsyncExtensions.generated.cs</LastGenOutput>
+    </None>
     <None Update="Common\Internal\MutableTuple.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MutableTuple.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\MySql\MySqlHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MySqlHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\Oracle\OracleHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OracleHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\PostgreSQL\PostgreSQLHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PostgreSQLHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\SqlCe\SqlCeHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SqlCeHints.generated.cs</LastGenOutput>
+    </None>
+    <None Update="DataProvider\SqlServer\SqlServerHints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SqlServerHints.generated.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

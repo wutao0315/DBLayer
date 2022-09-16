@@ -82,12 +82,10 @@ namespace DBLayer.DataProvider.Firebird
 				dataType = dataType.WithDataType(DataType.Char);
 			}
 
-#if NET6_0_OR_GREATER
 			if (!Adapter.IsDateOnlySupported && value is DateOnly d)
 			{
 				value = d.ToDateTime(TimeOnly.MinValue);
 			}
-#endif
 
 			base.SetParameter(dataConnection, parameter, name, dataType, value);
 		}
@@ -151,7 +149,6 @@ namespace DBLayer.DataProvider.Firebird
 				cancellationToken);
 		}
 
-#if NATIVE_ASYNC
 		public override Task<BulkCopyRowsCopied> BulkCopyAsync<T>(
 			ITable<T> table, BulkCopyOptions options, IAsyncEnumerable<T> source, CancellationToken cancellationToken)
 		{
@@ -162,7 +159,6 @@ namespace DBLayer.DataProvider.Firebird
 				source,
 				cancellationToken);
 		}
-#endif
 
 		#endregion
 	}

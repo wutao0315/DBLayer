@@ -3,7 +3,7 @@
 /// <summary>
 /// Attribute for skipping specific values on update.
 /// </summary>
-[CLSCompliant(false)]
+
 public class SkipValuesOnUpdateAttribute : SkipValuesByListAttribute
 {
 	/// <summary>

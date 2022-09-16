@@ -14,6 +14,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Linq\**" />
+    <EmbeddedResource Remove="Linq\**" />
+    <None Remove="Linq\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="ObjectExtensions.cs" />
     <Compile Remove="TypeExtensions.cs" />
   </ItemGroup>

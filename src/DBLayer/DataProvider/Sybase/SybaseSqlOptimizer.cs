@@ -72,9 +72,7 @@ class SybaseSqlOptimizer : BasicSqlOptimizer
 					var stype = func.Parameters[2].SystemType!.ToUnderlying();
 
 					if (stype == typeof(DateTime)
-#if NET6_0_OR_GREATER
 						|| stype == typeof(DateOnly)
-#endif
 						)
 					{
 						return new SqlFunction(func.SystemType, "convert", false, true, func.Parameters[0], func.Parameters[2], new SqlValue(23))

@@ -48,7 +48,6 @@ partial class TableBuilder
 		else
 		{
 			var evaluatedSql = formatArg.EvaluateExpression()!;
-#if !NET45
 			if (evaluatedSql is FormattableString formattable)
 			{
 				format     = formattable.Format;
@@ -77,7 +76,6 @@ partial class TableBuilder
 				arguments = args;
 			}
 			else
-#endif
 			{
 				var rawSqlString = (RawSqlString)evaluatedSql;
 
